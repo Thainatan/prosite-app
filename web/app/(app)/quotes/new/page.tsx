@@ -83,8 +83,7 @@ export default function NewQuotePage() {
             <span className="text-[13px] font-medium">Quotes</span>
           </a>
           <span className="text-[#1E2130]">/</span>
-<a href="/quotes/new" style={{display:'flex',alignItems:'center',gap:6,height:34,padding:'0 16px',background:'#4F7EF7',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>        </div>
-        <div className="flex items-center gap-2">
+<a href="/quotes/new" style={{display:'flex',alignItems:'center',gap:6,height:34,padding:'0 16px',background:'#4F7EF7',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>        <div className="flex items-center gap-2">
           <button onClick={() => handleSave('draft')}
             className="flex items-center gap-2 h-9 px-4 rounded-[9px] border border-[#1E2130] bg-[#161924] text-[13px] font-semibold text-[#8892B0] hover:text-white hover:border-[#2D3A6B] transition-all">
             <Save size={14} />
