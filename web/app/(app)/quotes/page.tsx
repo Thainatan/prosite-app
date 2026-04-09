@@ -172,9 +172,7 @@ export default function QuotesPage() {
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#4F7EF7] rounded-full">{QUOTES.length} total</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search quotes..." className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#4F7EF7] transition-all"/>
-        <button className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#3A6AE8]">+ New Quote</button>
-      </header>
-
+<a href="/quotes/new" style={{display:'flex',alignItems:'center',gap:6,height:34,padding:'0 16px',background:'#4F7EF7',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>
       <div className="bg-white border-b border-[#EAECF2] px-6 py-2.5 flex gap-6">
         <span className="text-[12px] text-[#A0A8B8]">Approved: <b className="text-[#34C78A]">{fmt(totalApproved)}</b></span>
         <span className="text-[12px] text-[#A0A8B8]">Pending: <b className="text-[#F5A623]">{fmt(totalPending)}</b></span>
