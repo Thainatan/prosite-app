@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String
+  firstName        String
+  lastName         String
+  phone            String?
+  role             String    @default("INSTALLER")
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String?
+  phone     String
+  address   String
+  city      String
+  state     String
+  zip       String
+  notes     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("clients")
+}
+
+model Lead {
+  id              String   @id @default(cuid())
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String
+  address         String?
+  city            String?
+  state           String?
+  serviceType     String
+  stage           String   @default("NEW_INQUIRY")
+  source          String?
+  notes           String?
+  estimatedBudget Decimal? @db.Decimal(10, 2)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("leads")
+}
+
+model Project {
+  id                  String    @id @default(cuid())
+  jobNumber           String    @unique
+  name                String
+  clientId            String
+  serviceType         String
+  status              String    @default("APPROVED")
+  address             String
+  city                String
+  state               String
+  zip                 String
+  scopeOfWork         String?
+  startDate           DateTime?
+  estimatedCompletion DateTime?
+  managerId           String?
+  estimatedValue      Decimal?  @db.Decimal(10, 2)
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@map("projects")
+}
+
+model Estimate {
+  id             String   @id @default(cuid())
+  estimateNumber String   @unique
+  clientId       String?
+  projectId      String?
+  serviceType    String
+  status         String   @default("DRAFT")
+  title          String
+  subtotal       Decimal  @db.Decimal(10, 2) @default(0)
+  total          Decimal  @db.Decimal(10, 2) @default(0)
+  createdById    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("estimates")
+}
+
+model ChangeOrder {
+  id                String   @id @default(cuid())
+  changeOrderNumber String   @unique
+  projectId         String
+  clientId          String
+  status            String   @default("DRAFT")
+  description       String
+  laborCost         Decimal  @db.Decimal(10, 2) @default(0)
+  materialCost      Decimal  @db.Decimal(10, 2) @default(0)
+  totalCost         Decimal  @db.Decimal(10, 2) @default(0)
+  createdById       String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("change_orders")
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  projectId     String
+  clientId      String
+  type          String
+  status        String   @default("DRAFT")
+  lineItems     Json
+  subtotal      Decimal  @db.Decimal(10, 2)
+  total         Decimal  @db.Decimal(10, 2)
+  amountPaid    Decimal  @db.Decimal(10, 2) @default(0)
+  amountDue     Decimal  @db.Decimal(10, 2)
+  dueDate       DateTime?
+  createdById   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("invoices")
+}
+
+model ScheduleEvent {
+  id             String   @id @default(cuid())
+  title          String
+  type           String
+  projectId      String?
+  assignedUserId String
+  address        String?
+  startDateTime  DateTime
+  endDateTime    DateTime
+  notes          String?
+  reminderSent   Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("schedule_events")
+}
+
+model Photo {
+  id           String   @id @default(cuid())
+  type         String
+  url          String
+  caption      String?
+  projectId    String?
+  uploadedById String
+  createdAt    DateTime @default(now())
+
+  @@map("photos")
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  projectId String?
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notes")
+}
