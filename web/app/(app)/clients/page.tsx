@@ -1,72 +1,55 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
+const API = 'http://localhost:3002';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
-
-interface Client {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  source: string;
-  notes: string;
-  totalRevenue: number;
-  openBalance: number;
-  jobsCount: number;
-}
-
-const INITIAL_CLIENTS: Client[] = [
-  { id:'1', firstName:'Linda', lastName:'Davis', email:'lindadavis@email.com', phone:'(941) 555-0438', address:'321 Cedar Blvd', city:'Sarasota', state:'FL', zip:'34236', source:'Referral', notes:'Prefers text messages.', totalRevenue:34519, openBalance:18000, jobsCount:1 },
-  { id:'2', firstName:'Michael', lastName:'Brown', email:'m.brown@gmail.com', phone:'(941) 555-0519', address:'654 Elm Street', city:'North Port', state:'FL', zip:'34287', source:'Google', notes:'', totalRevenue:39450, openBalance:10400, jobsCount:1 },
-  { id:'3', firstName:'Patricia', lastName:'Wilson', email:'p.wilson@gmail.com', phone:'(941) 555-0247', address:'567 Maple Ave', city:'Bradenton', state:'FL', zip:'34208', source:'Referral', notes:'', totalRevenue:0, openBalance:5400, jobsCount:0 },
-  { id:'4', firstName:'Robert', lastName:'Johnson', email:'robert.j@outlook.com', phone:'(941) 555-0391', address:'890 Pine Road', city:'Venice', state:'FL', zip:'34285', source:'Google', notes:'', totalRevenue:0, openBalance:0, jobsCount:0 },
-];
-
 const SOURCES = ['Referral','Google','Website','Social Media','Yard Sign','Repeat Client','Other'];
 const STATES = ['FL','GA','TX','CA','NY','NC','SC','AL','TN'];
 
+interface Client {
+  id: string; firstName: string; lastName: string;
+  email: string; phone: string; address: string;
+  city: string; state: string; zip: string;
+  source: string; notes: string;
+  totalRevenue: number; openBalance: number; jobsCount: number;
+}
+
 function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: Client) => void }) {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ firstName:'', lastName:'', email:'', phone:'', address:'', city:'', state:'FL', zip:'', source:'Referral', notes:'' });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
   const inp = 'w-full h-10 bg-[#0F1117] border border-[#1E2130] rounded-[9px] px-3 text-[13px] text-white placeholder-[#3D4466] outline-none focus:border-[#4F7EF7] transition-all';
   const lbl = 'block text-[11.5px] font-semibold text-[#8892B0] mb-1.5';
 
-  const save = () => {
-    const newClient: Client = {
-      id: Date.now().toString(),
-      ...form,
-      totalRevenue: 0,
-      openBalance: 0,
-      jobsCount: 0,
-    };
-    onSave(newClient);
+  const save = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/clients`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const newClient = await res.json();
+      onSave({ ...newClient, totalRevenue: 0, openBalance: 0, jobsCount: 0 });
+    } catch (e) {
+      alert('Error saving client.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#0F1117] rounded-[16px] w-full max-w-lg border border-[#1E2130] overflow-hidden flex flex-col max-h-[90vh] shadow-[0_24px_80px_rgba(0,0,0,0.5)]" onClick={e => e.stopPropagation()}>
-        
-        {/* Header */}
+      <div className="bg-[#0F1117] rounded-[16px] w-full max-w-lg border border-[#1E2130] overflow-hidden flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-[#1E2130]">
           <div>
             <h2 className="text-[16px] font-bold text-white">New Client</h2>
-            <p className="text-[12px] text-[#8892B0] mt-0.5">Step {step} of 2 — {step === 1 ? 'Contact Info' : 'Property Address'}</p>
+            <p className="text-[12px] text-[#8892B0] mt-0.5">Step {step} of 2</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#1E2130] flex items-center justify-center text-[#8892B0]">✕</button>
         </div>
-
-        {/* Progress */}
-        <div className="h-1 bg-[#1E2130]">
-          <div className="h-full bg-[#4F7EF7] transition-all" style={{ width: step === 1 ? '50%' : '100%' }} />
-        </div>
-
-        {/* Body */}
+        <div className="h-1 bg-[#1E2130]"><div className="h-full bg-[#4F7EF7]" style={{ width: step === 1 ? '50%' : '100%' }} /></div>
         <div className="flex-1 overflow-y-auto p-5">
           {step === 1 ? (
             <div className="space-y-3">
@@ -82,13 +65,12 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
                 </select>
               </div>
               <div><label className={lbl}>Notes</label>
-                <textarea className={inp + ' h-20 py-2.5 resize-none'} placeholder="Any notes about this client..." value={form.notes} onChange={e => set('notes', e.target.value)} />
+                <textarea className={inp + ' h-20 py-2.5 resize-none'} placeholder="Notes about this client..." value={form.notes} onChange={e => set('notes', e.target.value)} />
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-[13px] text-[#8892B0]">Primary property address:</p>
-              <div><label className={lbl}>Street Address *</label><input className={inp} placeholder="321 Cedar Blvd" value={form.address} onChange={e => set('address', e.target.value)} /></div>
+              <div><label className={lbl}>Street Address</label><input className={inp} placeholder="321 Cedar Blvd" value={form.address} onChange={e => set('address', e.target.value)} /></div>
               <div className="grid grid-cols-3 gap-2">
                 <div className="col-span-1"><label className={lbl}>City</label><input className={inp} placeholder="Sarasota" value={form.city} onChange={e => set('city', e.target.value)} /></div>
                 <div><label className={lbl}>State</label>
@@ -101,15 +83,13 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
             </div>
           )}
         </div>
-
-        {/* Footer */}
         <div className="flex gap-2 p-4 border-t border-[#1E2130]">
-          {step === 2 && <button onClick={() => setStep(1)} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0] hover:text-white transition-colors">← Back</button>}
+          {step === 2 && <button onClick={() => setStep(1)} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0]">Back</button>}
           <div className="flex-1" />
-          <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0] hover:text-white transition-colors">Cancel</button>
+          <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0]">Cancel</button>
           {step === 1
-            ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-semibold disabled:opacity-40 hover:bg-[#3A6AE8] transition-colors">Next →</button>
-            : <button onClick={save} className="h-9 px-5 rounded-[9px] bg-[#34C78A] text-white text-[13px] font-semibold hover:bg-[#2BAF78] transition-colors">Save Client ✓</button>
+            ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-semibold disabled:opacity-40">Next</button>
+            : <button onClick={save} disabled={loading} className="h-9 px-5 rounded-[9px] bg-[#34C78A] text-white text-[13px] font-semibold disabled:opacity-40">{loading ? 'Saving...' : 'Save Client'}</button>
           }
         </div>
       </div>
@@ -120,32 +100,22 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
 function ClientDetail({ client, onClose }: { client: Client; onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#0F1117] rounded-[16px] w-full max-w-xl border border-[#1E2130] overflow-hidden flex flex-col max-h-[90vh] shadow-[0_24px_80px_rgba(0,0,0,0.5)]" onClick={e => e.stopPropagation()}>
+      <div className="bg-[#0F1117] rounded-[16px] w-full max-w-xl border border-[#1E2130] overflow-hidden flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
         <div className="p-5 border-b border-[#1E2130] flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#1E2A4A] flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#1E2A4A] flex items-center justify-center">
               <span className="text-[16px] font-bold text-[#4F7EF7]">{client.firstName[0]}{client.lastName[0]}</span>
             </div>
             <div>
               <h2 className="text-[18px] font-bold text-white">{client.firstName} {client.lastName}</h2>
-              <p className="text-[12px] text-[#8892B0]">{client.source} · {client.city}, {client.state}</p>
+              <p className="text-[12px] text-[#8892B0]">{client.city}, {client.state}</p>
             </div>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#1E2130] flex items-center justify-center text-[#8892B0]">✕</button>
         </div>
-
-        <div className="flex border-b border-[#1E2130]">
-          {[{l:'Revenue',v:fmt(client.totalRevenue),c:'#34C78A'},{l:'Balance',v:fmt(client.openBalance),c:client.openBalance>0?'#F0584C':'#8892B0'},{l:'Jobs',v:String(client.jobsCount),c:'#4F7EF7'}].map(({l,v,c})=>(
-            <div key={l} className="flex-1 px-4 py-3 text-center border-r border-[#1E2130] last:border-0">
-              <p className="text-[10px] font-bold text-[#3D4466] uppercase mb-1">{l}</p>
-              <p className="text-[14px] font-bold" style={{color:c}}>{v}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-5 space-y-3">
           <div className="grid grid-cols-2 gap-2">
-            {[{l:'Phone',v:client.phone},{l:'Email',v:client.email||'—'},{l:'Address',v:client.address+', '+client.city},{l:'ZIP',v:client.zip}].map(({l,v})=>(
+            {[{l:'Phone',v:client.phone},{l:'Email',v:client.email||'—'},{l:'Address',v:client.address||'—'},{l:'Source',v:client.source||'—'}].map(({l,v})=>(
               <div key={l} className="bg-[#161924] border border-[#1E2130] rounded-[9px] p-3">
                 <p className="text-[10px] font-bold text-[#3D4466] uppercase mb-1">{l}</p>
                 <p className="text-[13px] font-medium text-white">{v}</p>
@@ -154,7 +124,6 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
           </div>
           {client.notes && <div className="bg-[#1A1A00] border border-[#3D3000] rounded-[9px] p-3.5"><p className="text-[13px] text-[#FCD34D]">{client.notes}</p></div>}
         </div>
-
         <div className="flex gap-2 p-4 border-t border-[#1E2130]">
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0]">Close</button>
           <div className="flex-1" />
@@ -166,13 +135,21 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
 }
 
 export default function ClientsPage() {
-  const [clients, setClients] = useState<Client[]>(INITIAL_CLIENTS);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Client | null>(null);
   const [showNew, setShowNew] = useState(false);
   const [search, setSearch] = useState('');
 
+  useEffect(() => {
+    fetch(`${API}/clients`)
+      .then(r => r.json())
+      .then(data => { setClients(Array.isArray(data) ? data : []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
   const filtered = clients.filter(c =>
-    !search || `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()) || c.phone.includes(search) || c.city.toLowerCase().includes(search.toLowerCase())
+    !search || `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()) || c.phone.includes(search)
   );
 
   return (
@@ -183,45 +160,36 @@ export default function ClientsPage() {
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#1E2A4A] text-[#4F7EF7] rounded-full">{clients.length} total</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="flex-1 max-w-sm h-[34px] bg-[#161924] border border-[#1E2130] rounded-full px-4 text-[13px] text-white placeholder-[#3D4466] outline-none focus:border-[#4F7EF7] transition-all"/>
-        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#3A6AE8] transition-all">+ New Client</button>
+        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#3A6AE8]">+ New Client</button>
       </header>
-
-      <div className="bg-[#0F1117] border-b border-[#1E2130] px-6 py-2.5 flex gap-6">
-        <span className="text-[12px] text-[#3D4466]">Collected: <b className="text-[#34C78A]">{fmt(clients.reduce((a,c)=>a+c.totalRevenue,0))}</b></span>
-        <span className="text-[12px] text-[#3D4466]">Outstanding: <b className="text-[#F0584C]">{fmt(clients.reduce((a,c)=>a+c.openBalance,0))}</b></span>
-        <span className="text-[12px] text-[#3D4466]">Total clients: <b className="text-white">{clients.length}</b></span>
-      </div>
-
       <div className="p-5">
-        <div className="bg-[#0F1117] rounded-[14px] border border-[#1E2130] overflow-hidden">
-          {filtered.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-[14px] font-semibold text-white mb-1">No clients yet</p>
-              <p className="text-[12px] text-[#8892B0]">Click "+ New Client" to add your first client</p>
-            </div>
-          )}
-          {filtered.map(c => (
-            <div key={c.id} onClick={() => setSelected(c)} className="flex items-center gap-4 px-5 py-4 hover:bg-[#161924] cursor-pointer border-b border-[#1E2130] last:border-0 transition-colors">
-              <div className="w-10 h-10 rounded-full bg-[#1E2A4A] flex items-center justify-center flex-shrink-0">
-                <span className="text-[13px] font-bold text-[#4F7EF7]">{c.firstName[0]}{c.lastName[0]}</span>
+        {loading ? (
+          <div className="text-center py-12"><p className="text-[#8892B0]">Loading clients...</p></div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-[14px] font-semibold text-white mb-2">No clients yet</p>
+            <p className="text-[12px] text-[#8892B0]">Click New Client to get started</p>
+          </div>
+        ) : (
+          <div className="bg-[#0F1117] rounded-[14px] border border-[#1E2130] overflow-hidden">
+            {filtered.map(c => (
+              <div key={c.id} onClick={() => setSelected(c)} className="flex items-center gap-4 px-5 py-4 hover:bg-[#161924] cursor-pointer border-b border-[#1E2130] last:border-0 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-[#1E2A4A] flex items-center justify-center flex-shrink-0">
+                  <span className="text-[13px] font-bold text-[#4F7EF7]">{c.firstName[0]}{c.lastName[0]}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[14px] font-bold text-white">{c.firstName} {c.lastName}</p>
+                  <p className="text-[12px] text-[#8892B0]">{c.phone}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-[12px] text-[#3D4466]">{c.city}{c.state ? ', ' + c.state : ''}</p>
+                  <p className="text-[11px] text-[#3D4466]">{c.source || ''}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-bold text-white">{c.firstName} {c.lastName}</p>
-                <p className="text-[12px] text-[#8892B0]">{c.phone} · {c.address}, {c.city}</p>
-              </div>
-              <div className="text-center flex-shrink-0">
-                <p className="text-[13px] font-bold text-white">{c.jobsCount}</p>
-                <p className="text-[10px] text-[#3D4466]">jobs</p>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <p className="text-[13.5px] font-bold text-white">{fmt(c.totalRevenue)}</p>
-                {c.openBalance > 0 ? <p className="text-[11px] text-[#F0584C] font-medium">{fmt(c.openBalance)} due</p> : <p className="text-[11px] text-[#3D4466]">No balance</p>}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-
       {selected && <ClientDetail client={selected} onClose={() => setSelected(null)} />}
       {showNew && <NewClientModal onClose={() => setShowNew(false)} onSave={c => { setClients(p => [c, ...p]); setShowNew(false); }} />}
     </div>
