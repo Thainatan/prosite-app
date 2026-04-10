@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-const API = 'http://localhost:3002';
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const SOURCES = ['Referral','Google','Website','Social Media','Yard Sign','Repeat Client','Other'];
 const STATES = ['FL','GA','TX','CA','NY','NC','SC','AL','TN'];
