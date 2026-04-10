@@ -1,12 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { FileText, Plus, Trash2, ChevronLeft, Send, Save } from 'lucide-react';
+import ClientAutocomplete, { Client } from '../../components/ClientAutocomplete';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 
 interface LineItem { id: string; section: string; description: string; qty: number; unit: string; price: number; }
-interface Client { id: string; firstName: string; lastName: string; phone: string; address: string; city: string; state: string; }
 
 const SERVICES = ['Kitchen Remodel','Bathroom Remodel','Flooring','Painting','Outdoor Kitchen','Closet & Cabinetry','Interior Finish','Drywall Repair','Other'];
 const UNITS = ['job','sqft','lnft','hr','ea','lot'];
@@ -14,7 +14,6 @@ const SECTIONS = ['Demo & Prep','Framing & Drywall','Plumbing','Electrical','Til
 
 export default function NewQuotePage() {
   const [clientId, setClientId] = useState('');
-  const [clientsList, setClientsList] = useState<Client[]>([]);
   const [service, setService] = useState('');
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
@@ -24,13 +23,6 @@ export default function NewQuotePage() {
   const [items, setItems] = useState<LineItem[]>([
     { id: '1', section: 'Demo & Prep', description: '', qty: 1, unit: 'job', price: 0 },
   ]);
-
-  useEffect(() => {
-    fetch(`${API}/clients`)
-      .then(r => r.json())
-      .then(data => { if (Array.isArray(data)) setClientsList(data); })
-      .catch(() => {});
-  }, []);
 
   const addItem = () => setItems(p => [...p, { id: Date.now().toString(), section: 'Other', description: '', qty: 1, unit: 'job', price: 0 }]);
   const removeItem = (id: string) => setItems(p => p.filter(i => i.id !== id));
@@ -56,7 +48,7 @@ export default function NewQuotePage() {
       if (data.error) { alert('Error: ' + data.error); setLoading(false); return; }
       setSaved(true);
       setTimeout(() => { window.location.href = '/quotes'; }, 1000);
-    } catch (e) {
+    } catch {
       alert('Error saving quote. Check connection.');
       setLoading(false);
     }
@@ -106,10 +98,12 @@ export default function NewQuotePage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={lbl}>Client</label>
-              <select className={inp} value={clientId} onChange={e => setClientId(e.target.value)}>
-                <option value="">Select client...</option>
-                {clientsList.map(c => <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>)}
-              </select>
+              <ClientAutocomplete
+                value={clientId}
+                onSelect={(id) => setClientId(id)}
+                placeholder="Search or add client..."
+                theme="dark"
+              />
             </div>
             <div>
               <label className={lbl}>Service Type</label>

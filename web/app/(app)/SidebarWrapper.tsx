@@ -3,13 +3,14 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, FileText, HardHat, Receipt,
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
-  ChevronRight, LogOut, Bell
+  ChevronRight, LogOut, Bell, CheckSquare
 } from 'lucide-react';
 
 const NAV = [
   { section: 'MAIN', items: [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/schedule',  icon: Calendar,        label: 'Schedule'  },
+    { href: '/tasks',     icon: CheckSquare,     label: 'Tasks'     },
   ]},
   { section: 'SALES', items: [
     { href: '/clients', icon: Users,         label: 'Clients' },

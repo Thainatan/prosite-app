@@ -7,6 +7,7 @@ import { QuotesModule } from './quotes/quotes.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { AuthModule } from './auth/auth.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
     QuotesModule,
     ProjectsModule,
     InvoicesModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
