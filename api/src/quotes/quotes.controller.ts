@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('quotes')
@@ -51,11 +51,18 @@ export class QuotesController {
 
   @Patch(':id/approve')
   async approve(@Param('id') id: string) {
-    try {
-      const quote = await prisma.estimate.findUnique({ where: { id } });
-      if (!quote) return { error: 'Quote not found' };
-      if (quote.status === 'APPROVED') return { error: 'Quote already approved' };
+    const quote = await prisma.estimate.findUnique({ where: { id } });
+    if (!quote) return { error: 'Quote not found' };
+    if (quote.status === 'APPROVED') return { error: 'Quote already approved' };
 
+    if (!quote.clientId) {
+      throw new HttpException(
+        { error: 'Please assign a client to this quote before approving.' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
       const total = Number(quote.total);
 
       const project = await prisma.project.create({
