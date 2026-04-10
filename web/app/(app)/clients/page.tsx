@@ -164,11 +164,15 @@ export default function ClientsPage() {
       </header>
       <div className="p-5">
         {loading ? (
-          <div className="text-center py-12"><p className="text-[#8892B0]">Loading clients...</p></div>
+          <div className="space-y-2">
+            {[1,2,3,4,5].map(i => <div key={i} className="bg-[#0F1117] rounded-[12px] border border-[#1E2130] h-16 animate-pulse"/>)}
+          </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-[14px] font-semibold text-white mb-2">No clients yet</p>
-            <p className="text-[12px] text-[#8892B0]">Click New Client to get started</p>
+          <div className="text-center py-16">
+            <div className="text-5xl mb-4">👥</div>
+            <p className="text-[14px] font-semibold text-white mb-2">{search ? 'No clients found' : 'No clients yet'}</p>
+            <p className="text-[12px] text-[#8892B0] mb-4">Click New Client to get started</p>
+            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold">+ New Client</button>
           </div>
         ) : (
           <div className="bg-[#0F1117] rounded-[14px] border border-[#1E2130] overflow-hidden">

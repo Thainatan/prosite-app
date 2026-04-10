@@ -23,13 +23,31 @@ function mapStatus(dbStatus: string): Status {
   return map[dbStatus] || 'scheduled';
 }
 
+const SUB_STATUS_COLORS: Record<string, { bg: string; color: string }> = {
+  SCHEDULED:  { bg: '#F3F4F6', color: '#6B7280' },
+  IN_PROGRESS:{ bg: '#EAFAF3', color: '#34C78A' },
+  COMPLETED:  { bg: '#EEF3FF', color: '#4F7EF7' },
+  ON_HOLD:    { bg: '#FFF0EF', color: '#F0584C' },
+};
+
 interface DbProject {
   id: string; jobNumber: string; name: string; clientId: string; serviceType: string; status: string;
   address: string; city: string; estimatedValue: number | null; startDate: string | null;
   estimatedCompletion: string | null; notes: string | null; createdAt: string;
   client: { firstName: string; lastName: string } | null;
+  subcontractorCount?: number;
 }
-interface Project { id: string; jobNumber: string; name: string; client: string; address: string; city: string; service: string; status: Status; start: string; completion: string; value: number; notes: string; }
+interface Project {
+  id: string; jobNumber: string; name: string; client: string; address: string; city: string;
+  service: string; status: Status; start: string; completion: string; value: number; notes: string;
+  subcontractorCount: number;
+}
+interface Assignment {
+  id: string; subcontractorId: string; trade: string; scope: string; status: string;
+  startDate: string | null; notes: string;
+  subcontractor: { id: string; firstName: string; lastName: string; company: string; phone: string } | null;
+}
+interface SubOption { id: string; firstName: string; lastName: string; company: string; trade: string; }
 
 function DotsMenu({ onArchive, onDelete }: { onArchive: () => void; onDelete: () => void }) {
   const [open, setOpen] = useState(false);
@@ -54,9 +72,68 @@ function DotsMenu({ onArchive, onDelete }: { onArchive: () => void; onDelete: ()
 
 function ProjectDetail({ p, onClose }: { p: Project; onClose: () => void }) {
   const st = ST[p.status];
+  const [tab, setTab] = useState<'info' | 'subs'>('info');
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [subsLoading, setSubsLoading] = useState(false);
+  const [allSubs, setAllSubs] = useState<SubOption[]>([]);
+  const [assignSearch, setAssignSearch] = useState('');
+  const [assigning, setAssigning] = useState(false);
+  const [assignForm, setAssignForm] = useState({ subcontractorId: '', scope: '', startDate: '' });
+
+  useEffect(() => {
+    if (tab === 'subs') {
+      setSubsLoading(true);
+      Promise.all([
+        fetch(`${API}/projects/${p.id}/subcontractors`).then(r => r.json()),
+        fetch(`${API}/subcontractors`).then(r => r.json()),
+      ]).then(([a, s]) => {
+        if (Array.isArray(a)) setAssignments(a);
+        if (Array.isArray(s)) setAllSubs(s);
+      }).finally(() => setSubsLoading(false));
+    }
+  }, [tab, p.id]);
+
+  const assignedIds = new Set(assignments.map(a => a.subcontractorId));
+  const availableSubs = allSubs.filter(s =>
+    !assignedIds.has(s.id) &&
+    (!assignSearch || `${s.firstName} ${s.lastName} ${s.company}`.toLowerCase().includes(assignSearch.toLowerCase()))
+  );
+
+  const handleAssign = async (sub: SubOption) => {
+    setAssigning(true);
+    try {
+      const res = await fetch(`${API}/projects/${p.id}/subcontractors`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subcontractorId: sub.id, trade: sub.trade, scope: assignForm.scope, startDate: assignForm.startDate || null }),
+      });
+      const data = await res.json();
+      if (!data.error) {
+        setAssignments(prev => [...prev, { ...data, subcontractor: sub as any }]);
+        setAssignSearch('');
+      }
+    } finally { setAssigning(false); }
+  };
+
+  const handleRemove = async (assignmentId: string) => {
+    await fetch(`${API}/projects/${p.id}/subcontractors/${assignmentId}`, { method: 'DELETE' });
+    setAssignments(prev => prev.filter(a => a.id !== assignmentId));
+  };
+
+  const handleStatusChange = async (assignmentId: string, status: string) => {
+    const res = await fetch(`${API}/projects/${p.id}/subcontractors/${assignmentId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    const data = await res.json();
+    if (!data.error) setAssignments(prev => prev.map(a => a.id === assignmentId ? { ...a, status } : a));
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-[16px] w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col shadow-[0_24px_80px_rgba(0,0,0,0.18)] border border-[#EAECF2]" onClick={e => e.stopPropagation()}>
+        {/* Header */}
         <div className="p-5 border-b border-[#EAECF2]">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
@@ -68,7 +145,9 @@ function ProjectDetail({ p, onClose }: { p: Project; onClose: () => void }) {
             </div>
             <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">✕</button>
           </div>
-          <div className="flex border border-[#EAECF2] rounded-[10px] overflow-hidden divide-x divide-[#EAECF2]">
+
+          {/* Stats row */}
+          <div className="flex border border-[#EAECF2] rounded-[10px] overflow-hidden divide-x divide-[#EAECF2] mb-3">
             {[{ l:'Value', v: p.value ? fmt(p.value) : '—' }, { l:'Service', v: p.service }, { l:'Start', v: p.start ? fmtD(p.start) : '—' }, { l:'Est. Done', v: p.completion ? fmtD(p.completion) : '—' }].map(({ l, v }) => (
               <div key={l} className="flex-1 px-3 py-2.5 text-center">
                 <p className="text-[10px] font-bold text-[#A0A8B8] uppercase mb-1">{l}</p>
@@ -76,15 +155,107 @@ function ProjectDetail({ p, onClose }: { p: Project; onClose: () => void }) {
               </div>
             ))}
           </div>
+
+          {/* Tabs */}
+          <div className="flex gap-1 bg-[#F3F4F6] rounded-[9px] p-1">
+            {(['info','subs'] as const).map(t => (
+              <button key={t} onClick={() => setTab(t)}
+                className={`flex-1 h-7 rounded-[7px] text-[12px] font-semibold capitalize transition-all ${tab === t ? 'bg-white text-[#1A1D2E] shadow-sm' : 'text-[#9CA3AF]'}`}>
+                {t === 'info' ? 'Info' : `Subcontractors (${assignments.length})`}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          {p.notes && (
-            <div>
-              <p className="text-[10.5px] font-bold text-[#A0A8B8] uppercase mb-2">Notes</p>
-              <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-[10px] p-3.5 text-[13px] text-[#78350F] leading-relaxed">{p.notes}</div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-5">
+          {tab === 'info' && (
+            <div className="space-y-4">
+              {p.notes && (
+                <div>
+                  <p className="text-[10.5px] font-bold text-[#A0A8B8] uppercase mb-2">Notes</p>
+                  <div className="bg-[#FFFBEB] border border-[#FDE68A] rounded-[10px] p-3.5 text-[13px] text-[#78350F] leading-relaxed">{p.notes}</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {tab === 'subs' && (
+            <div className="space-y-4">
+              {/* Assigned subs */}
+              {subsLoading ? (
+                <div className="space-y-2">{[1,2].map(i => <div key={i} className="h-16 bg-[#F3F4F6] rounded-[10px] animate-pulse"/>)}</div>
+              ) : assignments.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-[13px] text-[#6B7280]">No subs assigned yet</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {assignments.map(a => {
+                    const sc = SUB_STATUS_COLORS[a.status] || SUB_STATUS_COLORS.SCHEDULED;
+                    return (
+                      <div key={a.id} className="bg-[#F9FAFB] border border-[#EAECF2] rounded-[10px] p-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-[13px] font-bold text-[#1A1D2E]">
+                                {a.subcontractor ? `${a.subcontractor.firstName} ${a.subcontractor.lastName}` : 'Unknown'}
+                              </span>
+                              <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full" style={{ background: sc.bg, color: sc.color }}>{a.status}</span>
+                            </div>
+                            <p className="text-[12px] text-[#6B7280]">{a.trade}{a.scope ? ` · ${a.scope}` : ''}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <select
+                              value={a.status}
+                              onChange={e => handleStatusChange(a.id, e.target.value)}
+                              onClick={e => e.stopPropagation()}
+                              className="h-7 text-[11px] bg-white border border-[#EAECF2] rounded-[7px] px-2 outline-none"
+                            >
+                              {['SCHEDULED','IN_PROGRESS','COMPLETED','ON_HOLD'].map(s => <option key={s}>{s}</option>)}
+                            </select>
+                            <button onClick={() => handleRemove(a.id)} className="w-7 h-7 rounded-[7px] flex items-center justify-center text-[#F0584C] hover:bg-[#FFF0EF] text-sm">✕</button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Assign form */}
+              <div className="border border-[#EAECF2] rounded-[10px] p-3">
+                <p className="text-[11.5px] font-bold text-[#6B7280] mb-2">Assign Subcontractor</p>
+                <input
+                  value={assignSearch}
+                  onChange={e => setAssignSearch(e.target.value)}
+                  placeholder="Search subcontractors..."
+                  className="w-full h-9 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 text-[13px] outline-none mb-2"
+                />
+                {assignSearch && (
+                  <div className="border border-[#EAECF2] rounded-[9px] max-h-40 overflow-y-auto mb-2">
+                    {availableSubs.length === 0 ? (
+                      <p className="text-[12px] text-[#A0A8B8] text-center py-3">No matches</p>
+                    ) : availableSubs.map(s => (
+                      <button key={s.id} onClick={() => handleAssign(s)}
+                        className="w-full text-left px-3 py-2 hover:bg-[#F7F8FC] border-b border-[#EAECF2] last:border-0 flex justify-between items-center">
+                        <span className="text-[13px] font-semibold text-[#1A1D2E]">{s.firstName} {s.lastName}</span>
+                        <span className="text-[11px] text-[#6B7280]">{s.trade}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <input
+                  value={assignForm.scope}
+                  onChange={e => setAssignForm(f => ({ ...f, scope: e.target.value }))}
+                  placeholder="Scope of work (optional)"
+                  className="w-full h-9 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 text-[13px] outline-none"
+                />
+              </div>
             </div>
           )}
         </div>
+
         <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Close</button>
           <div className="flex-1"/>
@@ -97,7 +268,6 @@ function ProjectDetail({ p, onClose }: { p: Project; onClose: () => void }) {
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [rawProjects, setRawProjects] = useState<DbProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Project | null>(null);
   const [search, setSearch] = useState('');
@@ -111,7 +281,6 @@ export default function ProjectsPage() {
       .then(r => r.json())
       .then((data: DbProject[]) => {
         if (Array.isArray(data)) {
-          setRawProjects(data);
           setProjects(data.map(p => ({
             id: p.id, jobNumber: p.jobNumber, name: p.name,
             client: p.client ? `${p.client.firstName} ${p.client.lastName}` : 'Unknown Client',
@@ -119,6 +288,7 @@ export default function ProjectsPage() {
             status: mapStatus(p.status),
             start: p.startDate || '', completion: p.estimatedCompletion || '',
             value: p.estimatedValue || 0, notes: p.notes || '',
+            subcontractorCount: p.subcontractorCount || 0,
           })));
         }
         setLoading(false);
@@ -156,9 +326,12 @@ export default function ProjectsPage() {
       </header>
 
       {loading ? (
-        <div className="text-center py-12"><p className="text-[#6B7280]">Loading projects...</p></div>
+        <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[1,2,3,4].map(i => <div key={i} className="bg-white rounded-[14px] border border-[#EAECF2] h-28 animate-pulse"/>)}
+        </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-16">
+          <div className="text-5xl mb-4">🏗️</div>
           <p className="text-[14px] font-semibold text-[#1A1D2E] mb-2">{search ? 'No projects found' : 'No projects yet'}</p>
           <p className="text-[12px] text-[#6B7280] mb-4">Approve a quote to create your first project</p>
           <a href="/quotes" className="inline-flex items-center px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold no-underline" style={{ textDecoration:'none' }}>Go to Quotes</a>
@@ -184,6 +357,9 @@ export default function ProjectsPage() {
                     </div>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full" style={{ background: st.bg, color: st.color }}>{st.label}</span>
+                      {p.subcontractorCount > 0 && (
+                        <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-[#F3F4F6] text-[#6B7280]">{p.subcontractorCount} subs</span>
+                      )}
                       <DotsMenu
                         onArchive={() => archiveProject(p.id)}
                         onDelete={() => setConfirmDelete({ id: p.id, name: p.name })}

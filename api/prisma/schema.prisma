@@ -135,7 +135,8 @@ model ChangeOrder {
   changeOrderNumber String   @unique
   projectId         String
   clientId          String
-  status            String   @default("DRAFT")
+  title             String   @default("")
+  status            String   @default("PENDING")
   description       String
   laborCost         Decimal  @db.Decimal(10, 2) @default(0)
   materialCost      Decimal  @db.Decimal(10, 2) @default(0)
@@ -145,6 +146,43 @@ model ChangeOrder {
   updatedAt         DateTime @updatedAt
 
   @@map("change_orders")
+}
+
+model Subcontractor {
+  id            String    @id @default(cuid())
+  firstName     String
+  lastName      String
+  company       String    @default("")
+  trade         String
+  phone         String
+  email         String    @default("")
+  address       String    @default("")
+  city          String    @default("")
+  state         String    @default("FL")
+  zip           String    @default("")
+  licenseNumber String    @default("")
+  insuranceExp  DateTime?
+  rating        Int       @default(5)
+  notes         String    @default("")
+  status        String    @default("ACTIVE")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("subcontractors")
+}
+
+model ProjectSubcontractor {
+  id              String    @id @default(cuid())
+  projectId       String
+  subcontractorId String
+  trade           String
+  scope           String    @default("")
+  startDate       DateTime?
+  status          String    @default("SCHEDULED")
+  notes           String    @default("")
+  createdAt       DateTime  @default(now())
+
+  @@map("project_subcontractors")
 }
 
 model Invoice {

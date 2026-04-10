@@ -216,7 +216,7 @@ export default function InvoicesPage() {
             </button>
           ))}
         </div>
-        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px]">+ New Invoice</button>
+        <a href="/invoices/new" className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration: 'none' }}>+ New Invoice</a>
       </header>
 
       <div className="bg-white border-b border-[#EAECF2] px-6 py-3 flex gap-4">

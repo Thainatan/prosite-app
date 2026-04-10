@@ -158,8 +158,8 @@ export default function SchedulePage() {
                         {dayTasks.slice(0, 3).map(t => {
                           const s = TYPE_STYLE[t.type] || TYPE_STYLE.Other;
                           return (
-                            <div key={t.id} className="truncate text-[10.5px] font-semibold px-1.5 py-0.5 rounded" style={{ background: s.bg, color: s.color }}>
-                              {t.title}
+                            <div key={t.id} className="truncate text-[10px] font-semibold px-1.5 py-0.5 rounded" style={{ background: s.bg, color: s.color }}>
+                              {fmtTime(t.startDateTime)} {t.title}
                             </div>
                           );
                         })}

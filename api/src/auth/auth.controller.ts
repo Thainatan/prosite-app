@@ -1,4 +1,5 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { JwtService } from '@nestjs/jwt';
 import { prisma } from '../prisma';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +10,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   async login(@Body() body: { email: string; password: string }) {
     try {
       let user = await prisma.user.findUnique({ where: { email: body.email } });

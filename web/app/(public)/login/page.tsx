@@ -28,6 +28,8 @@ export default function LoginPage() {
       if (data.token) {
         localStorage.setItem('prosite_token', data.token);
         localStorage.setItem('prosite_user', JSON.stringify(data.user));
+        // Also set cookie for middleware route protection
+        document.cookie = `prosite_token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
         window.location.href = '/dashboard';
       } else {
         setError('Login failed. Please try again.');

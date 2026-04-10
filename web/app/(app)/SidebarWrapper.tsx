@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, FileText, HardHat, Receipt,
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
-  ChevronRight, LogOut, Bell, CheckSquare
+  ChevronRight, LogOut, Bell, CheckSquare, Wrench
 } from 'lucide-react';
 
 const NAV = [
@@ -18,9 +18,10 @@ const NAV = [
     { href: '/leads',   icon: ClipboardList, label: 'Leads'   },
   ]},
   { section: 'OPERATIONS', items: [
-    { href: '/projects',      icon: HardHat,       label: 'Projects'      },
-    { href: '/change-orders', icon: ClipboardList, label: 'Change Orders' },
-    { href: '/invoices',      icon: Receipt,       label: 'Invoices'      },
+    { href: '/projects',         icon: HardHat,       label: 'Projects'         },
+    { href: '/subcontractors',   icon: Wrench,        label: 'Subcontractors'   },
+    { href: '/change-orders',    icon: ClipboardList, label: 'Change Orders'    },
+    { href: '/invoices',         icon: Receipt,       label: 'Invoices'         },
   ]},
   { section: 'REPORTS', items: [
     { href: '/reports', icon: BarChart3, label: 'Reports' },
