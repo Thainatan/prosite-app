@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
 function StatCard({ label, value, sub, color, bg }: { label: string; value: string; sub?: string; color: string; bg: string }) {
@@ -52,7 +53,7 @@ function PieChart({ slices }: { slices: { label: string; value: number; color: s
               <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: s.color }}/>
               <span className="text-[12px] text-[#6B7280]">{s.label}</span>
             </div>
-            <span className="text-[12px] font-bold text-[#1A1D2E]">{s.value}</span>
+            <span className="text-[12px] font-bold text-[#1A1A2E]">{s.value}</span>
           </div>
         ))}
       </div>
@@ -70,10 +71,10 @@ export default function ReportsPage() {
     const yearStart  = new Date(now.getFullYear(), 0, 1);
 
     Promise.all([
-      fetch(`${API}/invoices`).then(r => r.json()).catch(() => []),
-      fetch(`${API}/quotes`).then(r => r.json()).catch(() => []),
-      fetch(`${API}/projects`).then(r => r.json()).catch(() => []),
-      fetch(`${API}/clients`).then(r => r.json()).catch(() => []),
+      fetch(`${API}/invoices`, { headers: getH() }).then(r => r.json()).catch(() => []),
+      fetch(`${API}/quotes`, { headers: getH() }).then(r => r.json()).catch(() => []),
+      fetch(`${API}/projects`, { headers: getH() }).then(r => r.json()).catch(() => []),
+      fetch(`${API}/clients`, { headers: getH() }).then(r => r.json()).catch(() => []),
     ]).then(([invoices, quotes, projects, clients]) => {
       const invArr  = Array.isArray(invoices) ? invoices  : [];
       const qArr    = Array.isArray(quotes)   ? quotes    : [];
@@ -121,7 +122,7 @@ export default function ReportsPage() {
         { label: 'Punch List',  value: statusCounts['PUNCH_LIST'] || 0, color: '#0EA5E9' },
         { label: 'Waiting Mat.', value: statusCounts['WAITING_MATERIALS'] || 0, color: '#F5A623' },
         { label: 'On Hold',     value: statusCounts['ON_HOLD'] || 0, color: '#F0584C' },
-        { label: 'Completed',   value: statusCounts['COMPLETED'] || 0, color: '#4F7EF7' },
+        { label: 'Completed',   value: statusCounts['COMPLETED'] || 0, color: '#E8834A' },
       ];
 
       setData({ revenueMonth, revenueYear, outstanding, topClients, winRate, approvedQuotes, totalQuotes, projectSlices });
@@ -132,7 +133,7 @@ export default function ReportsPage() {
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center px-6">
-        <h1 className="text-[17px] font-bold text-[#1A1D2E]">Reports</h1>
+        <h1 className="text-[17px] font-bold text-[#1A1A2E]">Reports</h1>
       </header>
 
       <div className="p-5 space-y-5">
@@ -158,11 +159,11 @@ export default function ReportsPage() {
               <div className="flex items-center gap-6">
                 <div className="text-center">
                   <p className="text-[11px] font-bold text-[#A0A8B8] uppercase mb-1">Win Rate</p>
-                  <p className="text-[36px] font-bold text-[#4F7EF7]">{data.winRate}%</p>
+                  <p className="text-[36px] font-bold text-[#E8834A]">{data.winRate}%</p>
                 </div>
                 <div className="flex-1">
                   <div className="h-3 bg-[#F3F4F6] rounded-full overflow-hidden mb-2">
-                    <div className="h-full bg-[#4F7EF7] rounded-full transition-all" style={{ width: `${data.winRate}%` }}/>
+                    <div className="h-full bg-[#E8834A] rounded-full transition-all" style={{ width: `${data.winRate}%` }}/>
                   </div>
                   <p className="text-[12px] text-[#6B7280]">{data.approvedQuotes} approved out of {data.totalQuotes} total quotes</p>
                 </div>
@@ -183,8 +184,8 @@ export default function ReportsPage() {
                 ) : data.topClients.map((c: any, i: number) => (
                   <div key={i} className="flex items-center justify-between px-4 py-3 border-b border-[#EAECF2] last:border-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-full bg-[#EEF3FF] flex items-center justify-center text-[11px] font-bold text-[#4F7EF7]">{i + 1}</div>
-                      <span className="text-[13px] font-semibold text-[#1A1D2E]">{c.name}</span>
+                      <div className="w-7 h-7 rounded-full bg-[#EEF3FF] flex items-center justify-center text-[11px] font-bold text-[#E8834A]">{i + 1}</div>
+                      <span className="text-[13px] font-semibold text-[#1A1A2E]">{c.name}</span>
                     </div>
                     <span className="text-[13px] font-bold text-[#34C78A]">{fmt(c.total)}</span>
                   </div>

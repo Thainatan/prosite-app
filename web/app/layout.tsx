@@ -6,7 +6,7 @@ import SidebarWrapper from './(app)/SidebarWrapper';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: 'sans-serif', background: '#F7F8FC' }}>
+      <body style={{ margin: 0, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: '#F8F6F3' }}>
         <LayoutContent>{children}</LayoutContent>
       </body>
     </html>

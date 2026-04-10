@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const SOURCES = ['Referral','Google','Website','Social Media','Yard Sign','Repeat Client','Other'];
 const STATES = ['FL','GA','TX','CA','NY','NC','SC','AL','TN'];
@@ -19,15 +20,15 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ firstName:'', lastName:'', email:'', phone:'', address:'', city:'', state:'FL', zip:'', source:'Referral', notes:'' });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
-  const inp = 'w-full h-10 bg-[#0F1117] border border-[#1E2130] rounded-[9px] px-3 text-[13px] text-white placeholder-[#3D4466] outline-none focus:border-[#4F7EF7] transition-all';
-  const lbl = 'block text-[11.5px] font-semibold text-[#8892B0] mb-1.5';
+  const inp = 'w-full h-10 bg-white border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all';
+  const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
 
   const save = async () => {
     setLoading(true);
     try {
       const res = await fetch(`${API}/clients`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify(form),
       });
       const newClient = await res.json();
@@ -41,15 +42,15 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#0F1117] rounded-[16px] w-full max-w-lg border border-[#1E2130] overflow-hidden flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between p-5 border-b border-[#1E2130]">
+      <div className="bg-white rounded-[16px] w-full max-w-lg border border-[#E8E4DF] overflow-hidden flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-5 border-b border-[#E8E4DF]">
           <div>
-            <h2 className="text-[16px] font-bold text-white">New Client</h2>
-            <p className="text-[12px] text-[#8892B0] mt-0.5">Step {step} of 2</p>
+            <h2 className="text-[16px] font-bold text-[#1A1A2E]">New Client</h2>
+            <p className="text-[12px] text-[#6B7280] mt-0.5">Step {step} of 2</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#1E2130] flex items-center justify-center text-[#8892B0]">✕</button>
+          <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#E8E4DF] flex items-center justify-center text-[#6B7280]">✕</button>
         </div>
-        <div className="h-1 bg-[#1E2130]"><div className="h-full bg-[#4F7EF7]" style={{ width: step === 1 ? '50%' : '100%' }} /></div>
+        <div className="h-1 bg-[#E8E4DF]"><div className="h-full bg-[#E8834A]" style={{ width: step === 1 ? '50%' : '100%' }} /></div>
         <div className="flex-1 overflow-y-auto p-5">
           {step === 1 ? (
             <div className="space-y-3">
@@ -83,12 +84,12 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
             </div>
           )}
         </div>
-        <div className="flex gap-2 p-4 border-t border-[#1E2130]">
-          {step === 2 && <button onClick={() => setStep(1)} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0]">Back</button>}
+        <div className="flex gap-2 p-4 border-t border-[#E8E4DF]">
+          {step === 2 && <button onClick={() => setStep(1)} className="h-9 px-4 rounded-[9px] border border-[#E8E4DF] text-[13px] font-semibold text-[#6B7280]">Back</button>}
           <div className="flex-1" />
-          <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0]">Cancel</button>
+          <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#E8E4DF] text-[13px] font-semibold text-[#6B7280]">Cancel</button>
           {step === 1
-            ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-semibold disabled:opacity-40">Next</button>
+            ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold disabled:opacity-40">Next</button>
             : <button onClick={save} disabled={loading} className="h-9 px-5 rounded-[9px] bg-[#34C78A] text-white text-[13px] font-semibold disabled:opacity-40">{loading ? 'Saving...' : 'Save Client'}</button>
           }
         </div>
@@ -100,34 +101,34 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
 function ClientDetail({ client, onClose }: { client: Client; onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[#0F1117] rounded-[16px] w-full max-w-xl border border-[#1E2130] overflow-hidden flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
-        <div className="p-5 border-b border-[#1E2130] flex items-start justify-between">
+      <div className="bg-white rounded-[16px] w-full max-w-xl border border-[#E8E4DF] overflow-hidden flex flex-col max-h-[90vh]" onClick={e => e.stopPropagation()}>
+        <div className="p-5 border-b border-[#E8E4DF] flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#1E2A4A] flex items-center justify-center">
-              <span className="text-[16px] font-bold text-[#4F7EF7]">{client.firstName[0]}{client.lastName[0]}</span>
+            <div className="w-12 h-12 rounded-full bg-[#FEF3EC] flex items-center justify-center">
+              <span className="text-[16px] font-bold text-[#E8834A]">{client.firstName[0]}{client.lastName[0]}</span>
             </div>
             <div>
               <h2 className="text-[18px] font-bold text-white">{client.firstName} {client.lastName}</h2>
-              <p className="text-[12px] text-[#8892B0]">{client.city}, {client.state}</p>
+              <p className="text-[12px] text-[#6B7280]">{client.city}, {client.state}</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#1E2130] flex items-center justify-center text-[#8892B0]">✕</button>
+          <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#E8E4DF] flex items-center justify-center text-[#6B7280]">✕</button>
         </div>
         <div className="flex-1 overflow-y-auto p-5 space-y-3">
           <div className="grid grid-cols-2 gap-2">
             {[{l:'Phone',v:client.phone},{l:'Email',v:client.email||'—'},{l:'Address',v:client.address||'—'},{l:'Source',v:client.source||'—'}].map(({l,v})=>(
-              <div key={l} className="bg-[#161924] border border-[#1E2130] rounded-[9px] p-3">
-                <p className="text-[10px] font-bold text-[#3D4466] uppercase mb-1">{l}</p>
+              <div key={l} className="bg-[#FAF9F7] border border-[#E8E4DF] rounded-[9px] p-3">
+                <p className="text-[10px] font-bold text-[#9CA3AF] uppercase mb-1">{l}</p>
                 <p className="text-[13px] font-medium text-white">{v}</p>
               </div>
             ))}
           </div>
           {client.notes && <div className="bg-[#1A1A00] border border-[#3D3000] rounded-[9px] p-3.5"><p className="text-[13px] text-[#FCD34D]">{client.notes}</p></div>}
         </div>
-        <div className="flex gap-2 p-4 border-t border-[#1E2130]">
-          <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#1E2130] text-[13px] font-semibold text-[#8892B0]">Close</button>
+        <div className="flex gap-2 p-4 border-t border-[#E8E4DF]">
+          <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#E8E4DF] text-[13px] font-semibold text-[#6B7280]">Close</button>
           <div className="flex-1" />
-          <a href="/quotes/new" style={{display:'flex',alignItems:'center',height:36,padding:'0 16px',background:'#4F7EF7',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>
+          <a href="/quotes/new" style={{display:'flex',alignItems:'center',height:36,padding:'0 16px',background:'#E8834A',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>
         </div>
       </div>
     </div>
@@ -153,41 +154,41 @@ export default function ClientsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0A0D14]">
-      <header className="bg-[#0F1117] border-b border-[#1E2130] h-14 flex items-center justify-between px-6 gap-3">
+    <div className="min-h-screen bg-[#F8F6F3]">
+      <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-white">Clients</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#1E2A4A] text-[#4F7EF7] rounded-full">{clients.length} total</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{clients.length} total</span>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="flex-1 max-w-sm h-[34px] bg-[#161924] border border-[#1E2130] rounded-full px-4 text-[13px] text-white placeholder-[#3D4466] outline-none focus:border-[#4F7EF7] transition-all"/>
-        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#3A6AE8]">+ New Client</button>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
+        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#D4713A]">+ New Client</button>
       </header>
       <div className="p-5">
         {loading ? (
           <div className="space-y-2">
-            {[1,2,3,4,5].map(i => <div key={i} className="bg-[#0F1117] rounded-[12px] border border-[#1E2130] h-16 animate-pulse"/>)}
+            {[1,2,3,4,5].map(i => <div key={i} className="bg-white rounded-[12px] border border-[#E8E4DF] h-16 animate-pulse"/>)}
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-5xl mb-4">👥</div>
             <p className="text-[14px] font-semibold text-white mb-2">{search ? 'No clients found' : 'No clients yet'}</p>
-            <p className="text-[12px] text-[#8892B0] mb-4">Click New Client to get started</p>
-            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold">+ New Client</button>
+            <p className="text-[12px] text-[#6B7280] mb-4">Click New Client to get started</p>
+            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Client</button>
           </div>
         ) : (
-          <div className="bg-[#0F1117] rounded-[14px] border border-[#1E2130] overflow-hidden">
+          <div className="bg-white rounded-[14px] border border-[#E8E4DF] overflow-hidden">
             {filtered.map(c => (
-              <div key={c.id} onClick={() => setSelected(c)} className="flex items-center gap-4 px-5 py-4 hover:bg-[#161924] cursor-pointer border-b border-[#1E2130] last:border-0 transition-colors">
-                <div className="w-10 h-10 rounded-full bg-[#1E2A4A] flex items-center justify-center flex-shrink-0">
-                  <span className="text-[13px] font-bold text-[#4F7EF7]">{c.firstName[0]}{c.lastName[0]}</span>
+              <div key={c.id} onClick={() => setSelected(c)} className="flex items-center gap-4 px-5 py-4 hover:bg-[#FAF9F7] cursor-pointer border-b border-[#E8E4DF] last:border-0 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-[#FEF3EC] flex items-center justify-center flex-shrink-0">
+                  <span className="text-[13px] font-bold text-[#E8834A]">{c.firstName[0]}{c.lastName[0]}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-bold text-white">{c.firstName} {c.lastName}</p>
-                  <p className="text-[12px] text-[#8892B0]">{c.phone}</p>
+                  <p className="text-[12px] text-[#6B7280]">{c.phone}</p>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className="text-[12px] text-[#3D4466]">{c.city}{c.state ? ', ' + c.state : ''}</p>
-                  <p className="text-[11px] text-[#3D4466]">{c.source || ''}</p>
+                  <p className="text-[12px] text-[#9CA3AF]">{c.city}{c.state ? ', ' + c.state : ''}</p>
+                  <p className="text-[11px] text-[#9CA3AF]">{c.source || ''}</p>
                 </div>
               </div>
             ))}

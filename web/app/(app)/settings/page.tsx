@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 
 interface Settings {
   id?: string;
@@ -16,7 +17,7 @@ interface Settings {
 
 const DEFAULT: Settings = {
   companyName:'', phone:'', email:'', address:'', city:'', state:'FL', zip:'', website:'',
-  logoBase64: null, brandColor:'#4F7EF7',
+  logoBase64: null, brandColor:'#E8834A',
   headerLayout:'Classic',
   showQty: true, showUnitPrice: true, showLineTotal: true,
   footerDisclaimer:'', useEstimate: false,
@@ -29,7 +30,7 @@ function Toggle({ on, onToggle, label }: { on: boolean; onToggle: () => void; la
   return (
     <div className="flex items-center justify-between py-3 border-b border-[#EAECF2] last:border-0">
       <span className="text-[13.5px] text-[#374151]">{label}</span>
-      <button onClick={onToggle} className="w-11 h-6 rounded-full transition-colors relative flex-shrink-0" style={{ background: on ? '#4F7EF7' : '#D1D5DB' }}>
+      <button onClick={onToggle} className="w-11 h-6 rounded-full transition-colors relative flex-shrink-0" style={{ background: on ? '#E8834A' : '#D1D5DB' }}>
         <div className="w-5 h-5 bg-white rounded-full shadow absolute top-0.5 transition-all" style={{ left: on ? '22px' : '2px' }}/>
       </button>
     </div>
@@ -59,7 +60,7 @@ export default function SettingsPage() {
     try {
       await fetch(`${API}/settings`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify(s),
       });
       setSaved(true);
@@ -77,7 +78,7 @@ export default function SettingsPage() {
     reader.readAsDataURL(file);
   };
 
-  const inp = 'w-full h-10 bg-white border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none focus:border-[#4F7EF7] transition-all';
+  const inp = 'w-full h-10 bg-white border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none focus:border-[#E8834A] transition-all';
   const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
   const card = 'bg-white rounded-[14px] border border-[#EAECF2] p-5 mb-4';
 
@@ -91,11 +92,11 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6">
-        <h1 className="text-[17px] font-bold text-[#1A1D2E]">Settings</h1>
+        <h1 className="text-[17px] font-bold text-[#1A1A2E]">Settings</h1>
         <button
           onClick={save} disabled={saving}
           className="h-9 px-5 rounded-[9px] text-[13px] font-bold text-white transition-all disabled:opacity-60"
-          style={{ background: saved ? '#34C78A' : '#4F7EF7' }}
+          style={{ background: saved ? '#34C78A' : '#E8834A' }}
         >
           {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
         </button>
@@ -106,7 +107,7 @@ export default function SettingsPage() {
         <div className="w-44 flex-shrink-0">
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
             {TABS.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)} className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[#EAECF2] last:border-0 transition-colors" style={{ background: tab === t.id ? '#EEF3FF' : 'white', color: tab === t.id ? '#4F7EF7' : '#374151' }}>
+              <button key={t.id} onClick={() => setTab(t.id)} className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[#EAECF2] last:border-0 transition-colors" style={{ background: tab === t.id ? '#EEF3FF' : 'white', color: tab === t.id ? '#E8834A' : '#374151' }}>
                 <span>{t.icon}</span>
                 <span className="text-[13px] font-semibold">{t.label}</span>
               </button>
@@ -121,7 +122,7 @@ export default function SettingsPage() {
           {tab === 'company' && (
             <>
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-4">Company Information</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Company Information</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
                     <label className={lbl}>Company Name</label>
@@ -161,13 +162,13 @@ export default function SettingsPage() {
               </div>
 
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-4">Branding</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Branding</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className={lbl}>Company Logo</label>
                     <div
                       onClick={() => logoRef.current?.click()}
-                      className="h-24 border-2 border-dashed border-[#EAECF2] rounded-[10px] flex flex-col items-center justify-center cursor-pointer hover:border-[#4F7EF7] transition-colors"
+                      className="h-24 border-2 border-dashed border-[#EAECF2] rounded-[10px] flex flex-col items-center justify-center cursor-pointer hover:border-[#E8834A] transition-colors"
                     >
                       {s.logoBase64 ? (
                         <img src={s.logoBase64} alt="Logo" className="max-h-20 max-w-full object-contain rounded"/>
@@ -215,27 +216,27 @@ export default function SettingsPage() {
           {tab === 'documents' && (
             <>
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-4">Document Header Layout</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Document Header Layout</h2>
                 <div className="grid grid-cols-3 gap-3">
                   {['Classic', 'Modern', 'Minimal'].map(layout => (
                     <button
                       key={layout} onClick={() => set('headerLayout', layout)}
                       className="border-2 rounded-[10px] p-3 text-left transition-all"
-                      style={{ borderColor: s.headerLayout === layout ? '#4F7EF7' : '#EAECF2', background: s.headerLayout === layout ? '#EEF3FF' : 'white' }}
+                      style={{ borderColor: s.headerLayout === layout ? '#E8834A' : '#EAECF2', background: s.headerLayout === layout ? '#EEF3FF' : 'white' }}
                     >
                       <div className="h-14 bg-[#F3F4F6] rounded-[6px] mb-2 flex items-center p-2 gap-2">
-                        {layout === 'Classic' && <><div className="w-6 h-6 bg-[#4F7EF7] rounded"/><div className="flex-1"><div className="h-2 bg-[#D1D5DB] rounded mb-1 w-3/4"/><div className="h-1.5 bg-[#E5E7EB] rounded w-1/2"/></div></>}
-                        {layout === 'Modern' && <div className="w-full h-full flex flex-col justify-center"><div className="h-2 bg-[#4F7EF7] rounded w-full mb-1"/><div className="h-1.5 bg-[#D1D5DB] rounded w-2/3"/></div>}
+                        {layout === 'Classic' && <><div className="w-6 h-6 bg-[#E8834A] rounded"/><div className="flex-1"><div className="h-2 bg-[#D1D5DB] rounded mb-1 w-3/4"/><div className="h-1.5 bg-[#E5E7EB] rounded w-1/2"/></div></>}
+                        {layout === 'Modern' && <div className="w-full h-full flex flex-col justify-center"><div className="h-2 bg-[#E8834A] rounded w-full mb-1"/><div className="h-1.5 bg-[#D1D5DB] rounded w-2/3"/></div>}
                         {layout === 'Minimal' && <div className="w-full"><div className="h-2 bg-[#1A1D2E] rounded w-1/2"/></div>}
                       </div>
-                      <p className="text-[12.5px] font-semibold" style={{ color: s.headerLayout === layout ? '#4F7EF7' : '#374151' }}>{layout}</p>
+                      <p className="text-[12.5px] font-semibold" style={{ color: s.headerLayout === layout ? '#E8834A' : '#374151' }}>{layout}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-4">Line Item Columns</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Line Item Columns</h2>
                 <div className="space-y-0">
                   <Toggle on={s.showQty} onToggle={() => set('showQty', !s.showQty)} label="Show Quantity column"/>
                   <Toggle on={s.showUnitPrice} onToggle={() => set('showUnitPrice', !s.showUnitPrice)} label="Show Unit Price column"/>
@@ -245,14 +246,14 @@ export default function SettingsPage() {
               </div>
 
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-3">Footer Disclaimer</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-3">Footer Disclaimer</h2>
                 <p className="text-[12px] text-[#6B7280] mb-3">Appears at the bottom of all quotes and invoices.</p>
                 <textarea
                   value={s.footerDisclaimer}
                   onChange={e => set('footerDisclaimer', e.target.value)}
                   placeholder="e.g. Payment due within 30 days. Late payments subject to 1.5% monthly fee..."
                   rows={4}
-                  className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2.5 text-[13px] text-[#1A1D2E] outline-none focus:border-[#4F7EF7] resize-none"
+                  className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2.5 text-[13px] text-[#1A1A2E] outline-none focus:border-[#E8834A] resize-none"
                 />
               </div>
             </>
@@ -261,7 +262,7 @@ export default function SettingsPage() {
           {/* ── Notifications ── */}
           {tab === 'notifications' && (
             <div className={card}>
-              <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-1">Email Notifications</h2>
+              <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-1">Email Notifications</h2>
               <p className="text-[12px] text-[#6B7280] mb-4">Control which events trigger email notifications.</p>
               <Toggle on={s.emailNewQuote} onToggle={() => set('emailNewQuote', !s.emailNewQuote)} label="New quote created"/>
               <Toggle on={s.emailApproved} onToggle={() => set('emailApproved', !s.emailApproved)} label="Quote approved by client"/>
@@ -274,18 +275,18 @@ export default function SettingsPage() {
           {tab === 'account' && (
             <>
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-4">Profile</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Profile</h2>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#4F7EF7] to-[#8B5CF6] flex items-center justify-center text-white text-xl font-bold">TB</div>
                   <div>
-                    <p className="text-[15px] font-bold text-[#1A1D2E]">Thainatan Barcelos</p>
+                    <p className="text-[15px] font-bold text-[#1A1A2E]">Thainatan Barcelos</p>
                     <p className="text-[13px] text-[#6B7280]">admin@prosite.com · Admin</p>
                   </div>
                 </div>
               </div>
 
               <div className={card}>
-                <h2 className="text-[15px] font-bold text-[#1A1D2E] mb-4">Change Password</h2>
+                <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Change Password</h2>
                 {pwError && <div className="bg-[#FFF0EF] border border-[#F0584C] rounded-[9px] px-3 py-2 mb-3 text-[12.5px] text-[#F0584C]">{pwError}</div>}
                 <div className="space-y-3">
                   <div>

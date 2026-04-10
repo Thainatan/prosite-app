@@ -13,6 +13,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { SettingsModule } from './settings/settings.module';
 import { SubcontractorsModule } from './subcontractors/subcontractors.module';
 import { ChangeOrdersModule } from './change-orders/change-orders.module';
+import { TeamModule } from './team/team.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -27,11 +29,13 @@ import { ChangeOrdersModule } from './change-orders/change-orders.module';
     SettingsModule,
     SubcontractorsModule,
     ChangeOrdersModule,
+    TeamModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
   ],
 })
 export class AppModule {}

@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import ClientAutocomplete, { Client } from '../components/ClientAutocomplete';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 
 const TASK_TYPES = ['Site Visit', 'Meeting', 'Follow-up', 'Installation', 'Inspection', 'Other'] as const;
 type TaskType = typeof TASK_TYPES[number];
 
 const TYPE_STYLE: Record<TaskType, { bg: string; color: string; dot: string }> = {
-  'Site Visit':   { bg: '#EEF3FF', color: '#4F7EF7', dot: '#4F7EF7' },
+  'Site Visit':   { bg: '#EEF3FF', color: '#E8834A', dot: '#E8834A' },
   'Meeting':      { bg: '#F3F0FF', color: '#8B5CF6', dot: '#8B5CF6' },
   'Follow-up':    { bg: '#FFF7E9', color: '#F5A623', dot: '#F5A623' },
   'Installation': { bg: '#EAFAF3', color: '#34C78A', dot: '#34C78A' },
@@ -65,7 +66,7 @@ export default function TasksPage() {
       const endDateTime = new Date(`${form.date}T${form.endTime}`).toISOString();
       const res = await fetch(`${API}/tasks`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           title: form.title,
           type: form.type,
@@ -89,23 +90,23 @@ export default function TasksPage() {
   };
 
   const filtered = tasks.filter(t => filter === 'all' || t.type === filter);
-  const inp = (err?: string) => ({ width:'100%', height:38, background:'#F7F8FC', border:`1px solid ${err ? '#F0584C' : '#EAECF2'}`, borderRadius:9, padding:'0 12px', fontSize:13, color:'#1A1D2E', outline:'none', boxSizing:'border-box' as const });
+  const inp = (err?: string) => ({ width:'100%', height:38, background:'#F7F8FC', border:`1px solid ${err ? '#F0584C' : '#EAECF2'}`, borderRadius:9, padding:'0 12px', fontSize:13, color:'#1A1A2E', outline:'none', boxSizing:'border-box' as const });
   const lbl = { display:'block', fontSize:11.5, fontWeight:600, color:'#6B7280', marginBottom:5 } as const;
 
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-[17px] font-bold text-[#1A1D2E]">Tasks</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#4F7EF7] rounded-full">{tasks.length} total</span>
+          <h1 className="text-[17px] font-bold text-[#1A1A2E]">Tasks</h1>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#E8834A] rounded-full">{tasks.length} total</span>
         </div>
         <div className="flex items-center bg-[#F3F4F6] rounded-[9px] p-1 gap-1">
-          <button onClick={() => setFilter('all')} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all ${filter === 'all' ? 'bg-white text-[#1A1D2E] shadow-sm' : 'text-[#9CA3AF]'}`}>All</button>
+          <button onClick={() => setFilter('all')} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all ${filter === 'all' ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>All</button>
           {TASK_TYPES.map(t => (
-            <button key={t} onClick={() => setFilter(t)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all ${filter === t ? 'bg-white text-[#1A1D2E] shadow-sm' : 'text-[#9CA3AF]'}`}>{t}</button>
+            <button key={t} onClick={() => setFilter(t)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all ${filter === t ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>{t}</button>
           ))}
         </div>
-        <button onClick={() => setShowForm(true)} className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px]">+ New Task</button>
+        <button onClick={() => setShowForm(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px]">+ New Task</button>
       </header>
 
       <div className="p-5">
@@ -114,9 +115,9 @@ export default function TasksPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-14 h-14 bg-[#EEF3FF] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📋</div>
-            <p className="text-[14px] font-semibold text-[#1A1D2E] mb-2">{filter !== 'all' ? `No ${filter} tasks` : 'No tasks yet'}</p>
+            <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{filter !== 'all' ? `No ${filter} tasks` : 'No tasks yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Click + New Task to schedule your first task</p>
-            <button onClick={() => setShowForm(true)} className="inline-flex items-center px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold">+ New Task</button>
+            <button onClick={() => setShowForm(true)} className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Task</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
@@ -130,7 +131,7 @@ export default function TasksPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[13.5px] font-bold text-[#1A1D2E]">{task.title}</span>
+                      <span className="text-[13.5px] font-bold text-[#1A1A2E]">{task.title}</span>
                       <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full" style={{ background: st.bg, color: st.color }}>{task.type}</span>
                     </div>
                     <p className="text-[12px] text-[#6B7280]">
@@ -140,7 +141,7 @@ export default function TasksPage() {
                     </p>
                     {task.notes && <p className="text-[12px] text-[#A0A8B8] mt-1 truncate">{task.notes}</p>}
                   </div>
-                  <a href="/schedule" className="flex-shrink-0 text-[11px] text-[#4F7EF7] font-semibold hover:underline" style={{ textDecoration:'none' }}>View Calendar</a>
+                  <a href="/schedule" className="flex-shrink-0 text-[11px] text-[#E8834A] font-semibold hover:underline" style={{ textDecoration:'none' }}>View Calendar</a>
                 </div>
               );
             })}
@@ -153,7 +154,7 @@ export default function TasksPage() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-[16px] w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-[0_24px_80px_rgba(0,0,0,0.18)] border border-[#EAECF2]" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-[#EAECF2]">
-              <h2 className="text-[17px] font-bold text-[#1A1D2E]">New Task</h2>
+              <h2 className="text-[17px] font-bold text-[#1A1A2E]">New Task</h2>
               <button onClick={() => setShowForm(false)} className="w-8 h-8 rounded-full hover:bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">✕</button>
             </div>
             <div className="p-5 space-y-4">
@@ -209,12 +210,12 @@ export default function TasksPage() {
 
               <div>
                 <label style={lbl}>Notes</label>
-                <textarea value={form.notes} onChange={e => setForm(p => ({...p, notes: e.target.value}))} placeholder="Additional notes..." rows={3} style={{ width:'100%', background:'#F7F8FC', border:'1px solid #EAECF2', borderRadius:9, padding:'10px 12px', fontSize:13, color:'#1A1D2E', outline:'none', resize:'none', boxSizing:'border-box' }}/>
+                <textarea value={form.notes} onChange={e => setForm(p => ({...p, notes: e.target.value}))} placeholder="Additional notes..." rows={3} style={{ width:'100%', background:'#F7F8FC', border:'1px solid #EAECF2', borderRadius:9, padding:'10px 12px', fontSize:13, color:'#1A1A2E', outline:'none', resize:'none', boxSizing:'border-box' }}/>
               </div>
             </div>
             <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
               <button onClick={() => setShowForm(false)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-              <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-bold disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
                 {saving ? 'Saving...' : 'Create Task'}
               </button>
             </div>

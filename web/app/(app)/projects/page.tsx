@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
@@ -15,7 +16,7 @@ const ST: Record<Status, { label: string; bg: string; color: string }> = {
   on_hold:           { label: 'On Hold',           bg: '#FFF0EF', color: '#F0584C' },
 };
 const TRADE_COLOR: Record<string, string> = {
-  Electrical:'#F5A623', Plumbing:'#0EA5E9', HVAC:'#4F7EF7', Framing:'#34C78A',
+  Electrical:'#F5A623', Plumbing:'#0EA5E9', HVAC:'#E8834A', Framing:'#34C78A',
   Drywall:'#6B7280', Flooring:'#EC4899', Painting:'#F0584C', Roofing:'#374151',
   Tile:'#8B5CF6', Concrete:'#9CA3AF', Landscaping:'#059669', Other:'#6B7280',
 };
@@ -91,7 +92,7 @@ function QuickAssignModal({ project, allSubs, onAssigned, onClose }: {
     try {
       const res = await fetch(`${API}/projects/${project.id}/subcontractors`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({ subcontractorId: sub.id, trade: sub.trade, scope }),
       });
       const data = await res.json();
@@ -107,7 +108,7 @@ function QuickAssignModal({ project, allSubs, onAssigned, onClose }: {
       <div className="bg-white rounded-[16px] w-full max-w-sm shadow-[0_24px_80px_rgba(0,0,0,0.18)] border border-[#EAECF2]" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-4 border-b border-[#EAECF2]">
           <div>
-            <h3 className="text-[15px] font-bold text-[#1A1D2E]">Assign Subcontractor</h3>
+            <h3 className="text-[15px] font-bold text-[#1A1A2E]">Assign Subcontractor</h3>
             <p className="text-[11.5px] text-[#6B7280]">{project.name}</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">✕</button>
@@ -138,7 +139,7 @@ function QuickAssignModal({ project, allSubs, onAssigned, onClose }: {
                       {initials(s.firstName, s.lastName)}
                     </div>
                     <div>
-                      <p className="text-[13px] font-semibold text-[#1A1D2E]">{s.firstName} {s.lastName}</p>
+                      <p className="text-[13px] font-semibold text-[#1A1A2E]">{s.firstName} {s.lastName}</p>
                       {s.company && <p className="text-[11px] text-[#A0A8B8]">{s.company}</p>}
                     </div>
                   </div>
@@ -190,7 +191,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
     setAssigning(true);
     try {
       const res = await fetch(`${API}/projects/${p.id}/subcontractors`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({ subcontractorId: sub.id, trade: sub.trade, scope }),
       });
       const data = await res.json();
@@ -204,14 +205,14 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
   };
 
   const handleRemove = async (aId: string) => {
-    await fetch(`${API}/projects/${p.id}/subcontractors/${aId}`, { method: 'DELETE' });
+    await fetch(`${API}/projects/${p.id}/subcontractors/${aId}`, { method: 'DELETE', headers: getH() });
     setAssignments(prev => prev.filter(a => a.id !== aId));
     onSubRemoved(p.id, aId);
   };
 
   const handleStatusChange = async (aId: string, status: string) => {
     const res = await fetch(`${API}/projects/${p.id}/subcontractors/${aId}`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      method: 'PATCH', headers: { 'Content-Type': 'application/json', ...getH() },
       body: JSON.stringify({ status }),
     });
     const data = await res.json();
@@ -225,7 +226,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-[18px] font-bold text-[#1A1D2E]">{p.name}</h2>
+                <h2 className="text-[18px] font-bold text-[#1A1A2E]">{p.name}</h2>
                 <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full" style={{ background: st.bg, color: st.color }}>{st.label}</span>
               </div>
               <p className="text-[12.5px] text-[#6B7280]">{p.jobNumber} · {p.client} · {p.address}{p.city ? `, ${p.city}` : ''}</p>
@@ -236,14 +237,14 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
             {[{ l:'Value', v: p.value ? fmt(p.value) : '—' }, { l:'Service', v: p.service }, { l:'Start', v: p.start ? fmtD(p.start) : '—' }, { l:'Est. Done', v: p.completion ? fmtD(p.completion) : '—' }].map(({ l, v }) => (
               <div key={l} className="flex-1 px-3 py-2.5 text-center">
                 <p className="text-[10px] font-bold text-[#A0A8B8] uppercase mb-1">{l}</p>
-                <p className="text-[13px] font-bold text-[#1A1D2E] truncate">{v}</p>
+                <p className="text-[13px] font-bold text-[#1A1A2E] truncate">{v}</p>
               </div>
             ))}
           </div>
           <div className="flex gap-1 bg-[#F3F4F6] rounded-[9px] p-1">
             {(['info','subs'] as const).map(t => (
               <button key={t} onClick={() => setTab(t)}
-                className={`flex-1 h-7 rounded-[7px] text-[12px] font-semibold transition-all ${tab === t ? 'bg-white text-[#1A1D2E] shadow-sm' : 'text-[#9CA3AF]'}`}>
+                className={`flex-1 h-7 rounded-[7px] text-[12px] font-semibold transition-all ${tab === t ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>
                 {t === 'info' ? 'Info' : `Subcontractors (${assignments.length})`}
               </button>
             ))}
@@ -266,7 +267,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
                 <div className="space-y-2">
                   {assignments.map(a => {
                     const tc = TRADE_COLOR[a.trade] || '#6B7280';
-                    const statColors: Record<string,string> = { SCHEDULED:'#6B7280', IN_PROGRESS:'#34C78A', COMPLETED:'#4F7EF7', ON_HOLD:'#F0584C' };
+                    const statColors: Record<string,string> = { SCHEDULED:'#6B7280', IN_PROGRESS:'#34C78A', COMPLETED:'#E8834A', ON_HOLD:'#F0584C' };
                     return (
                       <div key={a.id} className="bg-[#F9FAFB] border border-[#EAECF2] rounded-[10px] p-3 flex items-start gap-3">
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0"
@@ -275,7 +276,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
-                            <span className="text-[13px] font-bold text-[#1A1D2E]">
+                            <span className="text-[13px] font-bold text-[#1A1A2E]">
                               {a.subcontractor ? `${a.subcontractor.firstName} ${a.subcontractor.lastName}` : 'Unknown'}
                             </span>
                             <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full" style={{ background: tc + '18', color: tc }}>{a.trade}</span>
@@ -310,7 +311,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
                     ) : availableSubs.map(s => (
                       <button key={s.id} onClick={() => handleAssign(s)} disabled={assigning}
                         className="w-full text-left px-3 py-2 hover:bg-[#F7F8FC] border-b border-[#EAECF2] last:border-0 flex justify-between items-center">
-                        <span className="text-[13px] font-semibold text-[#1A1D2E]">{s.firstName} {s.lastName}</span>
+                        <span className="text-[13px] font-semibold text-[#1A1A2E]">{s.firstName} {s.lastName}</span>
                         <span className="text-[11px] text-[#6B7280]">{s.trade}</span>
                       </button>
                     ))}
@@ -324,7 +325,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
         <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Close</button>
           <div className="flex-1"/>
-          <a href="/invoices" className="h-9 px-4 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-semibold flex items-center no-underline" style={{ textDecoration:'none' }}>View Invoices</a>
+          <a href="/invoices" className="h-9 px-4 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold flex items-center no-underline" style={{ textDecoration:'none' }}>View Invoices</a>
         </div>
       </div>
     </div>
@@ -393,7 +394,7 @@ export default function ProjectsPage() {
   };
 
   const deleteProject = async (id: string) => {
-    await fetch(`${API}/projects/${id}`, { method: 'DELETE' });
+    await fetch(`${API}/projects/${id}`, { method: 'DELETE', headers: getH() });
     setProjects(prev => prev.filter(p => p.id !== id));
     setConfirmDelete(null);
     showToast('Project deleted.');
@@ -417,12 +418,12 @@ export default function ProjectsPage() {
 
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-[17px] font-bold text-[#1A1D2E]">Projects</h1>
+          <h1 className="text-[17px] font-bold text-[#1A1A2E]">Projects</h1>
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EAFAF3] text-[#34C78A] rounded-full">{active} active</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..."
-          className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#4F7EF7] transition-all"/>
-        <a href="/quotes/new" className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration:'none' }}>+ New Quote</a>
+          className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#E8834A] transition-all"/>
+        <a href="/quotes/new" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration:'none' }}>+ New Quote</a>
       </header>
 
       {loading ? (
@@ -432,9 +433,9 @@ export default function ProjectsPage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
           <div className="text-5xl mb-4">🏗️</div>
-          <p className="text-[14px] font-semibold text-[#1A1D2E] mb-2">{search ? 'No projects found' : 'No projects yet'}</p>
+          <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No projects found' : 'No projects yet'}</p>
           <p className="text-[12px] text-[#6B7280] mb-4">Approve a quote to create your first project</p>
-          <a href="/quotes" className="inline-flex items-center px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold no-underline" style={{ textDecoration:'none' }}>Go to Quotes</a>
+          <a href="/quotes" className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold no-underline" style={{ textDecoration:'none' }}>Go to Quotes</a>
         </div>
       ) : (
         <>
@@ -458,7 +459,7 @@ export default function ProjectsPage() {
                   {/* Row 1: name + status + dots */}
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex-1 min-w-0">
-                      <p className="text-[14px] font-bold text-[#1A1D2E] mb-0.5 truncate">{p.name}</p>
+                      <p className="text-[14px] font-bold text-[#1A1A2E] mb-0.5 truncate">{p.name}</p>
                       <p className="text-[11.5px] text-[#6B7280]">{p.jobNumber} · {p.client}{p.city ? ` · ${p.city}` : ''}</p>
                     </div>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -476,7 +477,7 @@ export default function ProjectsPage() {
                       <span>🔧 {p.service}</span>
                       {p.start && <span>📅 {fmtD(p.start)}</span>}
                     </div>
-                    <span className="font-bold text-[#1A1D2E]">{p.value ? fmt(p.value) : '—'}</span>
+                    <span className="font-bold text-[#1A1A2E]">{p.value ? fmt(p.value) : '—'}</span>
                   </div>
 
                   {/* Row 3: Subcontractors inline */}
@@ -504,7 +505,7 @@ export default function ProjectsPage() {
                     {/* Quick assign button */}
                     <button
                       onClick={e => { e.stopPropagation(); setQuickAssignProject(p); }}
-                      className="ml-auto text-[10.5px] font-semibold px-2.5 py-1 rounded-full border border-[#EAECF2] text-[#6B7280] hover:border-[#4F7EF7] hover:text-[#4F7EF7] transition-colors flex-shrink-0">
+                      className="ml-auto text-[10.5px] font-semibold px-2.5 py-1 rounded-full border border-[#EAECF2] text-[#6B7280] hover:border-[#E8834A] hover:text-[#E8834A] transition-colors flex-shrink-0">
                       + Assign Sub
                     </button>
                   </div>
@@ -541,7 +542,7 @@ export default function ProjectsPage() {
       {confirmDelete && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setConfirmDelete(null)}>
           <div className="bg-white border border-[#EAECF2] rounded-[16px] p-6 w-full max-w-sm shadow-xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[16px] font-bold text-[#1A1D2E] mb-2">Delete Project?</h3>
+            <h3 className="text-[16px] font-bold text-[#1A1A2E] mb-2">Delete Project?</h3>
             <p className="text-[13px] text-[#6B7280] mb-5">"{confirmDelete.name}" will be permanently deleted.</p>
             <div className="flex gap-2">
               <button onClick={() => setConfirmDelete(null)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] text-[#6B7280] text-[13px] font-semibold">Cancel</button>

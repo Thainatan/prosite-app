@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ClientAutocomplete from '../../components/ClientAutocomplete';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const TYPE_ICON: Record<string, string> = { deposit: '🏁', progress: '🔨', final: '✅' };
 
@@ -34,7 +35,7 @@ export default function NewInvoicePage() {
     try {
       const res = await fetch(`${API}/invoices`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           clientId,
           projectId: 'DIRECT',
@@ -54,20 +55,20 @@ export default function NewInvoicePage() {
     } finally { setSaving(false); }
   };
 
-  const inp = (err?: string) => `w-full h-10 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none focus:border-[#4F7EF7] transition-all ${err ? 'border-[#F0584C]' : 'border-[#EAECF2]'}`;
+  const inp = (err?: string) => `w-full h-10 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none focus:border-[#E8834A] transition-all ${err ? 'border-[#F0584C]' : 'border-[#EAECF2]'}`;
   const lbl = 'block text-[12px] font-semibold text-[#6B7280] mb-1.5';
 
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center px-6 gap-4">
         <a href="/invoices" className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#F3F4F6] text-[#6B7280] text-lg" style={{ textDecoration: 'none' }}>←</a>
-        <h1 className="text-[17px] font-bold text-[#1A1D2E]">New Invoice</h1>
+        <h1 className="text-[17px] font-bold text-[#1A1A2E]">New Invoice</h1>
       </header>
 
       <div className="max-w-2xl mx-auto p-6 space-y-6">
         {/* Client */}
         <div className="bg-white rounded-[14px] border border-[#EAECF2] p-5">
-          <h2 className="text-[14px] font-bold text-[#1A1D2E] mb-4">Client</h2>
+          <h2 className="text-[14px] font-bold text-[#1A1A2E] mb-4">Client</h2>
           <ClientAutocomplete
             value={clientId}
             onSelect={(id) => { setClientId(id); setErrors(e => ({ ...e, client: '' })); }}
@@ -79,7 +80,7 @@ export default function NewInvoicePage() {
 
         {/* Type + Due Date */}
         <div className="bg-white rounded-[14px] border border-[#EAECF2] p-5">
-          <h2 className="text-[14px] font-bold text-[#1A1D2E] mb-4">Invoice Details</h2>
+          <h2 className="text-[14px] font-bold text-[#1A1A2E] mb-4">Invoice Details</h2>
           <div className="space-y-4">
             <div>
               <label className={lbl}>Invoice Type</label>
@@ -87,7 +88,7 @@ export default function NewInvoicePage() {
                 {(['deposit','progress','final'] as const).map(t => (
                   <button key={t} type="button" onClick={() => setType(t)}
                     className="flex-1 h-10 rounded-[9px] border text-[13px] font-semibold capitalize transition-all"
-                    style={{ background: type === t ? '#EEF3FF' : 'white', color: type === t ? '#4F7EF7' : '#6B7280', borderColor: type === t ? '#4F7EF7' : '#EAECF2' }}>
+                    style={{ background: type === t ? '#EEF3FF' : 'white', color: type === t ? '#E8834A' : '#6B7280', borderColor: type === t ? '#E8834A' : '#EAECF2' }}>
                     {TYPE_ICON[t]} {t}
                   </button>
                 ))}
@@ -99,7 +100,7 @@ export default function NewInvoicePage() {
             </div>
             <div>
               <label className={lbl}>Notes</label>
-              <textarea className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2 text-[13px] text-[#1A1D2E] outline-none resize-none focus:border-[#4F7EF7]"
+              <textarea className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2 text-[13px] text-[#1A1A2E] outline-none resize-none focus:border-[#E8834A]"
                 rows={3} value={notes} onChange={e => setNotes(e.target.value)} placeholder="Payment terms, special instructions..."/>
             </div>
           </div>
@@ -108,8 +109,8 @@ export default function NewInvoicePage() {
         {/* Line Items */}
         <div className="bg-white rounded-[14px] border border-[#EAECF2] p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[14px] font-bold text-[#1A1D2E]">Line Items</h2>
-            <button onClick={() => setLines(p => [...p, EMPTY_LINE()])} className="text-[12.5px] font-semibold text-[#4F7EF7]">+ Add line</button>
+            <h2 className="text-[14px] font-bold text-[#1A1A2E]">Line Items</h2>
+            <button onClick={() => setLines(p => [...p, EMPTY_LINE()])} className="text-[12.5px] font-semibold text-[#E8834A]">+ Add line</button>
           </div>
           {errors.lines && <p className="text-[11px] text-[#F0584C] mb-3">{errors.lines}</p>}
 
@@ -124,7 +125,7 @@ export default function NewInvoicePage() {
             {lines.map((line) => (
               <div key={line.id} className="grid grid-cols-[1fr_120px_32px] gap-2 items-center">
                 <input
-                  className="w-full h-10 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none focus:border-[#4F7EF7]"
+                  className="w-full h-10 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none focus:border-[#E8834A]"
                   placeholder="Description..."
                   value={line.description}
                   onChange={e => setLines(p => p.map(l => l.id === line.id ? { ...l, description: e.target.value } : l))}
@@ -132,7 +133,7 @@ export default function NewInvoicePage() {
                 <div className="relative">
                   <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[12px] text-[#9CA3AF]">$</span>
                   <input
-                    type="number" className="w-full h-10 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] pl-6 pr-2 text-[13px] text-[#1A1D2E] outline-none text-right focus:border-[#4F7EF7]"
+                    type="number" className="w-full h-10 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] pl-6 pr-2 text-[13px] text-[#1A1A2E] outline-none text-right focus:border-[#E8834A]"
                     value={line.amount || ''}
                     onChange={e => setLines(p => p.map(l => l.id === line.id ? { ...l, amount: parseFloat(e.target.value) || 0 } : l))}
                   />
@@ -146,17 +147,17 @@ export default function NewInvoicePage() {
 
           <div className="flex justify-between items-center mt-4 pt-4 border-t border-[#EAECF2]">
             <span className="text-[13px] font-semibold text-[#6B7280]">Total</span>
-            <span className="text-[22px] font-bold text-[#1A1D2E]">{fmt(total)}</span>
+            <span className="text-[22px] font-bold text-[#1A1A2E]">{fmt(total)}</span>
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex gap-3 pb-8">
           <a href="/invoices" className="flex-1 h-11 rounded-[9px] border border-[#EAECF2] bg-white flex items-center justify-center text-[13px] font-semibold text-[#6B7280] no-underline" style={{ textDecoration: 'none' }}>Cancel</a>
-          <button onClick={() => handleSave('DRAFT')} disabled={saving} className="flex-1 h-11 rounded-[9px] border border-[#4F7EF7] text-[#4F7EF7] text-[13px] font-bold disabled:opacity-50 bg-white">
+          <button onClick={() => handleSave('DRAFT')} disabled={saving} className="flex-1 h-11 rounded-[9px] border border-[#E8834A] text-[#E8834A] text-[13px] font-bold disabled:opacity-50 bg-white">
             Save Draft
           </button>
-          <button onClick={() => handleSave('SENT')} disabled={saving} className="flex-1 h-11 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-bold disabled:opacity-50">
+          <button onClick={() => handleSave('SENT')} disabled={saving} className="flex-1 h-11 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
             {saving ? 'Saving...' : 'Send Invoice'}
           </button>
         </div>

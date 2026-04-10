@@ -3,11 +3,13 @@ import { Throttle } from '@nestjs/throttler';
 import { JwtService } from '@nestjs/jwt';
 import { prisma } from '../prisma';
 import * as bcrypt from 'bcrypt';
+import { Public } from './public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private jwtService: JwtService) {}
 
+  @Public()
   @Post('login')
   @HttpCode(200)
   @Throttle({ default: { limit: 10, ttl: 60000 } })

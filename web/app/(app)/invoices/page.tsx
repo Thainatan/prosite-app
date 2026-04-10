@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import ClientAutocomplete, { Client } from '../components/ClientAutocomplete';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -89,8 +90,8 @@ export default function InvoicesPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/invoices`).then(r => r.json()),
-      fetch(`${API}/settings`).then(r => r.json()).catch(() => null),
+      fetch(`${API}/invoices`, { headers: getH() }).then(r => r.json()),
+      fetch(`${API}/settings`, { headers: getH() }).then(r => r.json()).catch(() => null),
     ]).then(([invData, settingsData]) => {
       if (Array.isArray(invData)) {
         setInvoices(invData.map(inv => ({
@@ -135,7 +136,7 @@ export default function InvoicesPage() {
   };
 
   const deleteInvoice = async (id: string) => {
-    await fetch(`${API}/invoices/${id}`, { method: 'DELETE' });
+    await fetch(`${API}/invoices/${id}`, { method: 'DELETE', headers: getH() });
     setInvoices(prev => prev.filter(i => i.id !== id));
     setConfirmDelete(null);
     showToast('Invoice deleted.');
@@ -147,7 +148,7 @@ export default function InvoicesPage() {
     try {
       const res = await fetch(`${API}/invoices/${selected.id}/pay`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({ amount: Number(payAmount), notes: payNotes }),
       });
       const data = await res.json();
@@ -171,7 +172,7 @@ export default function InvoicesPage() {
     try {
       const res = await fetch(`${API}/invoices`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           clientId: newClientId,
           projectId: 'DIRECT',
@@ -196,9 +197,9 @@ export default function InvoicesPage() {
   const collected = invoices.filter(i => i.status === 'paid').reduce((a, i) => a + i.total, 0);
   const overdue = invoices.filter(i => i.status === 'overdue').length;
 
-  const inp = (err?: string) => 'w-full h-9 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none ' + (err ? 'border-[#F0584C]' : 'border-[#EAECF2]');
+  const inp = (err?: string) => 'w-full h-9 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none ' + (err ? 'border-[#F0584C]' : 'border-[#EAECF2]');
 
-  const brandColor = settings?.brandColor || '#4F7EF7';
+  const brandColor = settings?.brandColor || '#E8834A';
 
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
@@ -206,24 +207,24 @@ export default function InvoicesPage() {
 
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-[17px] font-bold text-[#1A1D2E]">Invoices</h1>
+          <h1 className="text-[17px] font-bold text-[#1A1A2E]">Invoices</h1>
           {overdue > 0 && <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FFF0EF] text-[#F0584C] rounded-full">{overdue} overdue</span>}
         </div>
         <div className="flex items-center bg-[#F3F4F6] rounded-[9px] p-1 gap-1">
           {(['all','sent','partial','paid','overdue'] as const).map(s => (
-            <button key={s} onClick={() => setFilter(s)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold capitalize transition-all ${filter === s ? 'bg-white text-[#1A1D2E] shadow-sm' : 'text-[#9CA3AF]'}`}>
+            <button key={s} onClick={() => setFilter(s)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold capitalize transition-all ${filter === s ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>
               {s === 'all' ? 'All' : IS[s].label}
             </button>
           ))}
         </div>
-        <a href="/invoices/new" className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration: 'none' }}>+ New Invoice</a>
+        <a href="/invoices/new" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration: 'none' }}>+ New Invoice</a>
       </header>
 
       <div className="bg-white border-b border-[#EAECF2] px-6 py-3 flex gap-4">
         {[
           { label:'Outstanding', value:fmt(outstanding), color:'#F0584C', bg:'#FFF0EF' },
           { label:'Collected',   value:fmt(collected),   color:'#34C78A', bg:'#EAFAF3' },
-          { label:'Total Issued',value:fmt(invoices.reduce((a,i)=>a+i.total,0)), color:'#1A1D2E', bg:'#F7F8FC' },
+          { label:'Total Issued',value:fmt(invoices.reduce((a,i)=>a+i.total,0)), color:'#1A1A2E', bg:'#F7F8FC' },
         ].map(({label,value,color,bg}) => (
           <div key={label} className="flex items-center gap-3 px-4 py-2.5 rounded-[10px]" style={{background:bg}}>
             <div>
@@ -239,9 +240,9 @@ export default function InvoicesPage() {
           <div className="text-center py-12"><p className="text-[#6B7280]">Loading invoices...</p></div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-[14px] font-semibold text-[#1A1D2E] mb-2">{filter !== 'all' ? `No ${IS[filter as IStatus]?.label} invoices` : 'No invoices yet'}</p>
+            <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{filter !== 'all' ? `No ${IS[filter as IStatus]?.label} invoices` : 'No invoices yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Approve a quote or create a direct invoice</p>
-            <button onClick={() => setShowNew(true)} className="inline-flex items-center px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold">+ New Invoice</button>
+            <button onClick={() => setShowNew(true)} className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Invoice</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
@@ -253,7 +254,7 @@ export default function InvoicesPage() {
                   <div className="w-9 h-9 rounded-[10px] bg-[#F7F8FC] border border-[#EAECF2] flex items-center justify-center text-base flex-shrink-0">{TYPE_ICON[inv.type] || '📄'}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[13.5px] font-bold text-[#1A1D2E]">{inv.project}</span>
+                      <span className="text-[13.5px] font-bold text-[#1A1A2E]">{inv.project}</span>
                       <span className="font-mono text-[11px] text-[#A0A8B8]">{inv.number}</span>
                     </div>
                     <p className="text-[12px] text-[#6B7280]">{inv.client} · {inv.type} · Due {fmtD(inv.dueDate)}</p>
@@ -265,7 +266,7 @@ export default function InvoicesPage() {
                     </div>
                   )}
                   <div className="text-right flex-shrink-0">
-                    <p className="text-[14px] font-bold text-[#1A1D2E]">{fmt(inv.total)}</p>
+                    <p className="text-[14px] font-bold text-[#1A1A2E]">{fmt(inv.total)}</p>
                     {inv.due > 0 ? <p className="text-[11px] font-medium text-[#F0584C]">{fmt(inv.due)} due</p> : <p className="text-[11px] text-[#34C78A] font-medium">Paid ✓</p>}
                   </div>
                   <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full w-16 text-center flex-shrink-0" style={{background:st.bg,color:st.color}}>{st.label}</span>
@@ -289,7 +290,7 @@ export default function InvoicesPage() {
               <div className="px-5 pt-4 pb-3 border-b border-[#EAECF2] flex items-center gap-3" style={{ background: brandColor + '10' }}>
                 {settings.logoBase64 && <img src={settings.logoBase64} alt="logo" className="h-9 w-9 object-contain rounded-[8px]"/>}
                 <div>
-                  <p className="text-[13px] font-bold text-[#1A1D2E]">{settings.companyName}</p>
+                  <p className="text-[13px] font-bold text-[#1A1A2E]">{settings.companyName}</p>
                   <p className="text-[11px] text-[#6B7280]">{[settings.phone, settings.email].filter(Boolean).join(' · ')}</p>
                 </div>
               </div>
@@ -298,7 +299,7 @@ export default function InvoicesPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xl">{TYPE_ICON[selected.type] || '📄'}</span>
-                  <h2 className="text-[17px] font-bold text-[#1A1D2E] capitalize">{selected.type} Invoice</h2>
+                  <h2 className="text-[17px] font-bold text-[#1A1A2E] capitalize">{selected.type} Invoice</h2>
                   <span className="font-mono text-[11px] text-[#A0A8B8]">{selected.number}</span>
                   <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full" style={{background:IS[selected.status].bg,color:IS[selected.status].color}}>{IS[selected.status].label}</span>
                 </div>
@@ -311,23 +312,23 @@ export default function InvoicesPage() {
                 {selected.items.map((item, i) => (
                   <div key={i} className="flex justify-between px-4 py-3 border-b border-[#EAECF2] last:border-0">
                     <span className="text-[13px] text-[#374151]">{item.description}</span>
-                    <span className="text-[13px] font-bold text-[#1A1D2E] ml-4">{fmt(item.amount)}</span>
+                    <span className="text-[13px] font-bold text-[#1A1A2E] ml-4">{fmt(item.amount)}</span>
                   </div>
                 ))}
                 {selected.items.length === 0 && <div className="px-4 py-3 text-[13px] text-[#A0A8B8]">No line items</div>}
               </div>
               <div className="bg-[#F7F8FC] border border-[#EAECF2] rounded-[12px] p-4 space-y-2">
-                <div className="flex justify-between text-[13px]"><span className="text-[#6B7280]">Total</span><span className="font-bold text-[#1A1D2E]">{fmt(selected.total)}</span></div>
+                <div className="flex justify-between text-[13px]"><span className="text-[#6B7280]">Total</span><span className="font-bold text-[#1A1A2E]">{fmt(selected.total)}</span></div>
                 <div className="flex justify-between text-[13px]"><span className="text-[#34C78A]">Paid</span><span className="font-bold text-[#34C78A]">{fmt(selected.paid)}</span></div>
                 <div className="flex justify-between border-t-2 border-[#1A1D2E] pt-2.5">
-                  <span className="text-[14px] font-bold text-[#1A1D2E]">Balance Due</span>
+                  <span className="text-[14px] font-bold text-[#1A1A2E]">Balance Due</span>
                   <span className="text-[20px] font-bold" style={{color:selected.due>0?'#F0584C':'#34C78A'}}>{selected.due>0?fmt(selected.due):'Paid ✓'}</span>
                 </div>
               </div>
               {selected.due > 0 && (
                 <div className="border border-[#EAECF2] rounded-[12px] overflow-hidden">
                   <button onClick={() => setPayOpen(!payOpen)} className="w-full flex justify-between items-center px-4 py-3 hover:bg-[#F7F8FC]">
-                    <span className="text-[13px] font-bold text-[#1A1D2E]">Record Payment</span>
+                    <span className="text-[13px] font-bold text-[#1A1A2E]">Record Payment</span>
                     <span className="text-[#A0A8B8]">{payOpen?'▲':'▼'}</span>
                   </button>
                   {payOpen && (
@@ -359,7 +360,7 @@ export default function InvoicesPage() {
       {confirmDelete && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setConfirmDelete(null)}>
           <div className="bg-white border border-[#EAECF2] rounded-[16px] p-6 w-full max-w-sm shadow-xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[16px] font-bold text-[#1A1D2E] mb-2">Delete Invoice?</h3>
+            <h3 className="text-[16px] font-bold text-[#1A1A2E] mb-2">Delete Invoice?</h3>
             <p className="text-[13px] text-[#6B7280] mb-5">"{confirmDelete.number}" will be permanently deleted.</p>
             <div className="flex gap-2">
               <button onClick={() => setConfirmDelete(null)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] text-[#6B7280] text-[13px] font-semibold">Cancel</button>
@@ -374,7 +375,7 @@ export default function InvoicesPage() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowNew(false)}>
           <div className="bg-white rounded-[16px] w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-[0_24px_80px_rgba(0,0,0,0.18)] border border-[#EAECF2]" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-[#EAECF2]">
-              <h2 className="text-[17px] font-bold text-[#1A1D2E]">New Invoice</h2>
+              <h2 className="text-[17px] font-bold text-[#1A1A2E]">New Invoice</h2>
               <button onClick={() => setShowNew(false)} className="w-8 h-8 rounded-full hover:bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">✕</button>
             </div>
             <div className="p-5 space-y-4">
@@ -396,7 +397,7 @@ export default function InvoicesPage() {
                 <label className="block text-[11.5px] font-semibold text-[#6B7280] mb-1.5">Invoice Type</label>
                 <div className="flex gap-2">
                   {['deposit','progress','final'].map(t => (
-                    <button key={t} onClick={() => setNewType(t)} className="flex-1 h-9 rounded-[9px] border text-[12.5px] font-semibold capitalize transition-all" style={{ background: newType === t ? '#EEF3FF' : 'white', color: newType === t ? '#4F7EF7' : '#6B7280', borderColor: newType === t ? '#4F7EF7' : '#EAECF2' }}>
+                    <button key={t} onClick={() => setNewType(t)} className="flex-1 h-9 rounded-[9px] border text-[12.5px] font-semibold capitalize transition-all" style={{ background: newType === t ? '#EEF3FF' : 'white', color: newType === t ? '#E8834A' : '#6B7280', borderColor: newType === t ? '#E8834A' : '#EAECF2' }}>
                       {TYPE_ICON[t]} {t}
                     </button>
                   ))}
@@ -407,14 +408,14 @@ export default function InvoicesPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[11.5px] font-semibold text-[#6B7280]">Line Items *</label>
-                  <button onClick={() => setNewLines(p => [...p, EMPTY_LINE()])} className="text-[11.5px] font-semibold text-[#4F7EF7]">+ Add line</button>
+                  <button onClick={() => setNewLines(p => [...p, EMPTY_LINE()])} className="text-[11.5px] font-semibold text-[#E8834A]">+ Add line</button>
                 </div>
                 {newErrors.lines && <p className="text-[11px] text-[#F0584C] mb-2">{newErrors.lines}</p>}
                 <div className="space-y-2">
                   {newLines.map((line, i) => (
                     <div key={line.id} className="flex gap-2 items-center">
                       <input
-                        className="flex-1 h-9 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none"
+                        className="flex-1 h-9 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none"
                         placeholder="Description..."
                         value={line.description}
                         onChange={e => setNewLines(p => p.map(l => l.id === line.id ? {...l, description: e.target.value} : l))}
@@ -422,7 +423,7 @@ export default function InvoicesPage() {
                       <div className="relative w-28">
                         <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[12px] text-[#9CA3AF]">$</span>
                         <input
-                          type="number" className="w-full h-9 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] pl-6 pr-2 text-[13px] text-[#1A1D2E] outline-none text-right"
+                          type="number" className="w-full h-9 bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] pl-6 pr-2 text-[13px] text-[#1A1A2E] outline-none text-right"
                           value={line.amount}
                           onChange={e => setNewLines(p => p.map(l => l.id === line.id ? {...l, amount: parseFloat(e.target.value)||0} : l))}
                         />
@@ -435,13 +436,13 @@ export default function InvoicesPage() {
                 </div>
                 <div className="flex justify-between mt-3 pt-3 border-t border-[#EAECF2]">
                   <span className="text-[13px] font-semibold text-[#6B7280]">Total</span>
-                  <span className="text-[18px] font-bold text-[#1A1D2E]">{fmt(newTotal)}</span>
+                  <span className="text-[18px] font-bold text-[#1A1A2E]">{fmt(newTotal)}</span>
                 </div>
               </div>
             </div>
             <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
               <button onClick={() => setShowNew(false)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-              <button onClick={handleCreateInvoice} disabled={newSaving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-bold disabled:opacity-50">
+              <button onClick={handleCreateInvoice} disabled={newSaving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
                 {newSaving ? 'Creating...' : 'Create Invoice'}
               </button>
             </div>

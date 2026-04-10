@@ -2,12 +2,13 @@
 import { useState, useEffect, useRef } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 
 const TRADES = ['Electrical','Plumbing','HVAC','Framing','Drywall','Flooring','Painting','Roofing','Tile','Concrete','Landscaping','Windows','Cabinets','Other'];
 const TRADE_COLORS: Record<string, { bg: string; color: string }> = {
   Electrical: { bg: '#FFF7E9', color: '#F5A623' },
   Plumbing:   { bg: '#E0F2FE', color: '#0EA5E9' },
-  HVAC:       { bg: '#EEF3FF', color: '#4F7EF7' },
+  HVAC:       { bg: '#EEF3FF', color: '#E8834A' },
   Framing:    { bg: '#EAFAF3', color: '#34C78A' },
   Drywall:    { bg: '#F3F4F6', color: '#6B7280' },
   Flooring:   { bg: '#FDF2F8', color: '#EC4899' },
@@ -60,7 +61,7 @@ function DotsMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => vo
       <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] text-[18px] font-bold">⋯</button>
       {open && (
         <div className="absolute right-0 top-9 z-50 bg-white border border-[#EAECF2] rounded-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-32 overflow-hidden">
-          <button onClick={() => { onEdit(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#1A1D2E] hover:bg-[#F7F8FC] border-b border-[#EAECF2]">Edit</button>
+          <button onClick={() => { onEdit(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#1A1A2E] hover:bg-[#F7F8FC] border-b border-[#EAECF2]">Edit</button>
           <button onClick={() => { onDelete(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#F0584C] hover:bg-[#FFF0EF]">Delete</button>
         </div>
       )}
@@ -100,7 +101,7 @@ function SubModal({ initial, onClose, onSave }: {
       const url = initial ? `${API}/subcontractors/${initial.id}` : `${API}/subcontractors`;
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify(form),
       });
       const data = await res.json();
@@ -109,14 +110,14 @@ function SubModal({ initial, onClose, onSave }: {
     } finally { setSaving(false); }
   };
 
-  const inp = (err?: string) => `w-full h-9 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none ${err ? 'border-[#F0584C]' : 'border-[#EAECF2]'}`;
+  const inp = (err?: string) => `w-full h-9 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none ${err ? 'border-[#F0584C]' : 'border-[#EAECF2]'}`;
   const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-[16px] w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-[0_24px_80px_rgba(0,0,0,0.18)] border border-[#EAECF2]" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b border-[#EAECF2]">
-          <h2 className="text-[17px] font-bold text-[#1A1D2E]">{initial ? 'Edit Subcontractor' : 'New Subcontractor'}</h2>
+          <h2 className="text-[17px] font-bold text-[#1A1A2E]">{initial ? 'Edit Subcontractor' : 'New Subcontractor'}</h2>
           <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">✕</button>
         </div>
         <div className="p-5 space-y-4">
@@ -199,7 +200,7 @@ function SubModal({ initial, onClose, onSave }: {
               {['ACTIVE','INACTIVE'].map(s => (
                 <button key={s} type="button" onClick={() => set('status', s)}
                   className="flex-1 h-9 rounded-[9px] border text-[12.5px] font-semibold capitalize transition-all"
-                  style={{ background: form.status === s ? '#EEF3FF' : 'white', color: form.status === s ? '#4F7EF7' : '#6B7280', borderColor: form.status === s ? '#4F7EF7' : '#EAECF2' }}>
+                  style={{ background: form.status === s ? '#EEF3FF' : 'white', color: form.status === s ? '#E8834A' : '#6B7280', borderColor: form.status === s ? '#E8834A' : '#EAECF2' }}>
                   {s === 'ACTIVE' ? 'Active' : 'Inactive'}
                 </button>
               ))}
@@ -208,14 +209,14 @@ function SubModal({ initial, onClose, onSave }: {
 
           <div>
             <label className={lbl}>Notes</label>
-            <textarea className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2 text-[13px] text-[#1A1D2E] outline-none resize-none"
+            <textarea className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2 text-[13px] text-[#1A1A2E] outline-none resize-none"
               rows={3} value={form.notes} onChange={e => set('notes', e.target.value)}/>
           </div>
         </div>
 
         <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
           <button onClick={onClose} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-          <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#4F7EF7] text-white text-[13px] font-bold disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
             {saving ? 'Saving...' : initial ? 'Save Changes' : 'Add Subcontractor'}
           </button>
         </div>
@@ -255,7 +256,7 @@ export default function SubcontractorsPage() {
   };
 
   const handleDelete = async (sub: Sub) => {
-    await fetch(`${API}/subcontractors/${sub.id}`, { method: 'DELETE' });
+    await fetch(`${API}/subcontractors/${sub.id}`, { method: 'DELETE', headers: getH() });
     setSubs(prev => prev.filter(s => s.id !== sub.id));
     setConfirmDelete(null);
     showToast('Subcontractor deleted.');
@@ -276,11 +277,11 @@ export default function SubcontractorsPage() {
 
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-[17px] font-bold text-[#1A1D2E]">Subcontractors</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#4F7EF7] rounded-full">{subs.filter(s => s.status === 'ACTIVE').length} active</span>
+          <h1 className="text-[17px] font-bold text-[#1A1A2E]">Subcontractors</h1>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#E8834A] rounded-full">{subs.filter(s => s.status === 'ACTIVE').length} active</span>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search subs..." className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#4F7EF7] transition-all"/>
-        <button onClick={() => { setEditSub(null); setShowModal(true); }} className="h-[34px] px-4 bg-[#4F7EF7] text-white text-[13px] font-semibold rounded-[9px]">+ New Sub</button>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search subs..." className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#E8834A] transition-all"/>
+        <button onClick={() => { setEditSub(null); setShowModal(true); }} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px]">+ New Sub</button>
       </header>
 
       {/* Trade filters */}
@@ -288,7 +289,7 @@ export default function SubcontractorsPage() {
         {trades.map(t => (
           <button key={t} onClick={() => setTradeFilter(t)}
             className="text-[11px] font-bold px-3 py-1 rounded-full border transition-all"
-            style={tradeFilter === t ? { background: '#1A1D2E', color: 'white', borderColor: '#1A1D2E' } : { background: 'white', color: '#6B7280', borderColor: '#EAECF2' }}>
+            style={tradeFilter === t ? { background: '#1A1A2E', color: 'white', borderColor: '#1A1A2E' } : { background: 'white', color: '#6B7280', borderColor: '#EAECF2' }}>
             {t}
           </button>
         ))}
@@ -302,9 +303,9 @@ export default function SubcontractorsPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-5xl mb-4">🔧</div>
-            <p className="text-[14px] font-semibold text-[#1A1D2E] mb-2">{search || tradeFilter !== 'All' ? 'No subs found' : 'No subcontractors yet'}</p>
+            <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search || tradeFilter !== 'All' ? 'No subs found' : 'No subcontractors yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Add your trusted trade partners to assign them to projects</p>
-            <button onClick={() => setShowModal(true)} className="inline-flex px-6 py-2.5 bg-[#4F7EF7] text-white rounded-[9px] text-[14px] font-semibold">+ Add Subcontractor</button>
+            <button onClick={() => setShowModal(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ Add Subcontractor</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
@@ -322,7 +323,7 @@ export default function SubcontractorsPage() {
                   {/* Name + company */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[13.5px] font-bold text-[#1A1D2E]">{sub.firstName} {sub.lastName}</span>
+                      <span className="text-[13.5px] font-bold text-[#1A1A2E]">{sub.firstName} {sub.lastName}</span>
                       <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full" style={{ background: ts.bg, color: ts.color }}>{sub.trade}</span>
                       {sub.status === 'INACTIVE' && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F3F4F6] text-[#9CA3AF]">Inactive</span>}
                     </div>
@@ -358,7 +359,7 @@ export default function SubcontractorsPage() {
       {confirmDelete && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setConfirmDelete(null)}>
           <div className="bg-white border border-[#EAECF2] rounded-[16px] p-6 w-full max-w-sm shadow-xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[16px] font-bold text-[#1A1D2E] mb-2">Delete Subcontractor?</h3>
+            <h3 className="text-[16px] font-bold text-[#1A1A2E] mb-2">Delete Subcontractor?</h3>
             <p className="text-[13px] text-[#6B7280] mb-5">"{confirmDelete.firstName} {confirmDelete.lastName}" will be permanently deleted.</p>
             <div className="flex gap-2">
               <button onClick={() => setConfirmDelete(null)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] text-[#6B7280] text-[13px] font-semibold">Cancel</button>
