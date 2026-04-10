@@ -8,6 +8,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TasksModule } from './tasks/tasks.module';
     ProjectsModule,
     InvoicesModule,
     TasksModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

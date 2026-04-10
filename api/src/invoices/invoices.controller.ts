@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('invoices')
@@ -6,7 +6,10 @@ export class InvoicesController {
   @Get()
   async findAll() {
     try {
-      const invoices = await prisma.invoice.findMany({ orderBy: { createdAt: 'desc' } });
+      const invoices = await prisma.invoice.findMany({
+        where: { status: { not: 'ARCHIVED' } },
+        orderBy: { createdAt: 'desc' },
+      });
 
       const projectIds = [...new Set(invoices.map(i => i.projectId).filter(Boolean))] as string[];
       const clientIds = [...new Set(invoices.map(i => i.clientId).filter(Boolean))] as string[];
@@ -25,7 +28,7 @@ export class InvoicesController {
         subtotal: Number(inv.subtotal),
         amountPaid: Number(inv.amountPaid),
         amountDue: Number(inv.amountDue),
-        project: inv.projectId ? projectMap[inv.projectId] || null : null,
+        project: inv.projectId && inv.projectId !== 'DIRECT' ? projectMap[inv.projectId] || null : null,
         client: inv.clientId ? clientMap[inv.clientId] || null : null,
       }));
     } catch (e: any) {
@@ -39,7 +42,7 @@ export class InvoicesController {
       const invoice = await prisma.invoice.create({
         data: {
           invoiceNumber: 'PS-INV-' + Date.now(),
-          projectId: body.projectId,
+          projectId: body.projectId || 'DIRECT',
           clientId: body.clientId,
           type: body.type || 'deposit',
           status: 'DRAFT',
@@ -84,6 +87,26 @@ export class InvoicesController {
         amountPaid: Number(updated.amountPaid),
         amountDue: Number(updated.amountDue),
       };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Patch(':id/archive')
+  async archive(@Param('id') id: string) {
+    try {
+      const updated = await prisma.invoice.update({ where: { id }, data: { status: 'ARCHIVED' } });
+      return { ...updated, total: Number(updated.total), amountPaid: Number(updated.amountPaid), amountDue: Number(updated.amountDue) };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    try {
+      await prisma.invoice.delete({ where: { id } });
+      return { success: true };
     } catch (e: any) {
       return { error: e.message };
     }

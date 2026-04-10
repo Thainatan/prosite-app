@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ClientAutocomplete, { Client } from '../components/ClientAutocomplete';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
@@ -38,11 +38,34 @@ interface Invoice {
 }
 
 interface LineItem { id: string; description: string; amount: number; }
+interface CompanySettings { companyName: string; phone: string; email: string; address: string; city: string; state: string; zip: string; logoBase64?: string; brandColor: string; footerDisclaimer: string; }
 
 const EMPTY_LINE: () => LineItem = () => ({ id: Date.now().toString(), description: '', amount: 0 });
 
+function DotsMenu({ onArchive, onDelete }: { onArchive: () => void; onDelete: () => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  return (
+    <div ref={ref} style={{ position:'relative' }} onClick={e => e.stopPropagation()}>
+      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] transition-colors text-[18px] font-bold">⋯</button>
+      {open && (
+        <div className="absolute right-0 top-9 z-50 bg-white border border-[#EAECF2] rounded-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-36 overflow-hidden" onClick={e => e.stopPropagation()}>
+          <button onClick={() => { onArchive(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#F5A623] hover:bg-[#FFF7E9] border-b border-[#EAECF2]">Archive</button>
+          <button onClick={() => { onDelete(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#F0584C] hover:bg-[#FFF0EF]">Delete</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [settings, setSettings] = useState<CompanySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Invoice | null>(null);
   const [filter, setFilter] = useState<IStatus | 'all'>('all');
@@ -50,6 +73,8 @@ export default function InvoicesPage() {
   const [payAmount, setPayAmount] = useState('');
   const [payNotes, setPayNotes] = useState('');
   const [paying, setPaying] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; number: string } | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   // New Invoice form state
   const [showNew, setShowNew] = useState(false);
@@ -60,7 +85,29 @@ export default function InvoicesPage() {
   const [newSaving, setNewSaving] = useState(false);
   const [newErrors, setNewErrors] = useState<Record<string,string>>({});
 
-  useEffect(() => { loadInvoices(); }, []);
+  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${API}/invoices`).then(r => r.json()),
+      fetch(`${API}/settings`).then(r => r.json()).catch(() => null),
+    ]).then(([invData, settingsData]) => {
+      if (Array.isArray(invData)) {
+        setInvoices(invData.map(inv => ({
+          id: inv.id, number: inv.invoiceNumber, type: inv.type,
+          status: mapStatus(inv.status),
+          total: inv.total, paid: inv.amountPaid, due: inv.amountDue,
+          date: inv.createdAt, dueDate: inv.dueDate || inv.createdAt,
+          project: inv.project?.name || (inv.project === null ? 'Direct Invoice' : 'Unknown'),
+          jobNumber: inv.project?.jobNumber || '',
+          client: inv.client ? `${inv.client.firstName} ${inv.client.lastName}` : 'Unknown Client',
+          items: Array.isArray(inv.lineItems) ? inv.lineItems : [],
+        })));
+      }
+      if (settingsData && settingsData.companyName !== undefined) setSettings(settingsData);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
 
   const loadInvoices = () => {
     fetch(`${API}/invoices`)
@@ -78,9 +125,20 @@ export default function InvoicesPage() {
             items: Array.isArray(inv.lineItems) ? inv.lineItems : [],
           })));
         }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      });
+  };
+
+  const archiveInvoice = async (id: string) => {
+    await fetch(`${API}/invoices/${id}/archive`, { method: 'PATCH' });
+    setInvoices(prev => prev.filter(i => i.id !== id));
+    showToast('Invoice archived.');
+  };
+
+  const deleteInvoice = async (id: string) => {
+    await fetch(`${API}/invoices/${id}`, { method: 'DELETE' });
+    setInvoices(prev => prev.filter(i => i.id !== id));
+    setConfirmDelete(null);
+    showToast('Invoice deleted.');
   };
 
   const handlePay = async () => {
@@ -140,8 +198,12 @@ export default function InvoicesPage() {
 
   const inp = (err?: string) => 'w-full h-9 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1D2E] outline-none ' + (err ? 'border-[#F0584C]' : 'border-[#EAECF2]');
 
+  const brandColor = settings?.brandColor || '#4F7EF7';
+
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
+      {toast && <div className="fixed top-4 right-4 z-50 px-4 py-3 rounded-[12px] text-[13px] font-semibold bg-[#EAFAF3] text-[#059669] border border-[#A7F3D0] shadow">{toast}</div>}
+
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1D2E]">Invoices</h1>
@@ -207,6 +269,10 @@ export default function InvoicesPage() {
                     {inv.due > 0 ? <p className="text-[11px] font-medium text-[#F0584C]">{fmt(inv.due)} due</p> : <p className="text-[11px] text-[#34C78A] font-medium">Paid ✓</p>}
                   </div>
                   <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full w-16 text-center flex-shrink-0" style={{background:st.bg,color:st.color}}>{st.label}</span>
+                  <DotsMenu
+                    onArchive={() => archiveInvoice(inv.id)}
+                    onDelete={() => setConfirmDelete({ id: inv.id, number: inv.number })}
+                  />
                 </div>
               );
             })}
@@ -218,6 +284,16 @@ export default function InvoicesPage() {
       {selected && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setSelected(null)}>
           <div className="bg-white rounded-[16px] w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col shadow-[0_24px_80px_rgba(0,0,0,0.18)] border border-[#EAECF2]" onClick={e => e.stopPropagation()}>
+            {/* Company header */}
+            {settings?.companyName && (
+              <div className="px-5 pt-4 pb-3 border-b border-[#EAECF2] flex items-center gap-3" style={{ background: brandColor + '10' }}>
+                {settings.logoBase64 && <img src={settings.logoBase64} alt="logo" className="h-9 w-9 object-contain rounded-[8px]"/>}
+                <div>
+                  <p className="text-[13px] font-bold text-[#1A1D2E]">{settings.companyName}</p>
+                  <p className="text-[11px] text-[#6B7280]">{[settings.phone, settings.email].filter(Boolean).join(' · ')}</p>
+                </div>
+              </div>
+            )}
             <div className="p-5 border-b border-[#EAECF2] flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -268,9 +344,26 @@ export default function InvoicesPage() {
                   )}
                 </div>
               )}
+              {settings?.footerDisclaimer && (
+                <p className="text-[11px] text-[#9CA3AF] border-t border-[#EAECF2] pt-3">{settings.footerDisclaimer}</p>
+              )}
             </div>
             <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
               <button onClick={() => setSelected(null)} className="flex-1 h-9 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Delete */}
+      {confirmDelete && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setConfirmDelete(null)}>
+          <div className="bg-white border border-[#EAECF2] rounded-[16px] p-6 w-full max-w-sm shadow-xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[16px] font-bold text-[#1A1D2E] mb-2">Delete Invoice?</h3>
+            <p className="text-[13px] text-[#6B7280] mb-5">"{confirmDelete.number}" will be permanently deleted.</p>
+            <div className="flex gap-2">
+              <button onClick={() => setConfirmDelete(null)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] text-[#6B7280] text-[13px] font-semibold">Cancel</button>
+              <button onClick={() => deleteInvoice(confirmDelete.id)} className="flex-1 h-10 rounded-[9px] bg-[#F0584C] text-white text-[13px] font-bold">Delete</button>
             </div>
           </div>
         </div>

@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -93,11 +94,40 @@ model Estimate {
   title          String
   subtotal       Decimal  @db.Decimal(10, 2) @default(0)
   total          Decimal  @db.Decimal(10, 2) @default(0)
+  lineItems      Json?
   createdById    String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   @@map("estimates")
+}
+
+model CompanySettings {
+  id               String   @id @default(cuid())
+  companyName      String   @default("")
+  phone            String   @default("")
+  email            String   @default("")
+  address          String   @default("")
+  city             String   @default("")
+  state            String   @default("FL")
+  zip              String   @default("")
+  website          String   @default("")
+  logoBase64       String?
+  brandColor       String   @default("#4F7EF7")
+  headerLayout     String   @default("Classic")
+  showQty          Boolean  @default(true)
+  showUnitPrice    Boolean  @default(true)
+  showLineTotal    Boolean  @default(true)
+  footerDisclaimer String   @default("")
+  useEstimate      Boolean  @default(false)
+  emailNewQuote    Boolean  @default(true)
+  emailApproved    Boolean  @default(true)
+  emailPayment     Boolean  @default(true)
+  emailOverdue     Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("company_settings")
 }
 
 model ChangeOrder {

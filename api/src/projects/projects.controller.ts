@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('projects')
@@ -6,7 +6,10 @@ export class ProjectsController {
   @Get()
   async findAll() {
     try {
-      const projects = await prisma.project.findMany({ orderBy: { createdAt: 'desc' } });
+      const projects = await prisma.project.findMany({
+        where: { status: { not: 'ARCHIVED' } },
+        orderBy: { createdAt: 'desc' },
+      });
       const clientIds = [...new Set(projects.map(p => p.clientId).filter(Boolean))] as string[];
       const clients = clientIds.length
         ? await prisma.client.findMany({ where: { id: { in: clientIds } } })
@@ -40,6 +43,26 @@ export class ProjectsController {
         },
       });
       return { ...project, estimatedValue: project.estimatedValue ? Number(project.estimatedValue) : null };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Patch(':id/archive')
+  async archive(@Param('id') id: string) {
+    try {
+      const updated = await prisma.project.update({ where: { id }, data: { status: 'ARCHIVED' } });
+      return { ...updated, estimatedValue: updated.estimatedValue ? Number(updated.estimatedValue) : null };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    try {
+      await prisma.project.delete({ where: { id } });
+      return { success: true };
     } catch (e: any) {
       return { error: e.message };
     }

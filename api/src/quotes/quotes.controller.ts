@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('quotes')
@@ -6,7 +6,10 @@ export class QuotesController {
   @Get()
   async findAll() {
     try {
-      const estimates = await prisma.estimate.findMany({ orderBy: { createdAt: 'desc' } });
+      const estimates = await prisma.estimate.findMany({
+        where: { status: { not: 'ARCHIVED' } },
+        orderBy: { createdAt: 'desc' },
+      });
       const clientIds = [...new Set(estimates.map(e => e.clientId).filter(Boolean))] as string[];
       const clients = clientIds.length
         ? await prisma.client.findMany({ where: { id: { in: clientIds } } })
@@ -16,6 +19,7 @@ export class QuotesController {
         ...e,
         total: Number(e.total),
         subtotal: Number(e.subtotal),
+        lineItems: e.lineItems || [],
         client: e.clientId ? clientMap[e.clientId] || null : null,
       }));
     } catch (e: any) {
@@ -35,10 +39,11 @@ export class QuotesController {
           title: body.title || 'New Quote',
           subtotal: body.subtotal || 0,
           total: body.total || 0,
+          lineItems: body.items || [],
           createdById: body.createdById || 'system',
         },
       });
-      return { ...estimate, total: Number(estimate.total), subtotal: Number(estimate.subtotal) };
+      return { ...estimate, total: Number(estimate.total), subtotal: Number(estimate.subtotal), lineItems: estimate.lineItems || [] };
     } catch (e: any) {
       return { error: e.message };
     }
@@ -53,7 +58,6 @@ export class QuotesController {
 
       const total = Number(quote.total);
 
-      // Create project from quote
       const project = await prisma.project.create({
         data: {
           jobNumber: 'PS-' + Date.now(),
@@ -70,7 +74,6 @@ export class QuotesController {
         },
       });
 
-      // Create deposit invoice (30% of total)
       const depositAmount = Math.round(total * 0.3 * 100) / 100;
       const invoice = await prisma.invoice.create({
         data: {
@@ -88,7 +91,6 @@ export class QuotesController {
         },
       });
 
-      // Update quote status and link to project
       const updatedQuote = await prisma.estimate.update({
         where: { id },
         data: { status: 'APPROVED', projectId: project.id },
@@ -99,6 +101,50 @@ export class QuotesController {
         project: { ...project, estimatedValue: Number(project.estimatedValue) },
         invoice: { ...invoice, total: Number(invoice.total), subtotal: Number(invoice.subtotal), amountDue: Number(invoice.amountDue) },
       };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Patch(':id/archive')
+  async archive(@Param('id') id: string) {
+    try {
+      const updated = await prisma.estimate.update({ where: { id }, data: { status: 'ARCHIVED' } });
+      return { ...updated, total: Number(updated.total), subtotal: Number(updated.subtotal) };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Post(':id/duplicate')
+  async duplicate(@Param('id') id: string) {
+    try {
+      const q = await prisma.estimate.findUnique({ where: { id } });
+      if (!q) return { error: 'Not found' };
+      const copy = await prisma.estimate.create({
+        data: {
+          estimateNumber: 'PS-Q-' + Date.now(),
+          clientId: q.clientId,
+          serviceType: q.serviceType,
+          status: 'DRAFT',
+          title: q.title + ' (Copy)',
+          subtotal: q.subtotal,
+          total: q.total,
+          lineItems: (q.lineItems as any) || [],
+          createdById: q.createdById,
+        },
+      });
+      return { ...copy, total: Number(copy.total), subtotal: Number(copy.subtotal), lineItems: copy.lineItems || [] };
+    } catch (e: any) {
+      return { error: e.message };
+    }
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    try {
+      await prisma.estimate.delete({ where: { id } });
+      return { success: true };
     } catch (e: any) {
       return { error: e.message };
     }
