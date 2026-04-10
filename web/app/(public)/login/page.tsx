@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,11 +13,28 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    await new Promise(r => setTimeout(r, 800));
-    if (email === 'admin@prosite.com' && password === 'prosite123') {
-      window.location.href = '/dashboard';
-    } else {
-      setError('Invalid credentials. Use admin@prosite.com / prosite123');
+    try {
+      const res = await fetch(`${API}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+        setLoading(false);
+        return;
+      }
+      if (data.token) {
+        localStorage.setItem('prosite_token', data.token);
+        localStorage.setItem('prosite_user', JSON.stringify(data.user));
+        window.location.href = '/dashboard';
+      } else {
+        setError('Login failed. Please try again.');
+        setLoading(false);
+      }
+    } catch {
+      setError('Could not connect to server. Please try again.');
       setLoading(false);
     }
   };
@@ -76,7 +95,7 @@ export default function LoginPage() {
 
           <div style={{ marginTop:24, paddingTop:20, borderTop:'1px solid #1E2130', textAlign:'center' }}>
             <p style={{ fontSize:13, color:'#8892B0', margin:0 }}>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <a href="/register" style={{ color:'#4F7EF7', fontWeight:700, textDecoration:'none' }}>Start free trial</a>
             </p>
           </div>

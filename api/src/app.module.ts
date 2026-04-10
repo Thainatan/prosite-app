@@ -6,10 +6,12 @@ import { ClientsModule } from './clients/clients.module';
 import { QuotesModule } from './quotes/quotes.module';
 import { ProjectsModule } from './projects/projects.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
     ClientsModule,
     QuotesModule,
     ProjectsModule,
