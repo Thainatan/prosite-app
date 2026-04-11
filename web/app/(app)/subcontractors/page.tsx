@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Wrench, AlertTriangle, MoreHorizontal } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
+
 
 const TRADES = ['Electrical','Plumbing','HVAC','Framing','Drywall','Flooring','Painting','Roofing','Tile','Concrete','Landscaping','Windows','Cabinets','Other'];
 const TRADE_COLORS: Record<string, { bg: string; color: string }> = {
@@ -99,10 +99,9 @@ function SubModal({ initial, onClose, onSave }: {
     setSaving(true);
     try {
       const method = initial ? 'PATCH' : 'POST';
-      const url = initial ? `${API}/subcontractors/${initial.id}` : `${API}/subcontractors`;
-      const res = await fetch(url, {
+      const path = initial ? `/subcontractors/${initial.id}` : '/subcontractors';
+      const res = await apiFetch(path, {
         method,
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify(form),
       });
       const data = await res.json();
@@ -239,7 +238,7 @@ export default function SubcontractorsPage() {
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
 
   useEffect(() => {
-    fetch(`${API}/subcontractors`)
+    apiFetch('/subcontractors')
       .then(r => r.json())
       .then(data => { if (Array.isArray(data)) setSubs(data); setLoading(false); })
       .catch(() => setLoading(false));
@@ -257,7 +256,7 @@ export default function SubcontractorsPage() {
   };
 
   const handleDelete = async (sub: Sub) => {
-    await fetch(`${API}/subcontractors/${sub.id}`, { method: 'DELETE', headers: getH() });
+    await apiFetch(`/subcontractors/${sub.id}`, { method: 'DELETE' });
     setSubs(prev => prev.filter(s => s.id !== sub.id));
     setConfirmDelete(null);
     showToast('Subcontractor deleted.');

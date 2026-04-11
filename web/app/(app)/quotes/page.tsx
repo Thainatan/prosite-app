@@ -2,8 +2,8 @@
 import { MoreHorizontal } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
+
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -215,8 +215,8 @@ export default function QuotesPage() {
   const [confirmDelete, setConfirmDelete] = useState<Quote | null>(null);
 
   useEffect(() => {
-    fetch(`${API}/quotes`, { headers: getH() }).then(r => r.json()).then(data => { if (Array.isArray(data)) setQuotes(data); setLoading(false); }).catch(() => setLoading(false));
-    fetch(`${API}/settings`, { headers: getH() }).then(r => r.json()).then(data => { if (data && !data.error) setSettings(data); }).catch(() => {});
+    apiFetch('/quotes').then(r => r.json()).then(data => { if (Array.isArray(data)) setQuotes(data); setLoading(false); }).catch(() => setLoading(false));
+    apiFetch('/settings').then(r => r.json()).then(data => { if (data && !data.error) setSettings(data); }).catch(() => {});
   }, []);
 
   const showToast = (type: 'success' | 'error', msg: string) => {
@@ -229,7 +229,7 @@ export default function QuotesPage() {
     if (q.status === 'APPROVED') return;
     setApproving(q.id);
     try {
-      const res = await fetch(`${API}/quotes/${q.id}/approve`, { method: 'PATCH' });
+      const res = await apiFetch(`/quotes/${q.id}/approve`, { method: 'PATCH' });
       const data = await res.json();
       if (data.error) { showToast('error', data.error); }
       else { setQuotes(prev => prev.map(x => x.id === q.id ? { ...x, status: 'APPROVED' } : x)); showToast('success', `Quote approved! Project "${data.project.name}" created.`); }
@@ -239,7 +239,7 @@ export default function QuotesPage() {
 
   const duplicateQuote = async (q: Quote) => {
     try {
-      const res = await fetch(`${API}/quotes/${q.id}/duplicate`, { method: 'POST' });
+      const res = await apiFetch(`/quotes/${q.id}/duplicate`, { method: 'POST' });
       const data = await res.json();
       if (!data.error) { setQuotes(prev => [data, ...prev]); showToast('success', 'Quote duplicated.'); }
     } catch { showToast('error', 'Failed to duplicate.'); }
@@ -247,7 +247,7 @@ export default function QuotesPage() {
 
   const archiveQuote = async (q: Quote) => {
     try {
-      const res = await fetch(`${API}/quotes/${q.id}/archive`, { method: 'PATCH' });
+      const res = await apiFetch(`/quotes/${q.id}/archive`, { method: 'PATCH' });
       const data = await res.json();
       if (!data.error) { setQuotes(prev => prev.filter(x => x.id !== q.id)); showToast('success', 'Quote archived.'); }
     } catch { showToast('error', 'Failed to archive.'); }
@@ -255,7 +255,7 @@ export default function QuotesPage() {
 
   const deleteQuote = async (q: Quote) => {
     try {
-      await fetch(`${API}/quotes/${q.id}`, { method: 'DELETE', headers: getH() });
+      await apiFetch(`/quotes/${q.id}`, { method: 'DELETE' });
       setQuotes(prev => prev.filter(x => x.id !== q.id));
       showToast('success', 'Quote deleted.');
     } catch { showToast('error', 'Failed to delete.'); }

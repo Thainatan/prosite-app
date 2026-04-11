@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Users, X, CheckCircle } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
+
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const SOURCES = ['Referral','Google','Website','Social Media','Yard Sign','Repeat Client','Other'];
 const STATES = ['FL','GA','TX','CA','NY','NC','SC','AL','TN'];
@@ -27,9 +27,8 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
   const save = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/clients`, {
+      const res = await apiFetch('/clients', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify(form),
       });
       const newClient = await res.json();
@@ -144,7 +143,7 @@ export default function ClientsPage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch(`${API}/clients`)
+    apiFetch('/clients')
       .then(r => r.json())
       .then(data => { setClients(Array.isArray(data) ? data : []); setLoading(false); })
       .catch(() => setLoading(false));

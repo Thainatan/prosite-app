@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient({
@@ -8,9 +8,18 @@ const prisma = new PrismaClient({
 @Controller('clients')
 export class ClientsController {
   @Get()
-  async findAll() {
+  async findAll(@Query('search') search?: string) {
     try {
+      const where = search ? {
+        OR: [
+          { firstName: { contains: search, mode: 'insensitive' as const } },
+          { lastName: { contains: search, mode: 'insensitive' as const } },
+          { phone: { contains: search } },
+          { email: { contains: search, mode: 'insensitive' as const } },
+        ],
+      } : {};
       const clients = await prisma.client.findMany({
+        where,
         orderBy: { createdAt: 'desc' },
       });
       return clients;

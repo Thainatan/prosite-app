@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
+
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
 function StatCard({ label, value, sub, color, bg }: { label: string; value: string; sub?: string; color: string; bg: string }) {
@@ -71,10 +71,10 @@ export default function ReportsPage() {
     const yearStart  = new Date(now.getFullYear(), 0, 1);
 
     Promise.all([
-      fetch(`${API}/invoices`, { headers: getH() }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/quotes`, { headers: getH() }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/projects`, { headers: getH() }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/clients`, { headers: getH() }).then(r => r.json()).catch(() => []),
+      apiFetch('/invoices').then(r => r.json()).catch(() => []),
+      apiFetch('/quotes').then(r => r.json()).catch(() => []),
+      apiFetch('/projects').then(r => r.json()).catch(() => []),
+      apiFetch('/clients').then(r => r.json()).catch(() => []),
     ]).then(([invoices, quotes, projects, clients]) => {
       const invArr  = Array.isArray(invoices) ? invoices  : [];
       const qArr    = Array.isArray(quotes)   ? quotes    : [];

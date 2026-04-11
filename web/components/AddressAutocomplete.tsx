@@ -22,53 +22,94 @@ interface Props {
 declare global {
   interface Window {
     google?: any;
-    initGoogleMaps?: () => void;
   }
 }
 
-function parsePlace(place: any): AddressResult {
+// ─── Google Places ────────────────────────────────────────────────────────────
+function parseGooglePlace(place: any): AddressResult {
   const comp = (type: string) =>
     place.address_components?.find((c: any) => c.types.includes(type))?.long_name || '';
   const compShort = (type: string) =>
     place.address_components?.find((c: any) => c.types.includes(type))?.short_name || '';
-
-  const streetNumber = comp('street_number');
-  const route = comp('route');
-  const street = [streetNumber, route].filter(Boolean).join(' ');
+  const street = [comp('street_number'), comp('route')].filter(Boolean).join(' ');
   const city = comp('locality') || comp('sublocality') || comp('administrative_area_level_2');
-  const state = compShort('administrative_area_level_1');
-  const zip = comp('postal_code');
-  const fullAddress = place.formatted_address || '';
-
-  return { street, city, state, zip, fullAddress };
+  return {
+    street,
+    city,
+    state: compShort('administrative_area_level_1'),
+    zip: comp('postal_code'),
+    fullAddress: place.formatted_address || '',
+  };
 }
 
-export default function AddressAutocomplete({ value, onChange, onSelect, placeholder = 'Street address', className, style }: Props) {
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+// ─── Nominatim fallback ───────────────────────────────────────────────────────
+interface NominatimResult {
+  place_id: number;
+  display_name: string;
+  address: {
+    house_number?: string;
+    road?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    state?: string;
+    postcode?: string;
+  };
+}
+
+function parseNominatim(r: NominatimResult): AddressResult {
+  const a = r.address;
+  const street = [a.house_number, a.road].filter(Boolean).join(' ');
+  const city = a.city || a.town || a.village || '';
+  // Convert full state name to abbreviation (common US states)
+  const STATE_ABBR: Record<string, string> = {
+    'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+    'Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA',
+    'Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS',
+    'Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA',
+    'Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT',
+    'Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM',
+    'New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK',
+    'Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC',
+    'South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT',
+    'Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY',
+  };
+  const state = STATE_ABBR[a.state || ''] || a.state || '';
+  return { street, city, state, zip: a.postcode || '', fullAddress: r.display_name };
+}
+
+async function nominatimSearch(query: string): Promise<NominatimResult[]> {
+  const url = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=us&addressdetails=1&limit=5&q=${encodeURIComponent(query)}`;
+  const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+export default function AddressAutocomplete({
+  value, onChange, onSelect, placeholder = 'Street address', className, style,
+}: Props) {
+  const [suggestions, setSuggestions] = useState<{ label: string; sub: string; onPick: () => void }[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [mapsReady, setMapsReady] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const autocompleteRef = useRef<any>(null);
+  const placesServiceRef = useRef<any>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Check if Google Maps is loaded
   useEffect(() => {
-    if (window.google?.maps?.places) {
-      setMapsReady(true);
-      return;
-    }
-    const interval = setInterval(() => {
-      if (window.google?.maps?.places) {
-        setMapsReady(true);
-        clearInterval(interval);
-      }
-    }, 500);
+    const check = () => {
+      if (window.google?.maps?.places) { setMapsReady(true); return true; }
+      return false;
+    };
+    if (check()) return;
+    const interval = setInterval(() => { if (check()) clearInterval(interval); }, 500);
     return () => clearInterval(interval);
   }, []);
 
-  // Click outside
+  // Click outside to close
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
@@ -77,49 +118,83 @@ export default function AddressAutocomplete({ value, onChange, onSelect, placeho
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const search = useCallback((query: string) => {
-    if (!mapsReady || !window.google?.maps?.places || query.length < 3) {
-      setSuggestions([]); setOpen(false); return;
-    }
-    if (!autocompleteRef.current) {
-      autocompleteRef.current = new window.google.maps.places.AutocompleteService();
-    }
+  const search = useCallback(async (query: string) => {
+    if (query.length < 3) { setSuggestions([]); setOpen(false); return; }
     setLoading(true);
-    autocompleteRef.current.getPlacePredictions(
-      { input: query, componentRestrictions: { country: 'us' }, types: ['address'] },
-      (predictions: any[], status: string) => {
+
+    if (mapsReady && window.google?.maps?.places) {
+      // ── Google Places path ──────────────────────────────────────────────
+      if (!autocompleteRef.current) {
+        autocompleteRef.current = new window.google.maps.places.AutocompleteService();
+      }
+      autocompleteRef.current.getPlacePredictions(
+        { input: query, componentRestrictions: { country: 'us' }, types: ['address'] },
+        (predictions: any[], status: string) => {
+          setLoading(false);
+          if (status === 'OK' && predictions) {
+            setSuggestions(predictions.map(pred => ({
+              label: pred.structured_formatting?.main_text || pred.description,
+              sub: pred.structured_formatting?.secondary_text || '',
+              onPick: () => {
+                setOpen(false);
+                if (!window.google?.maps?.places) return;
+                if (!placesServiceRef.current) {
+                  placesServiceRef.current = new window.google.maps.places.PlacesService(document.createElement('div'));
+                }
+                placesServiceRef.current.getDetails(
+                  { placeId: pred.place_id, fields: ['address_components', 'formatted_address'] },
+                  (place: any, st: string) => {
+                    if (st === 'OK' && place) {
+                      const result = parseGooglePlace(place);
+                      onChange(result.street || result.fullAddress);
+                      onSelect?.(result);
+                    }
+                  }
+                );
+              },
+            })));
+            setOpen(true);
+          } else {
+            setSuggestions([]); setOpen(false);
+          }
+        }
+      );
+    } else {
+      // ── Nominatim fallback ──────────────────────────────────────────────
+      try {
+        const results = await nominatimSearch(query);
         setLoading(false);
-        if (status === 'OK' && predictions) {
-          setSuggestions(predictions);
+        if (results.length > 0) {
+          setSuggestions(results.map(r => {
+            const parsed = parseNominatim(r);
+            const mainText = [parsed.street, parsed.city].filter(Boolean).join(', ') || r.display_name.split(',')[0];
+            const subText = [parsed.city, parsed.state, parsed.zip].filter(Boolean).join(', ');
+            return {
+              label: mainText,
+              sub: subText,
+              onPick: () => {
+                setOpen(false);
+                onChange(parsed.street || mainText);
+                onSelect?.(parsed);
+              },
+            };
+          }));
           setOpen(true);
         } else {
           setSuggestions([]); setOpen(false);
         }
+      } catch {
+        setLoading(false);
+        setSuggestions([]); setOpen(false);
       }
-    );
-  }, [mapsReady]);
+    }
+  }, [mapsReady, onChange, onSelect]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value;
     onChange(v);
     clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => search(v), 300);
-  };
-
-  const handleSelect = (prediction: any) => {
-    setOpen(false);
-    if (!window.google?.maps?.places) return;
-    const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
-    placesService.getDetails(
-      { placeId: prediction.place_id, fields: ['address_components', 'formatted_address'] },
-      (place: any, status: string) => {
-        if (status === 'OK' && place) {
-          const result = parsePlace(place);
-          onChange(result.street || result.fullAddress);
-          onSelect?.(result);
-        }
-      }
-    );
+    debounceRef.current = setTimeout(() => search(v), mapsReady ? 300 : 500);
   };
 
   const inputStyle: React.CSSProperties = {
@@ -133,7 +208,6 @@ export default function AddressAutocomplete({ value, onChange, onSelect, placeho
     <div ref={containerRef} style={{ position: 'relative', width: '100%' }} className={className}>
       <div style={{ position: 'relative' }}>
         <input
-          ref={inputRef}
           type="text"
           value={value}
           onChange={handleChange}
@@ -150,7 +224,9 @@ export default function AddressAutocomplete({ value, onChange, onSelect, placeho
           }}
         />
         <div style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-          {loading ? <Loader2 size={14} color="#9CA3AF" className="animate-spin"/> : <MapPin size={14} color="#9CA3AF"/>}
+          {loading
+            ? <Loader2 size={14} color="#9CA3AF" className="animate-spin"/>
+            : <MapPin size={14} color="#9CA3AF"/>}
         </div>
       </div>
 
@@ -160,38 +236,33 @@ export default function AddressAutocomplete({ value, onChange, onSelect, placeho
           background: 'white', border: '1px solid #E8E4DF', borderRadius: 10,
           boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, overflow: 'hidden',
         }}>
-          {suggestions.map(pred => (
+          {!mapsReady && (
+            <div style={{ padding: '6px 14px', fontSize: 10, color: '#9CA3AF', background: '#FAF9F7', borderBottom: '1px solid #F0EDE9' }}>
+              Powered by OpenStreetMap · Add Google Maps key for enhanced results
+            </div>
+          )}
+          {suggestions.map((s, i) => (
             <button
-              key={pred.place_id}
+              key={i}
               type="button"
-              onMouseDown={() => handleSelect(pred)}
+              onMouseDown={() => s.onPick()}
               style={{
                 width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                 padding: '10px 14px', background: 'none', border: 'none',
                 cursor: 'pointer', textAlign: 'left',
-                borderBottom: '1px solid #F3F4F6',
+                borderBottom: i < suggestions.length - 1 ? '1px solid #F3F4F6' : 'none',
               }}
               onMouseEnter={e => (e.currentTarget.style.background = '#FAF9F7')}
               onMouseLeave={e => (e.currentTarget.style.background = 'none')}
             >
               <MapPin size={13} color="#E8834A" style={{ flexShrink: 0 }}/>
               <div>
-                <div style={{ fontSize: 13, color: '#1A1A2E', fontWeight: 500 }}>
-                  {pred.structured_formatting?.main_text}
-                </div>
-                <div style={{ fontSize: 11, color: '#9CA3AF' }}>
-                  {pred.structured_formatting?.secondary_text}
-                </div>
+                <div style={{ fontSize: 13, color: '#1A1A2E', fontWeight: 500 }}>{s.label}</div>
+                {s.sub && <div style={{ fontSize: 11, color: '#9CA3AF' }}>{s.sub}</div>}
               </div>
             </button>
           ))}
         </div>
-      )}
-
-      {!mapsReady && value.length > 0 && (
-        <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9CA3AF' }}>
-          Smart suggestions require Google Maps API key in Settings → Integrations
-        </p>
       )}
     </div>
   );

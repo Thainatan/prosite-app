@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, User, MapPin } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
 
 const TASK_TYPES = ['Site Visit', 'Meeting', 'Follow-up', 'Installation', 'Inspection', 'Other'] as const;
 type TaskType = typeof TASK_TYPES[number];
@@ -47,7 +46,7 @@ export default function SchedulePage() {
   today.setHours(0,0,0,0);
 
   useEffect(() => {
-    fetch(`${API}/tasks`)
+    apiFetch('/tasks')
       .then(r => r.json())
       .then(data => { if (Array.isArray(data)) setTasks(data); setLoading(false); })
       .catch(() => setLoading(false));

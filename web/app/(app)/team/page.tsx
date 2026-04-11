@@ -2,7 +2,7 @@
 import { MoreHorizontal } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+import { apiFetch } from '../../../lib/api';
 
 const ROLES = [
   { value: 'ADMIN',           label: 'Admin',           desc: 'Full access to all features and settings',                color: '#4F7EF7', bg: '#EEF3FF' },
@@ -45,10 +45,8 @@ function InviteModal({ onClose, onSave }: { onClose: () => void; onSave: (m: Mem
     if (!form.firstName || !form.lastName || !form.email) { setError('First name, last name, and email are required.'); return; }
     setLoading(true); setError('');
     try {
-      const token = localStorage.getItem('prosite_token');
-      const res = await fetch(`${API}/team`, {
+      const res = await apiFetch('/team', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(form),
       });
       const data = await res.json();
@@ -162,10 +160,8 @@ function EditRoleModal({ member, onClose, onSave }: { member: Member; onClose: (
   const save = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('prosite_token');
-      const res = await fetch(`${API}/team/${member.id}`, {
+      const res = await apiFetch(`/team/${member.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ role }),
       });
       const data = await res.json();
@@ -211,23 +207,20 @@ export default function TeamPage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('prosite_token');
-    fetch(`${API}/team`, { headers: { Authorization: `Bearer ${token || ''}` } })
+    apiFetch('/team')
       .then(r => r.json())
       .then(data => { setMembers(Array.isArray(data) ? data : []); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
   const deactivate = async (id: string) => {
-    const token = localStorage.getItem('prosite_token');
-    await fetch(`${API}/team/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token || ''}` }, body: JSON.stringify({ status: 'INACTIVE' }) });
+    await apiFetch(`/team/${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'INACTIVE' }) });
     setMembers(p => p.map(m => m.id === id ? { ...m, status: 'INACTIVE' } : m));
   };
 
   const remove = async (id: string) => {
     if (!confirm('Remove this team member?')) return;
-    const token = localStorage.getItem('prosite_token');
-    await fetch(`${API}/team/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token || ''}` } });
+    await apiFetch(`/team/${id}`, { method: 'DELETE' });
     setMembers(p => p.filter(m => m.id !== id));
   };
 

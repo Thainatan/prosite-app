@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
 
 export interface Client {
   id: string; firstName: string; lastName: string;
@@ -32,7 +31,7 @@ export default function ClientAutocomplete({
 
   useEffect(() => {
     if (!allClients) {
-      fetch(`${API}/clients`)
+      apiFetch('/clients')
         .then(r => r.json())
         .then(data => { if (Array.isArray(data)) { setClients(data); onClientsUpdate?.(data); } })
         .catch(() => {});
@@ -72,9 +71,8 @@ export default function ClientAutocomplete({
     if (!validateForm()) return;
     setSaving(true);
     try {
-      const res = await fetch(`${API}/clients`, {
+      const res = await apiFetch('/clients', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
       const newClient = await res.json();

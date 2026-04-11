@@ -1,10 +1,8 @@
 'use client';
 import { MoreHorizontal } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import ClientAutocomplete, { Client } from '../components/ClientAutocomplete';
-
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import ClientAutocomplete from '../../../components/ClientAutocomplete';
+import { apiFetch } from '../../../lib/api';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -91,8 +89,8 @@ export default function InvoicesPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/invoices`, { headers: getH() }).then(r => r.json()),
-      fetch(`${API}/settings`, { headers: getH() }).then(r => r.json()).catch(() => null),
+      apiFetch('/invoices').then(r => r.json()),
+      apiFetch('/settings').then(r => r.json()).catch(() => null),
     ]).then(([invData, settingsData]) => {
       if (Array.isArray(invData)) {
         setInvoices(invData.map(inv => ({
@@ -112,7 +110,7 @@ export default function InvoicesPage() {
   }, []);
 
   const loadInvoices = () => {
-    fetch(`${API}/invoices`)
+    apiFetch('/invoices')
       .then(r => r.json())
       .then((data: DbInvoice[]) => {
         if (Array.isArray(data)) {
@@ -131,13 +129,13 @@ export default function InvoicesPage() {
   };
 
   const archiveInvoice = async (id: string) => {
-    await fetch(`${API}/invoices/${id}/archive`, { method: 'PATCH' });
+    await apiFetch(`/invoices/${id}/archive`, { method: 'PATCH' });
     setInvoices(prev => prev.filter(i => i.id !== id));
     showToast('Invoice archived.');
   };
 
   const deleteInvoice = async (id: string) => {
-    await fetch(`${API}/invoices/${id}`, { method: 'DELETE', headers: getH() });
+    await apiFetch(`/invoices/${id}`, { method: 'DELETE' });
     setInvoices(prev => prev.filter(i => i.id !== id));
     setConfirmDelete(null);
     showToast('Invoice deleted.');
@@ -147,9 +145,8 @@ export default function InvoicesPage() {
     if (!selected || !payAmount) return;
     setPaying(true);
     try {
-      const res = await fetch(`${API}/invoices/${selected.id}/pay`, {
+      const res = await apiFetch(`/invoices/${selected.id}/pay`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({ amount: Number(payAmount), notes: payNotes }),
       });
       const data = await res.json();
@@ -171,9 +168,8 @@ export default function InvoicesPage() {
     if (!validateNew()) return;
     setNewSaving(true);
     try {
-      const res = await fetch(`${API}/invoices`, {
+      const res = await apiFetch('/invoices', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           clientId: newClientId,
           projectId: 'DIRECT',
@@ -386,9 +382,8 @@ export default function InvoicesPage() {
                 <label className="block text-[11.5px] font-semibold text-[#6B7280] mb-1.5">Client *</label>
                 <ClientAutocomplete
                   value={newClientId}
-                  onSelect={(id, c) => { setNewClientId(id); setNewClientName(c ? `${c.firstName} ${c.lastName}` : ''); setNewErrors(p => ({...p, client:''})); }}
+                  onChange={(id, name) => { setNewClientId(id); setNewClientName(name); setNewErrors(p => ({...p, client:''})); }}
                   placeholder="Search or add client..."
-                  theme="light"
                 />
                 {newErrors.client && <p className="text-[11px] text-[#F0584C] mt-1">{newErrors.client}</p>}
               </div>

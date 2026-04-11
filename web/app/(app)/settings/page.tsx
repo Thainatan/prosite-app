@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
 
 interface Settings {
   id?: string;
@@ -47,7 +46,7 @@ export default function SettingsPage() {
   const logoRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch(`${API}/settings`)
+    apiFetch('/settings')
       .then(r => r.json())
       .then(data => { if (data && !data.error) setS(prev => ({ ...prev, ...data })); })
       .catch(() => {});
@@ -58,9 +57,8 @@ export default function SettingsPage() {
   const save = async () => {
     setSaving(true);
     try {
-      await fetch(`${API}/settings`, {
+      await apiFetch('/settings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify(s),
       });
       setSaved(true);
