@@ -1,5 +1,5 @@
 'use client';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Printer } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 import { apiFetch } from '../../../lib/api';
@@ -97,7 +97,7 @@ function PdfPreview({ quote, settings, onClose }: { quote: Quote; settings: Comp
             <span className="text-[11px] font-mono text-[#A0A8B8]">{quote.estimateNumber}</span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={handlePrint} className="h-9 px-4 rounded-[9px] text-[13px] font-semibold text-white" style={{ background: brand }}>🖨 Print / PDF</button>
+            <button onClick={handlePrint} className="h-9 px-4 rounded-[9px] text-[13px] font-semibold text-white flex items-center gap-2" style={{ background: brand }}><Printer size={14}/>Print / PDF</button>
             <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#F3F4F6] flex items-center justify-center text-[#9CA3AF]">✕</button>
           </div>
         </div>

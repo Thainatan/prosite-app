@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { HardHat, Wrench, MoreHorizontal } from 'lucide-react';
+import { HardHat, Wrench, MoreHorizontal, Calendar } from 'lucide-react';
 
 import { apiFetch } from '../../../lib/api';
 
@@ -475,7 +475,7 @@ export default function ProjectsPage() {
                   <div className="flex items-center justify-between text-[11.5px] mb-3">
                     <div className="flex gap-3 text-[#A0A8B8]">
                       <span className="flex items-center gap-1"><Wrench size={11}/> {p.service}</span>
-                      {p.start && <span>📅 {fmtD(p.start)}</span>}
+                      {p.start && <span className="flex items-center gap-1"><Calendar size={11}/> {fmtD(p.start)}</span>}
                     </div>
                     <span className="font-bold text-[#1A1A2E]">{p.value ? fmt(p.value) : '—'}</span>
                   </div>

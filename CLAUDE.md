@@ -29,10 +29,7 @@
 - Border: #E8E4DF
 
 ## Known Issues
-- Clients not showing in dropdowns
-- Tasks not appearing on calendar
-- Address autocomplete needs Nominatim fallback
-- Auth token not persisting
+- None (all V1 issues resolved)
 
 ## Rules
 - ALWAYS use apiFetch() never raw fetch()
