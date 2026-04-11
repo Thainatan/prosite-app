@@ -1,12 +1,16 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Req } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('change-orders')
 export class ChangeOrdersController {
   @Get()
-  async findAll() {
+  async findAll(@Req() req: any) {
     try {
-      const orders = await prisma.changeOrder.findMany({ orderBy: { createdAt: 'desc' } });
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = {};
+      if (tenantId) where.tenantId = tenantId;
+
+      const orders = await prisma.changeOrder.findMany({ where, orderBy: { createdAt: 'desc' } });
       const projectIds = [...new Set(orders.map(o => o.projectId).filter(Boolean))] as string[];
       const projects = projectIds.length
         ? await prisma.project.findMany({ where: { id: { in: projectIds } } })
@@ -23,10 +27,12 @@ export class ChangeOrdersController {
   }
 
   @Post()
-  async create(@Body() body: any) {
+  async create(@Req() req: any, @Body() body: any) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
       const order = await prisma.changeOrder.create({
         data: {
+          tenantId,
           changeOrderNumber: 'CO-' + Date.now(),
           projectId: body.projectId || '',
           clientId: body.clientId || 'system',
@@ -36,7 +42,7 @@ export class ChangeOrdersController {
           totalCost: body.amount || 0,
           laborCost: 0,
           materialCost: 0,
-          createdById: 'system',
+          createdById: req.user?.id || 'system',
         },
       });
       return { ...order, totalCost: Number(order.totalCost) };
@@ -44,8 +50,14 @@ export class ChangeOrdersController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: any) {
+  async update(@Req() req: any, @Param('id') id: string, @Body() body: any) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const co = await prisma.changeOrder.findFirst({ where });
+      if (!co) return { error: 'Not found' };
+
       const data: any = {};
       if (body.status !== undefined) data.status = body.status;
       if (body.title !== undefined) data.title = body.title;
@@ -57,8 +69,13 @@ export class ChangeOrdersController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const co = await prisma.changeOrder.findFirst({ where });
+      if (!co) return { error: 'Not found' };
       await prisma.changeOrder.delete({ where: { id } });
       return { success: true };
     } catch (e: any) { return { error: e.message }; }

@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Req } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('invoices')
 export class InvoicesController {
   @Get()
-  async findAll() {
+  async findAll(@Req() req: any) {
     try {
-      const invoices = await prisma.invoice.findMany({
-        where: { status: { not: 'ARCHIVED' } },
-        orderBy: { createdAt: 'desc' },
-      });
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { status: { not: 'ARCHIVED' } };
+      if (tenantId) where.tenantId = tenantId;
+
+      const invoices = await prisma.invoice.findMany({ where, orderBy: { createdAt: 'desc' } });
 
       const projectIds = [...new Set(invoices.map(i => i.projectId).filter(Boolean))] as string[];
       const clientIds = [...new Set(invoices.map(i => i.clientId).filter(Boolean))] as string[];
@@ -37,10 +38,12 @@ export class InvoicesController {
   }
 
   @Post()
-  async create(@Body() body: any) {
+  async create(@Req() req: any, @Body() body: any) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
       const invoice = await prisma.invoice.create({
         data: {
+          tenantId,
           invoiceNumber: 'PS-INV-' + Date.now(),
           projectId: body.projectId || 'DIRECT',
           clientId: body.clientId,
@@ -51,7 +54,7 @@ export class InvoicesController {
           total: body.total || 0,
           amountPaid: 0,
           amountDue: body.total || 0,
-          createdById: body.createdById || 'system',
+          createdById: req.user?.id || 'system',
         },
       });
       return {
@@ -67,9 +70,12 @@ export class InvoicesController {
   }
 
   @Patch(':id/pay')
-  async recordPayment(@Param('id') id: string, @Body() body: { amount: number; notes?: string }) {
+  async recordPayment(@Req() req: any, @Param('id') id: string, @Body() body: { amount: number; notes?: string }) {
     try {
-      const invoice = await prisma.invoice.findUnique({ where: { id } });
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const invoice = await prisma.invoice.findFirst({ where });
       if (!invoice) return { error: 'Invoice not found' };
 
       const newPaid = Number(invoice.amountPaid) + Number(body.amount);
@@ -93,8 +99,13 @@ export class InvoicesController {
   }
 
   @Patch(':id/archive')
-  async archive(@Param('id') id: string) {
+  async archive(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const inv = await prisma.invoice.findFirst({ where });
+      if (!inv) return { error: 'Not found' };
       const updated = await prisma.invoice.update({ where: { id }, data: { status: 'ARCHIVED' } });
       return { ...updated, total: Number(updated.total), amountPaid: Number(updated.amountPaid), amountDue: Number(updated.amountDue) };
     } catch (e: any) {
@@ -103,8 +114,13 @@ export class InvoicesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const inv = await prisma.invoice.findFirst({ where });
+      if (!inv) return { error: 'Not found' };
       await prisma.invoice.delete({ where: { id } });
       return { success: true };
     } catch (e: any) {

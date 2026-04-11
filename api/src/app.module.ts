@@ -14,6 +14,7 @@ import { SettingsModule } from './settings/settings.module';
 import { SubcontractorsModule } from './subcontractors/subcontractors.module';
 import { ChangeOrdersModule } from './change-orders/change-orders.module';
 import { TeamModule } from './team/team.module';
+import { BillingModule } from './billing/billing.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
@@ -30,6 +31,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     SubcontractorsModule,
     ChangeOrdersModule,
     TeamModule,
+    BillingModule,
   ],
   controllers: [AppController],
   providers: [

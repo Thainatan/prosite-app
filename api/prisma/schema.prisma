@@ -8,23 +8,40 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Tenant {
+  id                   String    @id @default(cuid())
+  name                 String
+  slug                 String    @unique
+  plan                 String    @default("TRIAL")
+  planExpiresAt        DateTime?
+  stripeCustomerId     String    @default("")
+  stripeSubscriptionId String    @default("")
+  status               String    @default("ACTIVE")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  @@map("tenants")
+}
+
 model User {
-  id               String    @id @default(cuid())
-  email            String    @unique
-  passwordHash     String
-  firstName        String
-  lastName         String
-  phone            String?
-  role             String    @default("INSTALLER")
-  isActive         Boolean   @default(true)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  phone        String?
+  role         String   @default("INSTALLER")
+  tenantId     String   @default("")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@map("users")
 }
 
 model Client {
   id        String   @id @default(cuid())
+  tenantId  String   @default("")
   firstName String
   lastName  String
   email     String?
@@ -43,6 +60,7 @@ model Client {
 
 model Lead {
   id              String   @id @default(cuid())
+  tenantId        String   @default("")
   firstName       String
   lastName        String
   email           String?
@@ -63,6 +81,7 @@ model Lead {
 
 model Project {
   id                  String    @id @default(cuid())
+  tenantId            String    @default("")
   jobNumber           String    @unique
   name                String
   clientId            String
@@ -86,6 +105,7 @@ model Project {
 
 model Estimate {
   id             String   @id @default(cuid())
+  tenantId       String   @default("")
   estimateNumber String   @unique
   clientId       String?
   projectId      String?
@@ -104,6 +124,7 @@ model Estimate {
 
 model CompanySettings {
   id               String   @id @default(cuid())
+  tenantId         String   @default("")
   companyName      String   @default("")
   phone            String   @default("")
   email            String   @default("")
@@ -132,6 +153,7 @@ model CompanySettings {
 
 model ChangeOrder {
   id                String   @id @default(cuid())
+  tenantId          String   @default("")
   changeOrderNumber String   @unique
   projectId         String
   clientId          String
@@ -150,6 +172,7 @@ model ChangeOrder {
 
 model Subcontractor {
   id            String    @id @default(cuid())
+  tenantId      String    @default("")
   firstName     String
   lastName      String
   company       String    @default("")
@@ -173,6 +196,7 @@ model Subcontractor {
 
 model ProjectSubcontractor {
   id              String    @id @default(cuid())
+  tenantId        String    @default("")
   projectId       String
   subcontractorId String
   trade           String
@@ -187,6 +211,7 @@ model ProjectSubcontractor {
 
 model Invoice {
   id            String   @id @default(cuid())
+  tenantId      String   @default("")
   invoiceNumber String   @unique
   projectId     String
   clientId      String
@@ -207,6 +232,7 @@ model Invoice {
 
 model ScheduleEvent {
   id             String   @id @default(cuid())
+  tenantId       String   @default("")
   title          String
   type           String
   projectId      String?
@@ -224,6 +250,7 @@ model ScheduleEvent {
 
 model Photo {
   id           String   @id @default(cuid())
+  tenantId     String   @default("")
   type         String
   url          String
   caption      String?
@@ -236,6 +263,7 @@ model Photo {
 
 model Note {
   id        String   @id @default(cuid())
+  tenantId  String   @default("")
   content   String
   projectId String?
   authorId  String
@@ -247,6 +275,7 @@ model Note {
 
 model TeamMember {
   id        String    @id @default(cuid())
+  tenantId  String    @default("")
   firstName String
   lastName  String
   email     String    @unique

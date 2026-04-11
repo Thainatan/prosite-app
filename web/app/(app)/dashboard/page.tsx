@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Users, ClipboardList, HardHat, DollarSign, Home, Clock, MapPin } from 'lucide-react';
 import { apiFetch } from '../../../lib/api';
+import OnboardingChecklist from '../../../components/OnboardingChecklist';
+import TrialBanner from '../../../components/TrialBanner';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -101,6 +103,8 @@ export default function DashboardPage() {
 
   return (
     <div className="animate-fadeInUp" style={{ minHeight: '100vh', background: '#F8F6F3', padding: 24 }}>
+      <TrialBanner/>
+      <OnboardingChecklist/>
       {/* Welcome header with subtle pattern */}
       <div style={{
         background: 'linear-gradient(135deg, #1C2B3A 0%, #2D4A6B 100%)',

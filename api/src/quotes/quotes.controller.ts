@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, HttpException, HttpStatus, Req } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('quotes')
 export class QuotesController {
   @Get()
-  async findAll() {
+  async findAll(@Req() req: any) {
     try {
-      const estimates = await prisma.estimate.findMany({
-        where: { status: { not: 'ARCHIVED' } },
-        orderBy: { createdAt: 'desc' },
-      });
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { status: { not: 'ARCHIVED' } };
+      if (tenantId) where.tenantId = tenantId;
+
+      const estimates = await prisma.estimate.findMany({ where, orderBy: { createdAt: 'desc' } });
       const clientIds = [...new Set(estimates.map(e => e.clientId).filter(Boolean))] as string[];
       const clients = clientIds.length
         ? await prisma.client.findMany({ where: { id: { in: clientIds } } })
@@ -28,10 +29,12 @@ export class QuotesController {
   }
 
   @Post()
-  async create(@Body() body: any) {
+  async create(@Req() req: any, @Body() body: any) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
       const estimate = await prisma.estimate.create({
         data: {
+          tenantId,
           estimateNumber: 'PS-Q-' + Date.now(),
           clientId: body.clientId || null,
           serviceType: body.serviceType || 'OTHER',
@@ -40,7 +43,7 @@ export class QuotesController {
           subtotal: body.subtotal || 0,
           total: body.total || 0,
           lineItems: body.items || [],
-          createdById: body.createdById || 'system',
+          createdById: req.user?.id || 'system',
         },
       });
       return { ...estimate, total: Number(estimate.total), subtotal: Number(estimate.subtotal), lineItems: estimate.lineItems || [] };
@@ -50,8 +53,12 @@ export class QuotesController {
   }
 
   @Patch(':id/approve')
-  async approve(@Param('id') id: string) {
-    const quote = await prisma.estimate.findUnique({ where: { id } });
+  async approve(@Req() req: any, @Param('id') id: string) {
+    const tenantId: string = req.user?.tenantId ?? '';
+    const where: any = { id };
+    if (tenantId) where.tenantId = tenantId;
+
+    const quote = await prisma.estimate.findFirst({ where });
     if (!quote) return { error: 'Quote not found' };
     if (quote.status === 'APPROVED') return { error: 'Quote already approved' };
 
@@ -67,6 +74,7 @@ export class QuotesController {
 
       const project = await prisma.project.create({
         data: {
+          tenantId,
           jobNumber: 'PS-' + Date.now(),
           name: quote.title,
           clientId: quote.clientId!,
@@ -84,6 +92,7 @@ export class QuotesController {
       const depositAmount = Math.round(total * 0.3 * 100) / 100;
       const invoice = await prisma.invoice.create({
         data: {
+          tenantId,
           invoiceNumber: 'PS-INV-' + Date.now(),
           projectId: project.id,
           clientId: quote.clientId!,
@@ -94,7 +103,7 @@ export class QuotesController {
           total: depositAmount,
           amountPaid: 0,
           amountDue: depositAmount,
-          createdById: quote.createdById,
+          createdById: req.user?.id || 'system',
         },
       });
 
@@ -114,8 +123,13 @@ export class QuotesController {
   }
 
   @Patch(':id/archive')
-  async archive(@Param('id') id: string) {
+  async archive(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const quote = await prisma.estimate.findFirst({ where });
+      if (!quote) return { error: 'Not found' };
       const updated = await prisma.estimate.update({ where: { id }, data: { status: 'ARCHIVED' } });
       return { ...updated, total: Number(updated.total), subtotal: Number(updated.subtotal) };
     } catch (e: any) {
@@ -124,12 +138,14 @@ export class QuotesController {
   }
 
   @Post(':id/duplicate')
-  async duplicate(@Param('id') id: string) {
+  async duplicate(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
       const q = await prisma.estimate.findUnique({ where: { id } });
       if (!q) return { error: 'Not found' };
       const copy = await prisma.estimate.create({
         data: {
+          tenantId,
           estimateNumber: 'PS-Q-' + Date.now(),
           clientId: q.clientId,
           serviceType: q.serviceType,
@@ -138,7 +154,7 @@ export class QuotesController {
           subtotal: q.subtotal,
           total: q.total,
           lineItems: (q.lineItems as any) || [],
-          createdById: q.createdById,
+          createdById: req.user?.id || 'system',
         },
       });
       return { ...copy, total: Number(copy.total), subtotal: Number(copy.subtotal), lineItems: copy.lineItems || [] };
@@ -148,8 +164,13 @@ export class QuotesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const quote = await prisma.estimate.findFirst({ where });
+      if (!quote) return { error: 'Not found' };
       await prisma.estimate.delete({ where: { id } });
       return { success: true };
     } catch (e: any) {

@@ -1,23 +1,25 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Req } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('subcontractors')
 export class SubcontractorsController {
   @Get()
-  async findAll() {
+  async findAll(@Req() req: any) {
     try {
-      return await prisma.subcontractor.findMany({
-        where: { status: { not: 'DELETED' } },
-        orderBy: { createdAt: 'desc' },
-      });
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { status: { not: 'DELETED' } };
+      if (tenantId) where.tenantId = tenantId;
+      return await prisma.subcontractor.findMany({ where, orderBy: { createdAt: 'desc' } });
     } catch (e: any) { return { error: e.message }; }
   }
 
   @Post()
-  async create(@Body() body: any) {
+  async create(@Req() req: any, @Body() body: any) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
       return await prisma.subcontractor.create({
         data: {
+          tenantId,
           firstName: body.firstName,
           lastName: body.lastName,
           company: body.company || '',
@@ -39,8 +41,14 @@ export class SubcontractorsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: any) {
+  async update(@Req() req: any, @Param('id') id: string, @Body() body: any) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const sub = await prisma.subcontractor.findFirst({ where });
+      if (!sub) return { error: 'Not found' };
+
       const data: any = {};
       if (body.firstName !== undefined) data.firstName = body.firstName;
       if (body.lastName !== undefined) data.lastName = body.lastName;
@@ -62,8 +70,13 @@ export class SubcontractorsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Req() req: any, @Param('id') id: string) {
     try {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = { id };
+      if (tenantId) where.tenantId = tenantId;
+      const sub = await prisma.subcontractor.findFirst({ where });
+      if (!sub) return { error: 'Not found' };
       await prisma.subcontractor.delete({ where: { id } });
       return { success: true };
     } catch (e: any) { return { error: e.message }; }

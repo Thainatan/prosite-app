@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req } from '@nestjs/common';
 import { prisma } from '../prisma';
 
 @Controller('settings')
 export class SettingsController {
   @Get()
-  async get() {
+  async get(@Req() req: any) {
     try {
-      const s = await prisma.companySettings.findFirst();
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = tenantId ? { tenantId } : {};
+      const s = await prisma.companySettings.findFirst({ where });
       return s || {};
     } catch (e: any) {
       return { error: e.message };
@@ -14,10 +16,13 @@ export class SettingsController {
   }
 
   @Post()
-  async upsert(@Body() body: any) {
+  async upsert(@Req() req: any, @Body() body: any) {
     try {
-      const existing = await prisma.companySettings.findFirst();
-      const data = {
+      const tenantId: string = req.user?.tenantId ?? '';
+      const where: any = tenantId ? { tenantId } : {};
+      const existing = await prisma.companySettings.findFirst({ where });
+      const data: any = {
+        tenantId,
         companyName:      body.companyName      ?? '',
         phone:            body.phone            ?? '',
         email:            body.email            ?? '',
