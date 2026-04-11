@@ -1,4 +1,5 @@
 'use client';
+import { MoreHorizontal } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import ClientAutocomplete, { Client } from '../components/ClientAutocomplete';
 
@@ -15,7 +16,7 @@ const IS: Record<IStatus, { label: string; bg: string; color: string }> = {
   paid:    { label: 'Paid',    bg: '#EAFAF3', color: '#34C78A' },
   overdue: { label: 'Overdue', bg: '#FFF0EF', color: '#F0584C' },
 };
-const TYPE_ICON: Record<string, string> = { deposit: '🏁', progress: '🔨', final: '✅' };
+const TYPE_ICON: Record<string, string> = { deposit: 'deposit', progress: 'progress', final: 'final' };
 
 function mapStatus(s: string): IStatus {
   return ({ DRAFT:'draft', SENT:'sent', PARTIAL:'partial', PAID:'paid', OVERDUE:'overdue' } as Record<string,IStatus>)[s] || 'draft';
@@ -53,7 +54,7 @@ function DotsMenu({ onArchive, onDelete }: { onArchive: () => void; onDelete: ()
   }, []);
   return (
     <div ref={ref} style={{ position:'relative' }} onClick={e => e.stopPropagation()}>
-      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] transition-colors text-[18px] font-bold">⋯</button>
+      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] transition-colors text-[18px] font-bold"><MoreHorizontal size={16}/></button>
       {open && (
         <div className="absolute right-0 top-9 z-50 bg-white border border-[#EAECF2] rounded-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-36 overflow-hidden" onClick={e => e.stopPropagation()}>
           <button onClick={() => { onArchive(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#F5A623] hover:bg-[#FFF7E9] border-b border-[#EAECF2]">Archive</button>

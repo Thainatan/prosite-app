@@ -1,11 +1,10 @@
 'use client';
 import { useState } from 'react';
-import ClientAutocomplete from '../../components/ClientAutocomplete';
+import ClientAutocomplete from '../../../../components/ClientAutocomplete';
+import { apiFetch } from '../../../../lib/api';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
-const TYPE_ICON: Record<string, string> = { deposit: '🏁', progress: '🔨', final: '✅' };
+const TYPE_ICON: Record<string, string> = { deposit: 'Deposit', progress: 'Progress', final: 'Final' };
 
 interface LineItem { id: string; description: string; amount: number; }
 const EMPTY_LINE: () => LineItem = () => ({ id: Date.now().toString(), description: '', amount: 0 });
@@ -33,9 +32,8 @@ export default function NewInvoicePage() {
     if (!validate()) return;
     setSaving(true);
     try {
-      const res = await fetch(`${API}/invoices`, {
+      const res = await apiFetch('/invoices', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           clientId,
           projectId: 'DIRECT',
@@ -71,9 +69,8 @@ export default function NewInvoicePage() {
           <h2 className="text-[14px] font-bold text-[#1A1A2E] mb-4">Client</h2>
           <ClientAutocomplete
             value={clientId}
-            onSelect={(id) => { setClientId(id); setErrors(e => ({ ...e, client: '' })); }}
+            onChange={(id) => { setClientId(id); setErrors(e => ({ ...e, client: '' })); }}
             placeholder="Search or add client..."
-            theme="light"
           />
           {errors.client && <p className="text-[11px] text-[#F0584C] mt-1.5">{errors.client}</p>}
         </div>

@@ -3,9 +3,20 @@ import './globals.css';
 import { usePathname } from 'next/navigation';
 import SidebarWrapper from './(app)/SidebarWrapper';
 
+const GMAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {GMAPS_KEY && (
+          <script
+            src={`https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&libraries=places`}
+            async
+            defer
+          />
+        )}
+      </head>
       <body style={{ margin: 0, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: '#F8F6F3' }}>
         <LayoutContent>{children}</LayoutContent>
       </body>

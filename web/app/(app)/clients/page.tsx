@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { Users, X, CheckCircle } from 'lucide-react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
@@ -157,7 +158,7 @@ export default function ClientsPage() {
     <div className="min-h-screen bg-[#F8F6F3]">
       <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-[17px] font-bold text-white">Clients</h1>
+          <h1 className="text-[17px] font-bold text-[#1A1A2E]">Clients</h1>
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{clients.length} total</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
@@ -170,8 +171,8 @@ export default function ClientsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-5xl mb-4">👥</div>
-            <p className="text-[14px] font-semibold text-white mb-2">{search ? 'No clients found' : 'No clients yet'}</p>
+            <div className="w-16 h-16 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><Users size={32} color="#E8834A" strokeWidth={1.5}/></div>
+            <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No clients found' : 'No clients yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Click New Client to get started</p>
             <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Client</button>
           </div>
@@ -183,7 +184,7 @@ export default function ClientsPage() {
                   <span className="text-[13px] font-bold text-[#E8834A]">{c.firstName[0]}{c.lastName[0]}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-bold text-white">{c.firstName} {c.lastName}</p>
+                  <p className="text-[14px] font-bold text-[#1A1A2E]">{c.firstName} {c.lastName}</p>
                   <p className="text-[12px] text-[#6B7280]">{c.phone}</p>
                 </div>
                 <div className="text-right flex-shrink-0">

@@ -1,4 +1,5 @@
 'use client';
+import { MoreHorizontal } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
@@ -132,7 +133,7 @@ function DotsMenu({ onEdit, onDeactivate, onRemove }: { onEdit: () => void; onDe
   const [open, setOpen] = useState(false);
   return (
     <div style={{ position: 'relative' }}>
-      <button onClick={() => setOpen(o => !o)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', borderRadius: 6, color: '#9CA3AF', fontSize: 18, lineHeight: 1 }}>⋯</button>
+      <button onClick={() => setOpen(o => !o)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', borderRadius: 6, color: '#9CA3AF', fontSize: 18, lineHeight: 1 }}><MoreHorizontal size={16}/></button>
       {open && (
         <>
           <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 10 }}/>

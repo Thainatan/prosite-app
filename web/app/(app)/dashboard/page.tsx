@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { Users, ClipboardList, HardHat, DollarSign, Home, Clock, MapPin } from 'lucide-react';
+import { apiFetch } from '../../../lib/api';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -55,15 +57,12 @@ export default function DashboardPage() {
     const today = new Date();
     today.setHours(0,0,0,0);
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const token = localStorage.getItem('prosite_token') || '';
-    const h = { Authorization: `Bearer ${token}` };
-
     Promise.all([
-      fetch(`${API}/clients`, { headers: h }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/quotes`, { headers: h }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/projects`, { headers: h }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/invoices`, { headers: h }).then(r => r.json()).catch(() => []),
-      fetch(`${API}/tasks`, { headers: h }).then(r => r.json()).catch(() => []),
+      apiFetch('/clients').then(r => r.json()).catch(() => []),
+      apiFetch('/quotes').then(r => r.json()).catch(() => []),
+      apiFetch('/projects').then(r => r.json()).catch(() => []),
+      apiFetch('/invoices').then(r => r.json()).catch(() => []),
+      apiFetch('/tasks').then(r => r.json()).catch(() => []),
     ]).then(([clients, quotes, projects, invoices, tasks]) => {
       const clientsArr  = Array.isArray(clients)  ? clients  : [];
       const quotesArr   = Array.isArray(quotes)   ? quotes   : [];
@@ -94,10 +93,10 @@ export default function DashboardPage() {
   }, []);
 
   const stats = data ? [
-    { label: 'New Leads',       value: String(data.newLeads),       icon: '👥', color: '#4F7EF7', bg: '#EEF3FF' },
-    { label: 'Open Quotes',     value: String(data.openQuotes),     icon: '📋', color: '#E8834A', bg: '#FEF3EC' },
-    { label: 'Active Projects', value: String(data.activeProjects), icon: '🏗️', color: '#2ECC71', bg: '#EAFAF3' },
-    { label: 'Unpaid Balance',  value: fmt(data.unpaidBalance),     icon: '💰', color: '#E74C3C', bg: '#FFF0EF' },
+    { label: 'New Leads',       value: String(data.newLeads),       Icon: Users,         color: '#4F7EF7', bg: '#EEF3FF' },
+    { label: 'Open Quotes',     value: String(data.openQuotes),     Icon: ClipboardList, color: '#E8834A', bg: '#FEF3EC' },
+    { label: 'Active Projects', value: String(data.activeProjects), Icon: HardHat,       color: '#2ECC71', bg: '#EAFAF3' },
+    { label: 'Unpaid Balance',  value: fmt(data.unpaidBalance),     Icon: DollarSign,    color: '#E74C3C', bg: '#FFF0EF' },
   ] : [];
 
   return (
@@ -112,7 +111,9 @@ export default function DashboardPage() {
           <rect width="100%" height="100%" fill="url(#g)"/>
         </svg>
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ fontSize: 36 }}>🏠</div>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(232,131,74,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Home size={24} color="#E8834A" strokeWidth={2}/>
+          </div>
           <div>
             <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: 'white' }}>
               {getGreeting()}{userName ? `, ${userName}` : ''}!
@@ -128,10 +129,10 @@ export default function DashboardPage() {
       <div className="stagger-children" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
         {loading ? (
           [1,2,3,4].map(i => <div key={i} style={{ background: '#F3F4F6', borderRadius: 14, padding: '20px 18px', height: 90 }} className="animate-pulse"/>)
-        ) : stats.map(({ label, value, icon, color, bg }) => (
+        ) : stats.map(({ label, value, Icon, color, bg }) => (
           <div key={label} className="animate-fadeInUp card-hover" style={{ background: bg, borderRadius: 14, padding: '18px 20px', border: `1px solid ${color}22` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-              <span style={{ fontSize: 18 }}>{icon}</span>
+              <Icon size={16} color={color} strokeWidth={2.5}/>
               <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
             </div>
             <p style={{ margin: 0, fontSize: 30, fontWeight: 800, color }}>{value}</p>

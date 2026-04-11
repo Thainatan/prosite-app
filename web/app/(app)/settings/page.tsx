@@ -86,7 +86,7 @@ export default function SettingsPage() {
     { id: 'company',       label: 'Company',       icon: '🏢' },
     { id: 'documents',     label: 'Documents',     icon: '📄' },
     { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'account',       label: 'Account',       icon: '👤' },
+    { id: 'account',       label: 'Account',       icon: 'account' },
   ];
 
   return (

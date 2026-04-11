@@ -1,3 +1,10 @@
+import { Target, ClipboardList, HardHat, RefreshCw, DollarSign, Smartphone, Users, Check } from 'lucide-react';
+
+const FEATURE_ICONS: Record<string, React.FC<{size:number;color:string;strokeWidth:number}>> = {
+  '🎯': Target, '📋': ClipboardList, '🏗️': HardHat,
+  '↺': RefreshCw, '💰': DollarSign, '📱': Smartphone,
+};
+
 export default function HomePage() {
   return (
     <div style={{fontFamily:'sans-serif',margin:0,padding:0,background:'#fff'}}>
@@ -55,13 +62,18 @@ export default function HomePage() {
             {icon:'↺',t:'Change Orders',d:'Document scope changes instantly. Get client signature digitally before starting extra work.'},
             {icon:'💰',t:'Invoicing',d:'Deposit, progress, and final invoices. Track payments manually. Know who owes what.'},
             {icon:'📱',t:'Mobile App',d:'Your field crew uploads photos and fills forms from the job site. No more paper.'},
-          ].map(({icon,t,d})=>(
-            <div key={t} style={{background:'#F7F8FC',borderRadius:16,padding:'28px 24px',border:'1px solid #EAECF2'}}>
-              <div style={{fontSize:32,marginBottom:14}}>{icon}</div>
-              <h3 style={{fontSize:17,fontWeight:700,color:'#1C2B3A',marginBottom:8}}>{t}</h3>
-              <p style={{fontSize:14,color:'#6B7280',lineHeight:1.6,margin:0}}>{d}</p>
-            </div>
-          ))}
+          ].map(({icon,t,d})=>{
+            const IconComp = FEATURE_ICONS[icon] || ClipboardList;
+            return (
+              <div key={t} style={{background:'#F8F6F3',borderRadius:16,padding:'28px 24px',border:'1px solid #E8E4DF'}}>
+                <div style={{width:48,height:48,borderRadius:12,background:'#FEF3EC',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:16}}>
+                  <IconComp size={24} color="#E8834A" strokeWidth={1.8}/>
+                </div>
+                <h3 style={{fontSize:17,fontWeight:700,color:'#1C2B3A',marginBottom:8}}>{t}</h3>
+                <p style={{fontSize:14,color:'#6B7280',lineHeight:1.6,margin:0}}>{d}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -83,7 +95,7 @@ export default function HomePage() {
               <p style={{fontSize:13,color:featured?'#9BA3C4':'#6B7280',marginBottom:16}}>{desc}</p>
               <div style={{marginBottom:24}}><span style={{fontSize:40,fontWeight:800,color:featured?'white':'#1C2B3A'}}>{price}</span><span style={{fontSize:14,color:featured?'#9BA3C4':'#6B7280'}}>/month</span></div>
               <ul style={{listStyle:'none',padding:0,margin:'0 0 28px',display:'flex',flexDirection:'column',gap:10}}>
-                {features.map(f=><li key={f} style={{display:'flex',alignItems:'center',gap:8,fontSize:14,color:featured?'#E5E7EB':'#374151'}}><span style={{color:featured?'#34C78A':'#E8834A',fontWeight:700}}>✓</span>{f}</li>)}
+                {features.map(f=><li key={f} style={{display:'flex',alignItems:'center',gap:8,fontSize:14,color:featured?'#E5E7EB':'#374151'}}><Check size={14} color={featured?'#34C78A':'#E8834A'} strokeWidth={2.5}/>{f}</li>)}
               </ul>
               <a href="/register" style={{display:'block',textAlign:'center',padding:'12px',background:featured?'#E8834A':'#F7F8FC',color:featured?'white':'#1C2B3A',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none',border:featured?'none':'1px solid #EAECF2'}}>Start Free Trial</a>
             </div>
@@ -95,7 +107,9 @@ export default function HomePage() {
       {/* PARTNER */}
       <section style={{padding:'60px 40px',background:'#fff',borderTop:'1px solid #EAECF2'}}>
         <div style={{maxWidth:600,margin:'0 auto',textAlign:'center',background:'#F7F8FC',borderRadius:20,padding:'40px',border:'1px solid #EAECF2'}}>
-          <div style={{fontSize:36,marginBottom:14}}>🤝</div>
+          <div style={{width:56,height:56,borderRadius:14,background:'#FEF3EC',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
+            <Users size={28} color="#E8834A" strokeWidth={1.8}/>
+          </div>
           <h3 style={{fontSize:22,fontWeight:800,color:'#1C2B3A',marginBottom:10}}>Partner Program</h3>
           <p style={{fontSize:15,color:'#6B7280',lineHeight:1.6,marginBottom:20}}>Are you a supplier, trade association, or industry partner? Apply for a free partner code and give your network access to ProSite.</p>
           <a href="/partner" style={{display:'inline-block',padding:'12px 28px',background:'#1C2B3A',color:'white',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none'}}>Apply for Partner Code →</a>

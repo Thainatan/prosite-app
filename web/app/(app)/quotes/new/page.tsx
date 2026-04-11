@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { FileText, Plus, Trash2, ChevronLeft, Send, Save, UserPlus, X } from 'lucide-react';
-import ClientAutocomplete from '../../components/ClientAutocomplete';
+import ClientAutocomplete from '../../../../components/ClientAutocomplete';
+import { apiFetch } from '../../../../lib/api';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 
 interface LineItem {
@@ -82,7 +81,7 @@ export default function NewQuotePage() {
   const [pickerForItem, setPickerForItem] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${API}/subcontractors`)
+    apiFetch('/subcontractors')
       .then(r => r.json())
       .then(data => { if (Array.isArray(data)) setSubs(data); })
       .catch(() => {});
@@ -102,9 +101,8 @@ export default function NewQuotePage() {
   const handleSave = async (action: 'draft' | 'send') => {
     setLoading(true);
     try {
-      const res = await fetch(`${API}/quotes`, {
+      const res = await apiFetch('/quotes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           clientId: clientId || null,
           serviceType: service || 'OTHER',
@@ -176,9 +174,8 @@ export default function NewQuotePage() {
               <label className={lbl}>Client</label>
               <ClientAutocomplete
                 value={clientId}
-                onSelect={(id) => setClientId(id)}
+                onChange={(id) => setClientId(id)}
                 placeholder="Search or add client..."
-                theme="dark"
               />
             </div>
             <div>

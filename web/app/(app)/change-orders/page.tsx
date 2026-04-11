@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { ClipboardList } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
+
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -36,8 +37,8 @@ export default function ChangeOrdersPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/change-orders`, { headers: getH() }).then(r => r.json()),
-      fetch(`${API}/projects`, { headers: getH() }).then(r => r.json()),
+      apiFetch('/change-orders').then(r => r.json()),
+      apiFetch('/projects').then(r => r.json()),
     ]).then(([co, proj]) => {
       if (Array.isArray(co)) setOrders(co);
       if (Array.isArray(proj)) setProjects(proj);
@@ -58,14 +59,13 @@ export default function ChangeOrdersPage() {
     if (!validate()) return;
     setSaving(true);
     try {
-      const res = await fetch(`${API}/change-orders`, {
+      const res = await apiFetch('/change-orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({ ...form, amount: Number(form.amount) }),
       });
       const data = await res.json();
       if (data.error) { alert('Error: ' + data.error); return; }
-      const updated = await fetch(`${API}/change-orders`, { headers: getH() }).then(r => r.json());
+      const updated = await apiFetch('/change-orders').then(r => r.json());
       if (Array.isArray(updated)) setOrders(updated);
       setShowNew(false);
       setForm({ projectId: '', title: '', description: '', amount: '', status: 'PENDING' });
@@ -74,8 +74,8 @@ export default function ChangeOrdersPage() {
   };
 
   const handleStatusChange = async (id: string, status: string) => {
-    const res = await fetch(`${API}/change-orders/${id}`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json', ...getH() },
+    const res = await apiFetch(`/change-orders/${id}`, {
+      method: 'PATCH',
       body: JSON.stringify({ status }),
     });
     const data = await res.json();
@@ -87,7 +87,7 @@ export default function ChangeOrdersPage() {
   };
 
   const handleDelete = async (id: string) => {
-    await fetch(`${API}/change-orders/${id}`, { method: 'DELETE', headers: getH() });
+    await apiFetch(`/change-orders/${id}`, { method: 'DELETE' });
     setOrders(prev => prev.filter(o => o.id !== id));
     setSelected(null);
     showToast('Change order deleted.');
@@ -128,7 +128,7 @@ export default function ChangeOrdersPage() {
           <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="bg-white rounded-[14px] border border-[#EAECF2] h-20 animate-pulse"/>)}</div>
         ) : orders.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-5xl mb-4">📋</div>
+            <div className="w-16 h-16 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><ClipboardList size={32} color="#E8834A" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">No change orders yet</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Track scope changes and additional costs for your projects</p>
             <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Change Order</button>

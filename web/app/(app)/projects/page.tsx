@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { HardHat, Wrench, MoreHorizontal } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { apiFetch } from '../../../lib/api';
+
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
@@ -61,7 +62,7 @@ function DotsMenu({ onArchive, onDelete }: { onArchive: () => void; onDelete: ()
   }, []);
   return (
     <div ref={ref} style={{ position:'relative' }} onClick={e => e.stopPropagation()}>
-      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] text-[18px] font-bold">⋯</button>
+      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] text-[18px] font-bold"><MoreHorizontal size={16}/></button>
       {open && (
         <div className="absolute right-0 top-9 z-50 bg-white border border-[#EAECF2] rounded-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-36 overflow-hidden" onClick={e => e.stopPropagation()}>
           <button onClick={() => { onArchive(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#F5A623] hover:bg-[#FFF7E9] border-b border-[#EAECF2]">Archive</button>
@@ -90,9 +91,8 @@ function QuickAssignModal({ project, allSubs, onAssigned, onClose }: {
   const handleAssign = async (sub: SubOption) => {
     setSaving(true);
     try {
-      const res = await fetch(`${API}/projects/${project.id}/subcontractors`, {
+      const res = await apiFetch(`/projects/${project.id}/subcontractors`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({ subcontractorId: sub.id, trade: sub.trade, scope }),
       });
       const data = await res.json();
@@ -174,7 +174,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
 
   useEffect(() => {
     if (tab === 'subs' && !subsLoaded) {
-      fetch(`${API}/projects/${p.id}/subcontractors`).then(r => r.json()).then(data => {
+      apiFetch(`/projects/${p.id}/subcontractors`).then(r => r.json()).then(data => {
         if (Array.isArray(data)) setAssignments(data);
         setSubsLoaded(true);
       });
@@ -190,8 +190,8 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
   const handleAssign = async (sub: SubOption) => {
     setAssigning(true);
     try {
-      const res = await fetch(`${API}/projects/${p.id}/subcontractors`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', ...getH() },
+      const res = await apiFetch(`/projects/${p.id}/subcontractors`, {
+        method: 'POST',
         body: JSON.stringify({ subcontractorId: sub.id, trade: sub.trade, scope }),
       });
       const data = await res.json();
@@ -205,14 +205,14 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
   };
 
   const handleRemove = async (aId: string) => {
-    await fetch(`${API}/projects/${p.id}/subcontractors/${aId}`, { method: 'DELETE', headers: getH() });
+    await apiFetch(`/projects/${p.id}/subcontractors/${aId}`, { method: 'DELETE' });
     setAssignments(prev => prev.filter(a => a.id !== aId));
     onSubRemoved(p.id, aId);
   };
 
   const handleStatusChange = async (aId: string, status: string) => {
-    const res = await fetch(`${API}/projects/${p.id}/subcontractors/${aId}`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json', ...getH() },
+    const res = await apiFetch(`/projects/${p.id}/subcontractors/${aId}`, {
+      method: 'PATCH',
       body: JSON.stringify({ status }),
     });
     const data = await res.json();
@@ -349,8 +349,8 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/projects`).then(r => r.json()),
-      fetch(`${API}/subcontractors`).then(r => r.json()).catch(() => []),
+      apiFetch('/projects').then(r => r.json()),
+      apiFetch('/subcontractors').then(r => r.json()).catch(() => []),
     ]).then(([data, subs]) => {
       if (Array.isArray(data)) {
         const mapped = data.map((p: DbProject) => ({
@@ -368,7 +368,7 @@ export default function ProjectsPage() {
         const ids = mapped.map((p: Project) => p.id);
         Promise.allSettled(
           ids.map((id: string) =>
-            fetch(`${API}/projects/${id}/subcontractors`).then(r => r.json())
+            apiFetch(`/projects/${id}/subcontractors`).then(r => r.json())
           )
         ).then(results => {
           const map: Record<string, Assignment[]> = {};
@@ -388,13 +388,13 @@ export default function ProjectsPage() {
   }, []);
 
   const archiveProject = async (id: string) => {
-    await fetch(`${API}/projects/${id}/archive`, { method: 'PATCH' });
+    await apiFetch(`/projects/${id}/archive`, { method: 'PATCH' });
     setProjects(prev => prev.filter(p => p.id !== id));
     showToast('Project archived.');
   };
 
   const deleteProject = async (id: string) => {
-    await fetch(`${API}/projects/${id}`, { method: 'DELETE', headers: getH() });
+    await apiFetch(`/projects/${id}`, { method: 'DELETE' });
     setProjects(prev => prev.filter(p => p.id !== id));
     setConfirmDelete(null);
     showToast('Project deleted.');
@@ -432,7 +432,7 @@ export default function ProjectsPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
-          <div className="text-5xl mb-4">🏗️</div>
+          <div className="w-16 h-16 bg-[#EAFAF3] rounded-full flex items-center justify-center mx-auto mb-4"><HardHat size={32} color="#2ECC71" strokeWidth={1.5}/></div>
           <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No projects found' : 'No projects yet'}</p>
           <p className="text-[12px] text-[#6B7280] mb-4">Approve a quote to create your first project</p>
           <a href="/quotes" className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold no-underline" style={{ textDecoration:'none' }}>Go to Quotes</a>
@@ -474,7 +474,7 @@ export default function ProjectsPage() {
                   {/* Row 2: service + value */}
                   <div className="flex items-center justify-between text-[11.5px] mb-3">
                     <div className="flex gap-3 text-[#A0A8B8]">
-                      <span>🔧 {p.service}</span>
+                      <span className="flex items-center gap-1"><Wrench size={11}/> {p.service}</span>
                       {p.start && <span>📅 {fmtD(p.start)}</span>}
                     </div>
                     <span className="font-bold text-[#1A1A2E]">{p.value ? fmt(p.value) : '—'}</span>

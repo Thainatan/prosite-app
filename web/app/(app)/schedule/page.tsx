@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { Clock, User, MapPin } from 'lucide-react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
@@ -238,9 +239,9 @@ export default function SchedulePage() {
                     <p className="text-[13px] font-bold text-[#1A1A2E] mt-0.5">{t.title}</p>
                   </div>
                   <div className="px-3 py-2 space-y-1">
-                    <p className="text-[11.5px] text-[#6B7280]">🕐 {fmtTime(t.startDateTime)} – {fmtTime(t.endDateTime)}</p>
-                    {clientDisplay && <p className="text-[11.5px] text-[#6B7280]">👤 {clientDisplay}</p>}
-                    {t.address && <p className="text-[11.5px] text-[#6B7280]">📍 {t.address}</p>}
+                    <p className="text-[11.5px] text-[#6B7280] flex items-center gap-1.5"><Clock size={11}/> {fmtTime(t.startDateTime)} – {fmtTime(t.endDateTime)}</p>
+                    {clientDisplay && <p className="text-[11.5px] text-[#6B7280] flex items-center gap-1.5"><User size={11}/> {clientDisplay}</p>}
+                    {t.address && <p className="text-[11.5px] text-[#6B7280] flex items-center gap-1.5"><MapPin size={11}/> {t.address}</p>}
                     {t.notes && <p className="text-[11.5px] text-[#A0A8B8] italic">{t.notes}</p>}
                   </div>
                 </div>

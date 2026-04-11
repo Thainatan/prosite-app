@@ -1,9 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
-import ClientAutocomplete, { Client } from '../components/ClientAutocomplete';
-
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
+import { ClipboardList } from 'lucide-react';
+import ClientAutocomplete from '../../../components/ClientAutocomplete';
+import { apiFetch } from '../../../lib/api';
 
 const TASK_TYPES = ['Site Visit', 'Meeting', 'Follow-up', 'Installation', 'Inspection', 'Other'] as const;
 type TaskType = typeof TASK_TYPES[number];
@@ -17,12 +16,13 @@ const TYPE_STYLE: Record<TaskType, { bg: string; color: string; dot: string }> =
   'Other':        { bg: '#F3F4F6', color: '#6B7280', dot: '#6B7280' },
 };
 
+interface ClientRef { id: string; firstName: string; lastName: string; }
 interface Task {
   id: string; title: string; type: string;
   address: string; notes: string;
   startDateTime: string; endDateTime: string;
   clientId: string | null; clientName: string;
-  client: Client | null;
+  client: ClientRef | null;
 }
 
 const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
@@ -42,7 +42,7 @@ export default function TasksPage() {
   useEffect(() => { loadTasks(); }, []);
 
   const loadTasks = () => {
-    fetch(`${API}/tasks`)
+    apiFetch('/tasks')
       .then(r => r.json())
       .then(data => { if (Array.isArray(data)) setTasks(data); setLoading(false); })
       .catch(() => setLoading(false));
@@ -64,9 +64,8 @@ export default function TasksPage() {
     try {
       const startDateTime = new Date(`${form.date}T${form.startTime}`).toISOString();
       const endDateTime = new Date(`${form.date}T${form.endTime}`).toISOString();
-      const res = await fetch(`${API}/tasks`, {
+      const res = await apiFetch('/tasks', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...getH() },
         body: JSON.stringify({
           title: form.title,
           type: form.type,
@@ -114,7 +113,7 @@ export default function TasksPage() {
           <div className="text-center py-12"><p className="text-[#6B7280]">Loading tasks...</p></div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-14 h-14 bg-[#EEF3FF] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📋</div>
+            <div className="w-14 h-14 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><ClipboardList size={28} color="#E8834A" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{filter !== 'all' ? `No ${filter} tasks` : 'No tasks yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Click + New Task to schedule your first task</p>
             <button onClick={() => setShowForm(true)} className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Task</button>
@@ -181,7 +180,7 @@ export default function TasksPage() {
 
               <div>
                 <label style={lbl}>Client</label>
-                <ClientAutocomplete value={form.clientId} onSelect={(id, c) => setForm(p => ({ ...p, clientId: id, clientName: c ? `${c.firstName} ${c.lastName}` : '', address: p.address || (c?.address || '') }))} placeholder="Search or add client..." theme="light"/>
+                <ClientAutocomplete value={form.clientId} onChange={(id, name) => setForm(p => ({ ...p, clientId: id, clientName: name }))} placeholder="Search or add client..."/>
               </div>
 
               <div>

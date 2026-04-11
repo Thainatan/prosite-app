@@ -1,4 +1,5 @@
 'use client';
+import { MoreHorizontal } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
@@ -37,7 +38,7 @@ function DotsMenu({ onView, onDuplicate, onArchive, onDelete }: { onView: () => 
   }, []);
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#9CA3AF] hover:bg-[#E8E4DF] transition-colors text-[18px] font-bold">⋯</button>
+      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#9CA3AF] hover:bg-[#E8E4DF] transition-colors text-[18px] font-bold"><MoreHorizontal size={16}/></button>
       {open && (
         <div className="absolute right-0 top-9 z-50 bg-white border border-[#E8E4DF] rounded-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.4)] w-40 overflow-hidden" onClick={e => e.stopPropagation()}>
           {[
@@ -105,7 +106,7 @@ function PdfPreview({ quote, settings, onClose }: { quote: Quote; settings: Comp
         <div className="flex-1 overflow-y-auto p-6 bg-[#F3F4F6]">
           {!settings?.companyName && (
             <div className="bg-[#FFF7E9] border border-[#F5A623] rounded-[10px] px-4 py-3 mb-4 text-[12.5px] text-[#92400E]">
-              ⚠ Company info not configured. <a href="/settings" className="font-bold underline">Go to Settings →</a>
+              Company info not configured. <a href="/settings" className="font-bold underline">Go to Settings →</a>
             </div>
           )}
           <div id="pdf-print-area" className="bg-white rounded-[12px] shadow-sm p-8" style={{ minHeight: 600 }}>

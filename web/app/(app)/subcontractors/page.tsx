@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { Wrench, AlertTriangle, MoreHorizontal } from 'lucide-react';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const getH = () => ({ Authorization: 'Bearer ' + (typeof window !== 'undefined' ? localStorage.getItem('prosite_token') || '' : '') });
@@ -58,7 +59,7 @@ function DotsMenu({ onEdit, onDelete }: { onEdit: () => void; onDelete: () => vo
   }, []);
   return (
     <div ref={ref} style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
-      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] text-[18px] font-bold">⋯</button>
+      <button onClick={e => { e.stopPropagation(); setOpen(o => !o); }} className="w-8 h-8 rounded-full flex items-center justify-center text-[#A0A8B8] hover:bg-[#F3F4F6] text-[18px] font-bold"><MoreHorizontal size={16}/></button>
       {open && (
         <div className="absolute right-0 top-9 z-50 bg-white border border-[#EAECF2] rounded-[10px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] w-32 overflow-hidden">
           <button onClick={() => { onEdit(); setOpen(false); }} className="w-full text-left px-4 py-2.5 text-[13px] font-medium text-[#1A1A2E] hover:bg-[#F7F8FC] border-b border-[#EAECF2]">Edit</button>
@@ -302,7 +303,7 @@ export default function SubcontractorsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-5xl mb-4">🔧</div>
+            <div className="w-16 h-16 bg-[#F3F4F6] rounded-full flex items-center justify-center mx-auto mb-4"><Wrench size={32} color="#6B7280" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search || tradeFilter !== 'All' ? 'No subs found' : 'No subcontractors yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Add your trusted trade partners to assign them to projects</p>
             <button onClick={() => setShowModal(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ Add Subcontractor</button>
@@ -329,7 +330,7 @@ export default function SubcontractorsPage() {
                     </div>
                     <p className="text-[12px] text-[#6B7280]">
                       {sub.company && `${sub.company} · `}{sub.phone}
-                      {insExpired && <span className="ml-2 text-[#F0584C] font-semibold">⚠ Ins. Expired</span>}
+                      {insExpired && <span className="ml-2 text-[#F0584C] font-semibold flex items-center gap-1"><AlertTriangle size={12}/> Ins. Expired</span>}
                     </p>
                   </div>
 
