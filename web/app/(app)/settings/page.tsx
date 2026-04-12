@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { Building2, FileText, Bell, User } from 'lucide-react';
 
 import { apiFetch } from '../../../lib/api';
 
@@ -25,6 +26,10 @@ const DEFAULT: Settings = {
 
 type Tab = 'company' | 'documents' | 'notifications' | 'account';
 
+const TAB_ICONS: Record<Tab, React.FC<{ size: number; color: string }>> = {
+  company: Building2, documents: FileText, notifications: Bell, account: User,
+};
+
 function Toggle({ on, onToggle, label }: { on: boolean; onToggle: () => void; label: string }) {
   return (
     <div className="flex items-center justify-between py-3 border-b border-[#EAECF2] last:border-0">
@@ -39,6 +44,10 @@ function Toggle({ on, onToggle, label }: { on: boolean; onToggle: () => void; la
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>('company');
   const [s, setS] = useState<Settings>({ ...DEFAULT });
+  const [profileName, setProfileName] = useState('');
+  const [profileEmail, setProfileEmail] = useState('');
+  const [profileInitials, setProfileInitials] = useState('');
+  const [profileRole, setProfileRole] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
@@ -50,6 +59,16 @@ export default function SettingsPage() {
       .then(r => r.json())
       .then(data => { if (data && !data.error) setS(prev => ({ ...prev, ...data })); })
       .catch(() => {});
+    try {
+      const raw = localStorage.getItem('prosite_user');
+      if (raw) {
+        const u = JSON.parse(raw);
+        setProfileName(`${u.firstName || ''} ${u.lastName || ''}`.trim());
+        setProfileEmail(u.email || '');
+        setProfileInitials(`${(u.firstName || 'U')[0]}${(u.lastName || '')[0] || ''}`.toUpperCase());
+        setProfileRole(u.role || 'ADMIN');
+      }
+    } catch {}
   }, []);
 
   const set = (key: keyof Settings, val: any) => setS(p => ({ ...p, [key]: val }));
@@ -80,11 +99,11 @@ export default function SettingsPage() {
   const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
   const card = 'bg-white rounded-[14px] border border-[#EAECF2] p-5 mb-4';
 
-  const TABS: { id: Tab; label: string; icon: string }[] = [
-    { id: 'company',       label: 'Company',       icon: '🏢' },
-    { id: 'documents',     label: 'Documents',     icon: '📄' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'account',       label: 'Account',       icon: 'account' },
+  const TABS: { id: Tab; label: string }[] = [
+    { id: 'company',       label: 'Company'       },
+    { id: 'documents',     label: 'Documents'     },
+    { id: 'notifications', label: 'Notifications' },
+    { id: 'account',       label: 'Account'       },
   ];
 
   return (
@@ -104,12 +123,15 @@ export default function SettingsPage() {
         {/* Sidebar tabs */}
         <div className="w-44 flex-shrink-0">
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
-            {TABS.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)} className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[#EAECF2] last:border-0 transition-colors" style={{ background: tab === t.id ? '#EEF3FF' : 'white', color: tab === t.id ? '#E8834A' : '#374151' }}>
-                <span>{t.icon}</span>
-                <span className="text-[13px] font-semibold">{t.label}</span>
-              </button>
-            ))}
+            {TABS.map(t => {
+              const IconComp = TAB_ICONS[t.id];
+              return (
+                <button key={t.id} onClick={() => setTab(t.id)} className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[#EAECF2] last:border-0 transition-colors" style={{ background: tab === t.id ? '#EEF3FF' : 'white', color: tab === t.id ? '#E8834A' : '#374151' }}>
+                  <IconComp size={15} color={tab === t.id ? '#E8834A' : '#6B7280'} />
+                  <span className="text-[13px] font-semibold">{t.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -275,10 +297,10 @@ export default function SettingsPage() {
               <div className={card}>
                 <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Profile</h2>
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#4F7EF7] to-[#8B5CF6] flex items-center justify-center text-white text-xl font-bold">TB</div>
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E8834A] to-[#D4713A] flex items-center justify-center text-white text-xl font-bold">{profileInitials || 'U'}</div>
                   <div>
-                    <p className="text-[15px] font-bold text-[#1A1A2E]">Thainatan Barcelos</p>
-                    <p className="text-[13px] text-[#6B7280]">admin@prosite.com · Admin</p>
+                    <p className="text-[15px] font-bold text-[#1A1A2E]">{profileName || 'User'}</p>
+                    <p className="text-[13px] text-[#6B7280]">{profileEmail}{profileRole ? ` · ${profileRole.replace('_',' ')}` : ''}</p>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, FileText, HardHat, Receipt,
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
-  ChevronRight, LogOut, Bell, CheckSquare, Wrench
+  ChevronRight, LogOut, Bell, CheckSquare, Wrench, Menu, X, Smartphone,
 } from 'lucide-react';
 import { ROLE_PERMISSIONS } from '../../lib/permissions';
 
@@ -45,6 +45,9 @@ export default function SidebarWrapper() {
   const [userRole, setUserRole] = useState('ADMIN');
   const [userName, setUserName] = useState('User');
   const [userInitials, setUserInitials] = useState('U');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+  const [appInstalled, setAppInstalled] = useState(false);
 
   useEffect(() => {
     try {
@@ -56,7 +59,23 @@ export default function SidebarWrapper() {
         setUserInitials(`${(u.firstName || 'U')[0]}${(u.lastName || '')[0] || ''}`.toUpperCase());
       }
     } catch {}
+
+    // PWA install prompt
+    if (localStorage.getItem('pwa_installed')) setAppInstalled(true);
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler as EventListener);
+    window.addEventListener('appinstalled', () => {
+      setAppInstalled(true);
+      localStorage.setItem('pwa_installed', '1');
+    });
+    return () => window.removeEventListener('beforeinstallprompt', handler as EventListener);
   }, []);
+
+  // Close mobile sidebar on route change
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const active = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
@@ -72,19 +91,30 @@ export default function SidebarWrapper() {
     window.location.href = '/login';
   };
 
+  const handleInstall = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const result = await installPrompt.userChoice;
+    if (result.outcome === 'accepted') {
+      setAppInstalled(true);
+      localStorage.setItem('pwa_installed', '1');
+    }
+    setInstallPrompt(null);
+  };
+
   const roleLabel: Record<string, string> = {
     ADMIN: 'Admin', OFFICE_MANAGER: 'Office Mgr', PROJECT_MANAGER: 'Project Mgr',
     FIELD_TECH: 'Field Tech', SUBCONTRACTOR: 'Subcontractor',
   };
 
-  return (
+  const sidebarContent = (
     <aside style={{
-      width: 240, background: '#1C2B3A', minHeight: '100vh',
-      display: 'flex', flexDirection: 'column', flexShrink: 0,
+      width: 240, background: '#1C2B3A', height: '100%',
+      display: 'flex', flexDirection: 'column',
       borderRight: '1px solid rgba(255,255,255,0.06)',
     }}>
       {/* Logo */}
-      <div style={{ padding: '18px 16px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ padding: '18px 16px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <img src="/logo.png" alt="ProSite" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }}/>
           <div>
@@ -92,6 +122,10 @@ export default function SidebarWrapper() {
             <div style={{ fontSize: 10, color: '#E8834A', fontWeight: 700, letterSpacing: '0.06em' }}>REMODELING OS</div>
           </div>
         </div>
+        {/* Close button — mobile only */}
+        <button onClick={() => setMobileOpen(false)} className="sidebar-close-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'none', color: 'rgba(255,255,255,0.5)' }}>
+          <X size={18}/>
+        </button>
       </div>
 
       {/* Notifications */}
@@ -133,6 +167,21 @@ export default function SidebarWrapper() {
         ))}
       </nav>
 
+      {/* PWA Install button */}
+      {installPrompt && !appInstalled && (
+        <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <button onClick={handleInstall} style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 8,
+            padding: '8px 12px', borderRadius: 8, cursor: 'pointer',
+            background: 'transparent', border: '1px solid rgba(232,131,74,0.4)',
+            color: '#E8834A', fontSize: 12.5, fontWeight: 600,
+          }}>
+            <Smartphone size={14} color="#E8834A"/>
+            <span>Install App</span>
+          </button>
+        </div>
+      )}
+
       {/* Wrench decoration */}
       <div style={{ padding: '0 16px 4px', display: 'flex', justifyContent: 'center' }}>
         <Wrench size={18} color="rgba(232,131,74,0.3)" strokeWidth={1.5}/>
@@ -154,5 +203,55 @@ export default function SidebarWrapper() {
         </div>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Hamburger button — mobile only */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="mobile-hamburger"
+        style={{
+          display: 'none',
+          position: 'fixed', top: 12, left: 12, zIndex: 60,
+          width: 40, height: 40, borderRadius: 10,
+          background: '#1C2B3A', border: 'none', cursor: 'pointer',
+          alignItems: 'center', justifyContent: 'center',
+        }}
+      >
+        <Menu size={20} color="white"/>
+      </button>
+
+      {/* Desktop sidebar */}
+      <div className="desktop-sidebar" style={{ flexShrink: 0, width: 240, minHeight: '100vh' }}>
+        {sidebarContent}
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setMobileOpen(false)}
+          style={{
+            display: 'none',
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40,
+          }}
+        />
+      )}
+
+      {/* Mobile sidebar */}
+      <div
+        className={`mobile-sidebar${mobileOpen ? ' open' : ''}`}
+        style={{
+          display: 'none',
+          position: 'fixed', top: 0, left: 0, height: '100vh',
+          zIndex: 50, width: 240,
+          transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s ease',
+        }}
+      >
+        {sidebarContent}
+      </div>
+    </>
   );
 }

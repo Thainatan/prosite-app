@@ -87,3 +87,37 @@ body {
 
 /* ── Toast animation ─────────────────────────────────────────── */
 .toast { animation: slideInRight 0.3s ease forwards; }
+
+/* ── Mobile responsive ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Show hamburger, hide desktop sidebar */
+  .mobile-hamburger { display: flex !important; }
+  .desktop-sidebar  { display: none !important; }
+
+  /* Show mobile sidebar and overlay */
+  .mobile-sidebar   { display: block !important; }
+  .sidebar-overlay  { display: block !important; }
+
+  /* Show close button inside sidebar */
+  .sidebar-close-btn { display: flex !important; }
+
+  /* Main content fills full width */
+  main { margin-left: 0 !important; padding-top: 56px; }
+
+  /* Tables: horizontal scroll */
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Modals: full screen on mobile */
+  .modal-content {
+    width: 100% !important; max-width: 100% !important;
+    height: 100vh !important; max-height: 100vh !important;
+    border-radius: 0 !important; margin: 0 !important;
+  }
+
+  /* Stat cards: 2-column grid */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* All interactive elements min 44px */
+  button, a[href] { min-height: 44px; }
+  input, select, textarea { min-height: 44px; font-size: 16px !important; }
+}

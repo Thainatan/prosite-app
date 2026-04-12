@@ -275,10 +275,10 @@ export default function QuotesPage() {
 
       <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-[17px] font-bold text-white">{docLabel}</h1>
+          <h1 className="text-[17px] font-bold text-[#1A1A2E]">{docLabel}</h1>
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{quotes.length} total</span>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder={`Search ${docLabel.toLowerCase()}...`} className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-white placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder={`Search ${docLabel.toLowerCase()}...`} className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
         <a href="/quotes/new" style={{display:'flex',alignItems:'center',gap:6,height:34,padding:'0 16px',background:'#E8834A',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New {settings?.useEstimate ? 'Estimate' : 'Quote'}</a>
       </header>
 
@@ -287,7 +287,7 @@ export default function QuotesPage() {
           <div className="text-center py-12"><p className="text-[#6B7280]">Loading...</p></div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-[14px] font-semibold text-white mb-2">{search ? 'No results' : `No ${docLabel.toLowerCase()} yet`}</p>
+            <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No results' : `No ${docLabel.toLowerCase()} yet`}</p>
             <a href="/quotes/new" style={{display:'inline-flex',alignItems:'center',padding:'10px 24px',background:'#E8834A',color:'white',borderRadius:9,fontSize:14,fontWeight:600,textDecoration:'none'}}>+ New {settings?.useEstimate ? 'Estimate' : 'Quote'}</a>
           </div>
         ) : (
@@ -301,7 +301,7 @@ export default function QuotesPage() {
                 <div key={q.id} className="flex items-center gap-3 px-5 py-4 hover:bg-[#FAF9F7] border-b border-[#E8E4DF] last:border-0 transition-colors">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[14px] font-bold text-white">{q.title || q.serviceType}</span>
+                      <span className="text-[14px] font-bold text-[#1A1A2E]">{q.title || q.serviceType}</span>
                       <span className="font-mono text-[11px] text-[#9CA3AF]">{q.estimateNumber}</span>
                     </div>
                     <p className="text-[12px] text-[#6B7280]">
@@ -311,7 +311,7 @@ export default function QuotesPage() {
                   </div>
                   <span className="text-[10.5px] font-bold px-2.5 py-1 rounded-full flex-shrink-0" style={{ background: st.bg, color: st.color }}>{st.label}</span>
                   <div className="text-right flex-shrink-0 min-w-[70px]">
-                    <p className="text-[14px] font-bold text-white">{fmt(q.total)}</p>
+                    <p className="text-[14px] font-bold text-[#1A1A2E]">{fmt(q.total)}</p>
                   </div>
                   {canApprove && (
                     <button onClick={e => approveQuote(q, e)} disabled={isApproving} className="flex-shrink-0 h-8 px-3 rounded-[8px] text-[11.5px] font-bold transition-all disabled:opacity-50" style={{ background: '#0C3020', color: '#34C78A', border: '1px solid #34C78A44' }}>
@@ -343,7 +343,7 @@ export default function QuotesPage() {
       {confirmDelete && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setConfirmDelete(null)}>
           <div className="bg-white border border-[#E8E4DF] rounded-[16px] p-6 w-full max-w-sm shadow-xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[16px] font-bold text-white mb-2">Delete Quote?</h3>
+            <h3 className="text-[16px] font-bold text-[#1A1A2E] mb-2">Delete Quote?</h3>
             <p className="text-[13px] text-[#6B7280] mb-5">"{confirmDelete.title}" will be permanently deleted. This cannot be undone.</p>
             <div className="flex gap-2">
               <button onClick={() => setConfirmDelete(null)} className="flex-1 h-10 rounded-[9px] border border-[#E8E4DF] text-[#6B7280] text-[13px] font-semibold">Cancel</button>

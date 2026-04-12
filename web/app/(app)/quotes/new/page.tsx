@@ -45,7 +45,7 @@ function SubPicker({ subs, onSelect, onClose }: {
           autoFocus
           value={q} onChange={e => setQ(e.target.value)}
           placeholder="Search subs..."
-          className="w-full h-7 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] px-2 text-[12px] text-white placeholder-[#9CA3AF] outline-none"
+          className="w-full h-7 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] px-2 text-[12px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none"
         />
       </div>
       <div className="max-h-48 overflow-y-auto">
@@ -54,7 +54,7 @@ function SubPicker({ subs, onSelect, onClose }: {
         ) : filtered.map(s => (
           <button key={s.id} onClick={() => { onSelect(s); onClose(); }}
             className="w-full text-left px-3 py-2 hover:bg-[#E8E4DF] border-b border-[#E8E4DF] last:border-0 flex items-center justify-between gap-2">
-            <span className="text-[12px] font-semibold text-white truncate">{s.firstName} {s.lastName}</span>
+            <span className="text-[12px] font-semibold text-[#1A1A2E] truncate">{s.firstName} {s.lastName}</span>
             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded flex-shrink-0"
               style={{ background: (TRADE_COLOR[s.trade] || '#6B7280') + '33', color: TRADE_COLOR[s.trade] || '#6B7280' }}>
               {s.trade}
@@ -127,7 +127,7 @@ export default function NewQuotePage() {
     }
   };
 
-  const inp = 'w-full h-10 bg-white border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-white placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all';
+  const inp = 'w-full h-10 bg-white border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all';
   const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
 
   if (saved) return (
@@ -136,7 +136,7 @@ export default function NewQuotePage() {
         <div style={{width:64,height:64,borderRadius:'50%',background:'rgba(52,199,138,0.2)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}>
           <FileText size={28} color="#34C78A"/>
         </div>
-        <h2 style={{fontSize:20,fontWeight:800,color:'white',marginBottom:8}}>Quote Saved!</h2>
+        <h2 style={{fontSize:20,fontWeight:800,color:'#1A1A2E',marginBottom:8}}>Quote Saved!</h2>
         <p style={{color:'#6B7280',fontSize:14}}>Redirecting...</p>
       </div>
     </div>
@@ -151,7 +151,7 @@ export default function NewQuotePage() {
             <span className="text-[13px] font-medium">Quotes</span>
           </a>
           <span className="text-[#1E2130]">/</span>
-          <span className="text-[13px] font-semibold text-white">New Quote</span>
+          <span className="text-[13px] font-semibold text-[#1A1A2E]">New Quote</span>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => handleSave('draft')} disabled={loading} className="flex items-center gap-2 h-9 px-4 rounded-[9px] border border-[#E8E4DF] bg-[#FAF9F7] text-[13px] font-semibold text-[#6B7280] hover:text-white transition-all">
@@ -166,7 +166,7 @@ export default function NewQuotePage() {
       <div className="max-w-4xl mx-auto p-6 space-y-5">
         {/* Quote Details */}
         <div className="bg-white rounded-[14px] border border-[#E8E4DF] p-5">
-          <h2 className="text-[15px] font-bold text-white mb-4 flex items-center gap-2">
+          <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4 flex items-center gap-2">
             <FileText size={16} color="#4F7EF7"/>Quote Details
           </h2>
           <div className="grid grid-cols-2 gap-4">
@@ -195,7 +195,7 @@ export default function NewQuotePage() {
         {/* Line Items */}
         <div className="bg-white rounded-[14px] border border-[#E8E4DF] overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DF]">
-            <h2 className="text-[15px] font-bold text-white">Line Items</h2>
+            <h2 className="text-[15px] font-bold text-[#1A1A2E]">Line Items</h2>
             <button onClick={addItem} className="flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-[#FEF3EC] text-[#E8834A] text-[12.5px] font-semibold hover:bg-[#2D3A6B] transition-all">
               <Plus size={13}/>Add Item
             </button>
@@ -228,11 +228,11 @@ export default function NewQuotePage() {
                 </div>
                 <div className="col-span-3">
                   <input value={item.description} onChange={e => updateItem(item.id,'description',e.target.value)}
-                    placeholder="Description..." className="w-full h-8 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] px-2 text-[12.5px] text-white placeholder-[#9CA3AF] outline-none"/>
+                    placeholder="Description..." className="w-full h-8 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] px-2 text-[12.5px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none"/>
                 </div>
                 <div className="col-span-1">
                   <input type="number" value={item.qty} onChange={e => updateItem(item.id,'qty',parseFloat(e.target.value)||0)}
-                    className="w-full h-8 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] px-2 text-[12.5px] text-white outline-none text-center"/>
+                    className="w-full h-8 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] px-2 text-[12.5px] text-[#1A1A2E] outline-none text-center"/>
                 </div>
                 <div className="col-span-1">
                   <select value={item.unit} onChange={e => updateItem(item.id,'unit',e.target.value)}
@@ -244,11 +244,11 @@ export default function NewQuotePage() {
                   <div className="relative">
                     <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-[#9CA3AF]">$</span>
                     <input type="number" value={item.price} onChange={e => updateItem(item.id,'price',parseFloat(e.target.value)||0)}
-                      className="w-full h-8 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] pl-5 pr-2 text-[12.5px] text-white outline-none text-right"/>
+                      className="w-full h-8 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[7px] pl-5 pr-2 text-[12.5px] text-[#1A1A2E] outline-none text-right"/>
                   </div>
                 </div>
                 <div className="col-span-2 text-right">
-                  <span className="text-[13px] font-semibold text-white">{fmt(item.qty*item.price)}</span>
+                  <span className="text-[13px] font-semibold text-[#1A1A2E]">{fmt(item.qty*item.price)}</span>
                 </div>
                 {/* Actions: delete + assign sub */}
                 <div className="col-span-1 flex items-center justify-end gap-1">
@@ -301,10 +301,10 @@ export default function NewQuotePage() {
             <div className="w-64 space-y-2">
               <div className="flex justify-between text-[13px]">
                 <span className="text-[#6B7280]">Subtotal</span>
-                <span className="font-semibold text-white">{fmt(subtotal)}</span>
+                <span className="font-semibold text-[#1A1A2E]">{fmt(subtotal)}</span>
               </div>
-              <div className="flex justify-between border-t-2 border-white/10 pt-2.5">
-                <span className="text-[15px] font-bold text-white">Total</span>
+              <div className="flex justify-between border-t-2 border-[#E8E4DF] pt-2.5">
+                <span className="text-[15px] font-bold text-[#1A1A2E]">Total</span>
                 <span className="text-[22px] font-bold text-[#E8834A]">{fmt(subtotal)}</span>
               </div>
             </div>
@@ -313,17 +313,17 @@ export default function NewQuotePage() {
 
         {/* Notes & Exclusions */}
         <div className="bg-white rounded-[14px] border border-[#E8E4DF] p-5">
-          <h2 className="text-[15px] font-bold text-white mb-4">Notes & Exclusions</h2>
+          <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Notes & Exclusions</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={lbl}>Scope Notes</label>
               <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Additional scope details..."
-                className="w-full h-24 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[9px] px-3 py-2.5 text-[13px] text-white placeholder-[#9CA3AF] outline-none resize-none"/>
+                className="w-full h-24 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[9px] px-3 py-2.5 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none resize-none"/>
             </div>
             <div>
               <label className={lbl}>Exclusions</label>
               <textarea value={exclusions} onChange={e => setExclusions(e.target.value)} placeholder="What is NOT included..."
-                className="w-full h-24 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[9px] px-3 py-2.5 text-[13px] text-white placeholder-[#9CA3AF] outline-none resize-none"/>
+                className="w-full h-24 bg-[#F8F6F3] border border-[#E8E4DF] rounded-[9px] px-3 py-2.5 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none resize-none"/>
             </div>
           </div>
         </div>

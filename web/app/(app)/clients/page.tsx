@@ -108,7 +108,7 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
               <span className="text-[16px] font-bold text-[#E8834A]">{client.firstName[0]}{client.lastName[0]}</span>
             </div>
             <div>
-              <h2 className="text-[18px] font-bold text-white">{client.firstName} {client.lastName}</h2>
+              <h2 className="text-[18px] font-bold text-[#1A1A2E]">{client.firstName} {client.lastName}</h2>
               <p className="text-[12px] text-[#6B7280]">{client.city}, {client.state}</p>
             </div>
           </div>
@@ -119,7 +119,7 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
             {[{l:'Phone',v:client.phone},{l:'Email',v:client.email||'—'},{l:'Address',v:client.address||'—'},{l:'Source',v:client.source||'—'}].map(({l,v})=>(
               <div key={l} className="bg-[#FAF9F7] border border-[#E8E4DF] rounded-[9px] p-3">
                 <p className="text-[10px] font-bold text-[#9CA3AF] uppercase mb-1">{l}</p>
-                <p className="text-[13px] font-medium text-white">{v}</p>
+                <p className="text-[13px] font-medium text-[#1A1A2E]">{v}</p>
               </div>
             ))}
           </div>
