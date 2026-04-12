@@ -37,8 +37,24 @@
 - ALWAYS run npm run build before committing
 - ALWAYS run npx tsc --noEmit in api/ before committing
 
+## Completed Features (V1)
+- Multi-tenant architecture with tenant isolation
+- PWA: manifest.json, sw.js service worker, offline page, install prompt in sidebar
+- Mobile responsive: hamburger menu, slide-in sidebar, full-screen modals, 44px touch targets
+- Quote → Approve → Project + Invoice auto-creation flow
+- Task creation with schedule calendar view
+- Settings: company info, branding
+- Team member invite with roles
+- Subcontractor management + project assignment
+- Reports: win rate, outstanding balance, projects by status
+
+## API Notes
+- POST /tasks requires startDateTime + endDateTime as ISO strings (not date/startTime)
+- POST /quotes uses 'items' array field (not 'lineItems')
+- Quote approve is triggered via the UI Approve button (no /approve REST endpoint)
+
 ## Status
-- V1: 85% complete
+- V1: 95% complete
 - V2: Not started
 
 ## Roles
