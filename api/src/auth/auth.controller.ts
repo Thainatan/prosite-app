@@ -100,6 +100,7 @@ export class AuthController {
       email: string;
       password: string;
       plan?: string;
+      promoCode?: string;
     },
   ) {
     try {
@@ -117,8 +118,29 @@ export class AuthController {
         slug = `${baseSlug}-${suffix++}`;
       }
 
-      const plan = body.plan || 'TRIAL';
-      const planExpiresAt = plan === 'TRIAL' ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) : null;
+      let plan = 'TRIAL';
+      let planExpiresAt: Date | null = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+
+      // Pre-validate promo code before creating tenant
+      let promoRecord: any = null;
+      if (body.promoCode) {
+        promoRecord = await prisma.promoCode.findUnique({
+          where: { code: body.promoCode.trim().toUpperCase() },
+        });
+        if (promoRecord && promoRecord.isActive &&
+            !(promoRecord.expiresAt && promoRecord.expiresAt < new Date()) &&
+            !(promoRecord.maxUses > 0 && promoRecord.usedCount >= promoRecord.maxUses)) {
+          if (promoRecord.type === 'FREE_FOREVER') {
+            plan = 'FREE_FOREVER';
+            planExpiresAt = null;
+          } else if (promoRecord.type === 'TRIAL_EXTENSION') {
+            plan = promoRecord.plan;
+            planExpiresAt = new Date(Date.now() + promoRecord.trialDays * 24 * 60 * 60 * 1000);
+          }
+        } else {
+          promoRecord = null; // invalid, ignore silently
+        }
+      }
 
       const tenant = await prisma.tenant.create({
         data: { name: body.companyName, slug, plan, planExpiresAt, status: 'ACTIVE' },
@@ -140,6 +162,17 @@ export class AuthController {
       await prisma.companySettings.create({
         data: { tenantId: tenant.id, companyName: body.companyName },
       });
+
+      // Record promo usage
+      if (promoRecord) {
+        await prisma.promoCodeUsage.create({
+          data: { promoCodeId: promoRecord.id, tenantId: tenant.id },
+        });
+        await prisma.promoCode.update({
+          where: { id: promoRecord.id },
+          data: { usedCount: { increment: 1 } },
+        });
+      }
 
       const token = this.jwtService.sign({
         sub: user.id,

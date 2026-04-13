@@ -15,6 +15,7 @@ import { SubcontractorsModule } from './subcontractors/subcontractors.module';
 import { ChangeOrdersModule } from './change-orders/change-orders.module';
 import { TeamModule } from './team/team.module';
 import { BillingModule } from './billing/billing.module';
+import { PromoModule } from './promo/promo.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
@@ -32,6 +33,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     ChangeOrdersModule,
     TeamModule,
     BillingModule,
+    PromoModule,
   ],
   controllers: [AppController],
   providers: [

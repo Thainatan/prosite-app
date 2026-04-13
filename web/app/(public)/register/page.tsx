@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
-import { Eye, EyeOff, Building2, CheckCircle, Users, FileText, DollarSign, Check } from 'lucide-react';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Eye, EyeOff, Building2, CheckCircle, Users, FileText, DollarSign, Check, Tag, X } from 'lucide-react';
 import { setToken } from '../../../lib/auth';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
@@ -55,7 +56,8 @@ function passwordStrength(pw: string): { score: number; label: string; color: st
   return { score, ...levels[score] };
 }
 
-export default function RegisterPage() {
+function RegisterForm() {
+  const searchParams = useSearchParams();
   const [form, setForm] = useState({
     companyName: '', firstName: '', lastName: '',
     email: '', password: '', confirmPassword: '', plan: 'TRIAL',
@@ -63,7 +65,54 @@ export default function RegisterPage() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [promoCode, setPromoCode] = useState('');
+  const [promoStatus, setPromoStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
+  const [promoInfo, setPromoInfo] = useState<{ type: string; trialDays: number; plan: string; description: string } | null>(null);
+  const promoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pw = passwordStrength(form.password);
+
+  // Pre-fill promo code from URL ?code= param
+  useEffect(() => {
+    const code = searchParams.get('code');
+    if (code) {
+      setPromoCode(code.toUpperCase());
+      validatePromoCode(code.toUpperCase());
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const validatePromoCode = async (code: string) => {
+    if (!code.trim()) { setPromoStatus('idle'); setPromoInfo(null); return; }
+    setPromoStatus('checking');
+    try {
+      const res = await fetch(`${API}/promo/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code.trim() }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setPromoStatus('valid');
+        setPromoInfo({ type: data.type, trialDays: data.trialDays, plan: data.plan, description: data.description });
+      } else {
+        setPromoStatus('invalid');
+        setPromoInfo(null);
+      }
+    } catch {
+      setPromoStatus('idle');
+    }
+  };
+
+  const handlePromoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.toUpperCase();
+    setPromoCode(val);
+    setPromoStatus('idle');
+    setPromoInfo(null);
+    if (promoTimerRef.current) clearTimeout(promoTimerRef.current);
+    if (val.trim()) {
+      promoTimerRef.current = setTimeout(() => validatePromoCode(val), 500);
+    }
+  };
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }));
@@ -75,17 +124,21 @@ export default function RegisterPage() {
     if (form.password.length < 8) { setError('Password must be at least 8 characters'); return; }
     setLoading(true);
     try {
+      const body: Record<string, string> = {
+        companyName: form.companyName,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        password: form.password,
+        plan: 'TRIAL',
+      };
+      if (promoCode.trim() && promoStatus === 'valid') {
+        body.promoCode = promoCode.trim();
+      }
       const res = await fetch(`${API}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          companyName: form.companyName,
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          password: form.password,
-          plan: 'TRIAL',
-        }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (data.error) { setError(data.error); setLoading(false); return; }
@@ -287,6 +340,63 @@ export default function RegisterPage() {
               </p>
             </div>
 
+            {/* Promo Code */}
+            <div style={{ marginBottom: 18 }}>
+              <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 5 }}>
+                Promo Code <span style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 400 }}>(optional)</span>
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Tag size={15} color="#9CA3AF" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}/>
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={handlePromoChange}
+                  placeholder="e.g. PARTNER90"
+                  style={{
+                    ...inp,
+                    paddingLeft: 36,
+                    paddingRight: promoCode ? 36 : 12,
+                    borderColor: promoStatus === 'valid' ? '#22C55E' : promoStatus === 'invalid' ? '#EF4444' : '#E8E4DF',
+                    boxShadow: promoStatus === 'valid' ? '0 0 0 3px rgba(34,197,94,0.15)' : promoStatus === 'invalid' ? '0 0 0 3px rgba(239,68,68,0.1)' : 'none',
+                    letterSpacing: '0.05em', fontWeight: 600,
+                  }}
+                />
+                {promoCode && (
+                  <button type="button" onClick={() => { setPromoCode(''); setPromoStatus('idle'); setPromoInfo(null); }}
+                    style={{ position: 'absolute', right: 11, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', padding: 0, display: 'flex' }}>
+                    <X size={14}/>
+                  </button>
+                )}
+              </div>
+              {promoStatus === 'checking' && (
+                <p style={{ margin: '4px 0 0', fontSize: 11, color: '#9CA3AF' }}>Validating code…</p>
+              )}
+              {promoStatus === 'invalid' && (
+                <p style={{ margin: '4px 0 0', fontSize: 11, color: '#EF4444', fontWeight: 600 }}>Invalid or expired promo code.</p>
+              )}
+              {promoStatus === 'valid' && promoInfo && (
+                <div style={{
+                  marginTop: 8, borderRadius: 9, padding: '10px 14px',
+                  background: promoInfo.type === 'FREE_FOREVER' ? 'rgba(34,197,94,0.08)' : 'rgba(59,130,246,0.08)',
+                  border: `1px solid ${promoInfo.type === 'FREE_FOREVER' ? '#22C55E' : '#3B82F6'}`,
+                  display: 'flex', alignItems: 'flex-start', gap: 8,
+                }}>
+                  <Check size={14} color={promoInfo.type === 'FREE_FOREVER' ? '#22C55E' : '#3B82F6'} style={{ marginTop: 1, flexShrink: 0 }} strokeWidth={3}/>
+                  <div>
+                    <p style={{ margin: 0, fontSize: 12.5, fontWeight: 700, color: promoInfo.type === 'FREE_FOREVER' ? '#15803D' : '#1D4ED8' }}>
+                      {promoCode} applied!
+                    </p>
+                    <p style={{ margin: '2px 0 0', fontSize: 11.5, color: '#374151' }}>
+                      {promoInfo.type === 'FREE_FOREVER'
+                        ? 'Free Forever access — no subscription needed.'
+                        : `${promoInfo.trialDays} days free on ${promoInfo.plan} plan.`}
+                      {promoInfo.description ? ` ${promoInfo.description}` : ''}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {error && (
               <div style={{ background: '#FFF0EF', border: '1px solid #FCA5A5', borderRadius: 9, padding: '10px 14px', marginBottom: 14 }}>
                 <p style={{ color: '#E74C3C', fontSize: 13, margin: 0 }}>{error}</p>
@@ -315,5 +425,13 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }

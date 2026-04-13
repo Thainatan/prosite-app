@@ -289,3 +289,31 @@ model TeamMember {
 
   @@map("team_members")
 }
+
+model PromoCode {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  type            String    @default("TRIAL_EXTENSION")
+  trialDays       Int       @default(90)
+  discountPercent Int       @default(0)
+  discountFixed   Int       @default(0)
+  plan            String    @default("COMPANY")
+  maxUses         Int       @default(1)
+  usedCount       Int       @default(0)
+  expiresAt       DateTime?
+  isActive        Boolean   @default(true)
+  description     String    @default("")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("promo_codes")
+}
+
+model PromoCodeUsage {
+  id          String   @id @default(cuid())
+  promoCodeId String
+  tenantId    String
+  usedAt      DateTime @default(now())
+
+  @@map("promo_code_usages")
+}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, FileText, HardHat, Receipt,
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
-  ChevronRight, LogOut, Bell, CheckSquare, Wrench, Menu, X, Smartphone,
+  ChevronRight, LogOut, Bell, CheckSquare, Wrench, Menu, X, Smartphone, Tag,
 } from 'lucide-react';
 import { ROLE_PERMISSIONS } from '../../lib/permissions';
 
@@ -31,6 +31,7 @@ const ALL_NAV = [
   { section: 'SETTINGS', items: [
     { href: '/team',     icon: UserCog,  label: 'Team'     },
     { href: '/settings', icon: Settings, label: 'Settings' },
+    { href: '/promo',    icon: Tag,      label: 'Promo Codes' },
   ]},
 ];
 

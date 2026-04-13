@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { CreditCard, Check, Zap, Building2, Shield, ExternalLink } from 'lucide-react';
+import { CreditCard, Check, Zap, Building2, Shield, ExternalLink, Tag } from 'lucide-react';
 import { apiFetch } from '../../../../lib/api';
 
 interface BillingStatus {
@@ -46,6 +46,9 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState('');
   const [portalLoading, setPortalLoading] = useState(false);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplying, setPromoApplying] = useState(false);
+  const [promoMsg, setPromoMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -90,6 +93,31 @@ export default function BillingPage() {
       alert('Could not connect to billing service');
     } finally {
       setPortalLoading(false);
+    }
+  };
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return;
+    setPromoApplying(true);
+    setPromoMsg(null);
+    try {
+      const res = await apiFetch('/promo/apply', {
+        method: 'POST',
+        body: JSON.stringify({ code: promoCode.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPromoMsg({ type: 'success', text: data.message || 'Promo code applied successfully!' });
+        setPromoCode('');
+        // Refresh billing status
+        apiFetch('/billing/status').then(r => r.json()).then(d => setStatus(d));
+      } else {
+        setPromoMsg({ type: 'error', text: data.message || 'Invalid or expired promo code.' });
+      }
+    } catch {
+      setPromoMsg({ type: 'error', text: 'Could not apply promo code. Please try again.' });
+    } finally {
+      setPromoApplying(false);
     }
   };
 
@@ -187,6 +215,54 @@ export default function BillingPage() {
               </div>
             );
           })}
+        </div>
+
+        {/* Promo Code Section */}
+        <div style={{ background: 'white', borderRadius: 16, padding: '20px 24px', marginBottom: 24, border: '1px solid #E8E4DF', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <Tag size={16} color={brand} strokeWidth={2}/>
+            <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A2E' }}>Have a promo code?</span>
+          </div>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+            <input
+              type="text"
+              value={promoCode}
+              onChange={e => { setPromoCode(e.target.value.toUpperCase()); setPromoMsg(null); }}
+              onKeyDown={e => e.key === 'Enter' && handleApplyPromo()}
+              placeholder="Enter promo code"
+              style={{
+                flex: 1, height: 42, background: '#FAF9F7', border: '1px solid #E8E4DF',
+                borderRadius: 9, padding: '0 14px', fontSize: 14, color: '#1A1A2E',
+                outline: 'none', letterSpacing: '0.05em', fontWeight: 600,
+              }}
+              onFocus={e => { e.target.style.borderColor = brand; e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)'; }}
+              onBlur={e => { e.target.style.borderColor = '#E8E4DF'; e.target.style.boxShadow = 'none'; }}
+            />
+            <button
+              onClick={handleApplyPromo}
+              disabled={promoApplying || !promoCode.trim()}
+              style={{
+                height: 42, padding: '0 20px', background: brand, color: 'white',
+                border: 'none', borderRadius: 9, fontSize: 14, fontWeight: 700,
+                cursor: promoApplying || !promoCode.trim() ? 'not-allowed' : 'pointer',
+                opacity: promoApplying || !promoCode.trim() ? 0.6 : 1, whiteSpace: 'nowrap',
+                transition: 'opacity 0.15s',
+              }}
+            >
+              {promoApplying ? 'Applying…' : 'Apply'}
+            </button>
+          </div>
+          {promoMsg && (
+            <div style={{
+              marginTop: 10, borderRadius: 8, padding: '8px 14px',
+              background: promoMsg.type === 'success' ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)',
+              border: `1px solid ${promoMsg.type === 'success' ? '#22C55E' : '#FCA5A5'}`,
+            }}>
+              <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: promoMsg.type === 'success' ? '#15803D' : '#E74C3C' }}>
+                {promoMsg.text}
+              </p>
+            </div>
+          )}
         </div>
 
         <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center' }}>
