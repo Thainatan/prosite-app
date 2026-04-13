@@ -47,6 +47,7 @@
 - Team member invite with roles
 - Subcontractor management + project assignment
 - Reports: win rate, outstanding balance, projects by status
+- Promo Code system: admin CRUD at /promo, public validate endpoint, register page field with ?code= URL pre-fill, billing page apply flow. Seeds PARTNER90 (90d), BETA2026 (180d), FREEPARTNER (FREE_FOREVER), ENTERPRISE90 (90d Enterprise) on API startup
 
 ## API Notes
 - POST /tasks requires startDateTime + endDateTime as ISO strings (not date/startTime)
@@ -61,4 +62,11 @@
 ADMIN, OFFICE_MANAGER, PROJECT_MANAGER, FIELD_TECH, SUBCONTRACTOR
 
 ## API Endpoints
-/clients, /quotes, /projects, /invoices, /tasks, /subcontractors, /team, /settings, /auth, /reports, /change-orders
+/clients, /quotes, /projects, /invoices, /tasks, /subcontractors, /team, /settings, /auth, /reports, /change-orders, /promo
+
+## Promo Code Notes
+- POST /promo/validate — public, no auth required. Returns { valid, type, trialDays, plan, description }
+- POST /promo/apply — authenticated, applies code to current user's tenant
+- Admin CRUD: GET/POST /promo, PATCH/DELETE /promo/:id, GET /promo/:id/usage
+- Types: TRIAL_EXTENSION (extends planExpiresAt), FREE_FOREVER (plan='FREE_FOREVER', no expiry), DISCOUNT_PERCENT, DISCOUNT_FIXED
+- DB tables: promo_codes, promo_code_usages
