@@ -29,7 +29,7 @@
 - Border: #E8E4DF
 
 ## Known Issues
-- None (all V1 issues resolved)
+- 3 orphaned `schedule_events` rows with empty tenantId (pre-isolation test data). Invisible to all tenants, no app impact. Fix: run `DELETE FROM schedule_events WHERE "tenantId" = '';` in Supabase SQL Editor (postgres MCP is read-only, API can't reach them due to tenant filtering).
 
 ## Rules
 - ALWAYS use apiFetch() never raw fetch()
