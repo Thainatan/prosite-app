@@ -1,8 +1,10 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { Building2, FileText, Bell, User } from 'lucide-react';
+import { Building2, FileText, Bell, User, BookOpen, RotateCcw, Play, EyeOff, CheckCircle, Circle } from 'lucide-react';
 
 import { apiFetch } from '../../../lib/api';
+import { useTutorial } from '../../../components/tutorial/TutorialContext';
+import { TUTORIALS, shouldShowTutorial } from '../../../lib/tutorials';
 
 interface Settings {
   id?: string;
@@ -53,6 +55,17 @@ export default function SettingsPage() {
   const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
   const [pwError, setPwError] = useState('');
   const logoRef = useRef<HTMLInputElement>(null);
+  const { startTutorial, getTutorialStatus, resetTutorial, resetAll, isDisabled, setDisabled } = useTutorial();
+  const [tutorialTick, setTutorialTick] = useState(0);
+
+  // Auto-start settings tutorial on first visit
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (shouldShowTutorial('settings_setup')) startTutorial('settings_setup');
+    }, 600);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     apiFetch('/settings')
@@ -112,6 +125,7 @@ export default function SettingsPage() {
         <h1 className="text-[17px] font-bold text-[#1A1A2E]">Settings</h1>
         <button
           onClick={save} disabled={saving}
+          data-tutorial="settings-save-btn"
           className="h-9 px-5 rounded-[9px] text-[13px] font-bold text-white transition-all disabled:opacity-60"
           style={{ background: saved ? '#34C78A' : '#E8834A' }}
         >
@@ -146,7 +160,7 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
                     <label className={lbl}>Company Name</label>
-                    <input className={inp} value={s.companyName} onChange={e => set('companyName', e.target.value)} placeholder="Your Company LLC"/>
+                    <input className={inp} data-tutorial="company-name" value={s.companyName} onChange={e => set('companyName', e.target.value)} placeholder="Your Company LLC"/>
                   </div>
                   <div>
                     <label className={lbl}>Phone</label>
@@ -188,6 +202,7 @@ export default function SettingsPage() {
                     <label className={lbl}>Company Logo</label>
                     <div
                       onClick={() => logoRef.current?.click()}
+                      data-tutorial="logo-upload"
                       className="h-24 border-2 border-dashed border-[#EAECF2] rounded-[10px] flex flex-col items-center justify-center cursor-pointer hover:border-[#E8834A] transition-colors"
                     >
                       {s.logoBase64 ? (
@@ -207,7 +222,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <label className={lbl}>Brand Color</label>
-                    <div className="flex items-center gap-3">
+                    <div data-tutorial="brand-color" className="flex items-center gap-3">
                       <input
                         type="color" value={s.brandColor}
                         onChange={e => set('brandColor', e.target.value)}
@@ -337,6 +352,68 @@ export default function SettingsPage() {
               </div>
             </>
           )}
+
+          {/* ── Tutorials (always visible) ── */}
+          <div id="tutorials" className={card} style={{ marginTop: 8 }}>
+            <div className="flex items-center gap-2 mb-1">
+              <BookOpen size={16} color="#E8834A" />
+              <h2 className="text-[15px] font-bold text-[#1A1A2E]">Tutorials &amp; Onboarding</h2>
+            </div>
+            <p className="text-[12px] text-[#6B7280] mb-4">Manage your learning experience</p>
+
+            <div className="space-y-2 mb-5">
+              {TUTORIALS.map(t => {
+                const status = getTutorialStatus(t.id);
+                const isDone = status === 'completed';
+                return (
+                  <div key={t.id} className="flex items-center justify-between py-2.5 border-b border-[#F3F4F6] last:border-0">
+                    <div className="flex items-center gap-2.5">
+                      {isDone
+                        ? <CheckCircle size={16} color="#22C55E" />
+                        : <Circle size={16} color="#D1D5DB" />}
+                      <div>
+                        <p className="text-[13px] font-semibold text-[#1A1A2E]">{t.name}</p>
+                        <p className="text-[11px] text-[#9CA3AF]">{status === 'completed' ? 'Completed' : status === 'skipped' ? 'Skipped' : 'Not started'}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        resetTutorial(t.id);
+                        startTutorial(t.id);
+                        setTutorialTick(n => n + 1);
+                      }}
+                      className="flex items-center gap-1.5 h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all"
+                      style={{ background: isDone ? '#F3F4F6' : '#FEF3EC', color: isDone ? '#6B7280' : '#E8834A', border: `1px solid ${isDone ? '#E8E4DF' : '#E8834A'}` }}
+                    >
+                      {isDone ? <><RotateCcw size={11} /> Restart</> : <><Play size={11} /> Start</>}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <button
+                onClick={() => { resetAll(); setTutorialTick(n => n + 1); }}
+                className="text-[12px] font-semibold text-[#6B7280] flex items-center gap-1.5 hover:text-[#E8834A] transition-colors"
+              >
+                <RotateCcw size={12} /> Reset all tutorials
+              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-[12px] text-[#6B7280]">Disable tutorials</span>
+                <button
+                  onClick={() => { setDisabled(!isDisabled); setTutorialTick(n => n + 1); }}
+                  className="w-10 h-5 rounded-full transition-colors relative flex-shrink-0"
+                  style={{ background: isDisabled ? '#E8834A' : '#D1D5DB' }}
+                >
+                  <div className="w-4 h-4 bg-white rounded-full shadow absolute top-0.5 transition-all" style={{ left: isDisabled ? '22px' : '2px' }} />
+                </button>
+              </div>
+            </div>
+            {isDisabled && (
+              <p className="text-[11.5px] text-[#E8834A] mt-2">Tutorials are disabled. Toggle to re-enable them.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

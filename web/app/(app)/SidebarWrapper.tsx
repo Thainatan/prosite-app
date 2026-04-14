@@ -10,28 +10,28 @@ import { ROLE_PERMISSIONS } from '../../lib/permissions';
 
 const ALL_NAV = [
   { section: 'MAIN', items: [
-    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { href: '/schedule',  icon: Calendar,        label: 'Schedule'  },
-    { href: '/tasks',     icon: CheckSquare,     label: 'Tasks'     },
+    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', tutorialId: 'nav-dashboard' },
+    { href: '/schedule',  icon: Calendar,        label: 'Schedule',  tutorialId: 'nav-schedule'  },
+    { href: '/tasks',     icon: CheckSquare,     label: 'Tasks',     tutorialId: 'nav-tasks'     },
   ]},
   { section: 'SALES', items: [
-    { href: '/clients', icon: Users,         label: 'Clients' },
-    { href: '/quotes',  icon: FileText,      label: 'Quotes'  },
-    { href: '/leads',   icon: ClipboardList, label: 'Leads'   },
+    { href: '/clients', icon: Users,         label: 'Clients', tutorialId: 'nav-clients' },
+    { href: '/quotes',  icon: FileText,      label: 'Quotes',  tutorialId: 'nav-quotes'  },
+    { href: '/leads',   icon: ClipboardList, label: 'Leads',   tutorialId: 'nav-leads'   },
   ]},
   { section: 'OPERATIONS', items: [
-    { href: '/projects',       icon: HardHat,       label: 'Projects'      },
-    { href: '/subcontractors', icon: Wrench,        label: 'Subcontractors'},
-    { href: '/change-orders',  icon: ClipboardList, label: 'Change Orders' },
-    { href: '/invoices',       icon: Receipt,       label: 'Invoices'      },
+    { href: '/projects',       icon: HardHat,       label: 'Projects',       tutorialId: 'nav-projects'       },
+    { href: '/subcontractors', icon: Wrench,        label: 'Subcontractors', tutorialId: 'nav-subcontractors' },
+    { href: '/change-orders',  icon: ClipboardList, label: 'Change Orders',  tutorialId: 'nav-change-orders'  },
+    { href: '/invoices',       icon: Receipt,       label: 'Invoices',       tutorialId: 'nav-invoices'       },
   ]},
   { section: 'REPORTS', items: [
-    { href: '/reports', icon: BarChart3, label: 'Reports' },
+    { href: '/reports', icon: BarChart3, label: 'Reports', tutorialId: 'nav-reports' },
   ]},
   { section: 'SETTINGS', items: [
-    { href: '/team',     icon: UserCog,  label: 'Team'     },
-    { href: '/settings', icon: Settings, label: 'Settings' },
-    { href: '/promo',    icon: Tag,      label: 'Promo Codes' },
+    { href: '/team',     icon: UserCog,  label: 'Team',        tutorialId: 'nav-team'     },
+    { href: '/settings', icon: Settings, label: 'Settings',    tutorialId: 'nav-settings' },
+    { href: '/promo',    icon: Tag,      label: 'Promo Codes', tutorialId: 'nav-promo'    },
   ]},
 ];
 
@@ -82,7 +82,7 @@ export default function SidebarWrapper() {
 
   const filteredNav = ALL_NAV.map(section => ({
     ...section,
-    items: section.items.filter(item => canSee(userRole, item.href)),
+    items: (section.items as Array<{ href: string; icon: React.FC<{ size: number; color: string; strokeWidth: number }>; label: string; tutorialId?: string }>).filter(item => canSee(userRole, item.href)),
   })).filter(section => section.items.length > 0);
 
   const handleLogout = () => {
@@ -145,10 +145,10 @@ export default function SidebarWrapper() {
             <div style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', padding: '8px 8px 4px', textTransform: 'uppercase' }}>
               {section}
             </div>
-            {items.map(({ href, icon: Icon, label }) => {
+            {items.map(({ href, icon: Icon, label, tutorialId }) => {
               const isActive = active(href);
               return (
-                <a key={href} href={href} style={{
+                <a key={href} href={href} data-tutorial={tutorialId} style={{
                   display: 'flex', alignItems: 'center', gap: 9,
                   padding: isActive ? '8px 10px 8px 7px' : '8px 10px',
                   borderRadius: 8, marginBottom: 1, textDecoration: 'none',

@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Clock, User, MapPin } from 'lucide-react';
 
 import { apiFetch } from '../../../lib/api';
+import { useTutorial } from '../../../components/tutorial/TutorialContext';
+import { shouldShowTutorial } from '../../../lib/tutorials';
 
 const TASK_TYPES = ['Site Visit', 'Meeting', 'Follow-up', 'Installation', 'Inspection', 'Other'] as const;
 type TaskType = typeof TASK_TYPES[number];
@@ -41,6 +43,7 @@ export default function SchedulePage() {
   const [view, setView] = useState<'month' | 'week'>('month');
   const [current, setCurrent] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const { startTutorial } = useTutorial();
 
   const today = new Date();
   today.setHours(0,0,0,0);
@@ -50,6 +53,12 @@ export default function SchedulePage() {
       .then(r => r.json())
       .then(data => { if (Array.isArray(data)) setTasks(data); setLoading(false); })
       .catch(() => setLoading(false));
+    // Auto-start create_task tutorial
+    const t = setTimeout(() => {
+      if (shouldShowTutorial('create_task')) startTutorial('create_task');
+    }, 800);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ─── Month View Helpers ───────────────────────────────────────────
@@ -101,12 +110,12 @@ export default function SchedulePage() {
               <button key={v} onClick={() => setView(v)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold capitalize transition-all ${view === v ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>{v}</button>
             ))}
           </div>
-          <a href="/tasks" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center no-underline" style={{ textDecoration:'none' }}>+ New Task</a>
+          <a data-tutorial="new-task-btn" href="/tasks" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center no-underline" style={{ textDecoration:'none' }}>+ New Task</a>
         </div>
       </header>
 
       {/* Legend */}
-      <div className="bg-white border-b border-[#EAECF2] px-6 py-2 flex gap-4 flex-wrap">
+      <div data-tutorial="task-type" className="bg-white border-b border-[#EAECF2] px-6 py-2 flex gap-4 flex-wrap">
         {TASK_TYPES.map(t => (
           <div key={t} className="flex items-center gap-1.5">
             <div className="w-2.5 h-2.5 rounded-full" style={{ background: TYPE_STYLE[t].bg }}/>

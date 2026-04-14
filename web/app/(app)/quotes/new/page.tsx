@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { FileText, Plus, Trash2, ChevronLeft, Send, Save, UserPlus, X } from 'lucide-react';
 import ClientAutocomplete from '../../../../components/ClientAutocomplete';
 import { apiFetch } from '../../../../lib/api';
+import { useTutorial } from '../../../../components/tutorial/TutorialContext';
+import { shouldShowTutorial } from '../../../../lib/tutorials';
 
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 
@@ -79,12 +81,19 @@ export default function NewQuotePage() {
   ]);
   const [subs, setSubs] = useState<Sub[]>([]);
   const [pickerForItem, setPickerForItem] = useState<string | null>(null);
+  const { startTutorial } = useTutorial();
 
   useEffect(() => {
     apiFetch('/subcontractors')
       .then(r => r.json())
       .then(data => { if (Array.isArray(data)) setSubs(data); })
       .catch(() => {});
+    // Auto-start create_quote tutorial
+    const t = setTimeout(() => {
+      if (shouldShowTutorial('create_quote')) startTutorial('create_quote');
+    }, 600);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addItem = () => setItems(p => [...p, { id: Date.now().toString(), section: 'Other', description: '', qty: 1, unit: 'job', price: 0 }]);
@@ -170,7 +179,7 @@ export default function NewQuotePage() {
             <FileText size={16} color="#4F7EF7"/>Quote Details
           </h2>
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div data-tutorial="quote-client">
               <label className={lbl}>Client</label>
               <ClientAutocomplete
                 value={clientId}
@@ -178,14 +187,14 @@ export default function NewQuotePage() {
                 placeholder="Search or add client..."
               />
             </div>
-            <div>
+            <div data-tutorial="quote-service">
               <label className={lbl}>Service Type</label>
               <select className={inp} value={service} onChange={e => setService(e.target.value)}>
                 <option value="">Select service...</option>
                 {SERVICES.map(s => <option key={s}>{s}</option>)}
               </select>
             </div>
-            <div className="col-span-2">
+            <div className="col-span-2" data-tutorial="quote-title">
               <label className={lbl}>Quote Title</label>
               <input className={inp} placeholder="e.g. Full Kitchen Remodel" value={title} onChange={e => setTitle(e.target.value)}/>
             </div>
@@ -196,7 +205,7 @@ export default function NewQuotePage() {
         <div className="bg-white rounded-[14px] border border-[#E8E4DF] overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DF]">
             <h2 className="text-[15px] font-bold text-[#1A1A2E]">Line Items</h2>
-            <button onClick={addItem} className="flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-[#FEF3EC] text-[#E8834A] text-[12.5px] font-semibold hover:bg-[#2D3A6B] transition-all">
+            <button data-tutorial="quote-add-item" onClick={addItem} className="flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-[#FEF3EC] text-[#E8834A] text-[12.5px] font-semibold hover:bg-[#2D3A6B] transition-all">
               <Plus size={13}/>Add Item
             </button>
           </div>
@@ -298,7 +307,7 @@ export default function NewQuotePage() {
           ))}
 
           <div className="flex justify-end px-5 py-4">
-            <div className="w-64 space-y-2">
+            <div className="w-64 space-y-2" data-tutorial="quote-total">
               <div className="flex justify-between text-[13px]">
                 <span className="text-[#6B7280]">Subtotal</span>
                 <span className="font-semibold text-[#1A1A2E]">{fmt(subtotal)}</span>
@@ -333,7 +342,7 @@ export default function NewQuotePage() {
           <button onClick={() => handleSave('draft')} disabled={loading} className="flex items-center gap-2 h-10 px-5 rounded-[9px] border border-[#E8E4DF] bg-[#FAF9F7] text-[13px] font-semibold text-[#6B7280] hover:text-white">
             <Save size={14}/>Save Draft
           </button>
-          <button onClick={() => handleSave('send')} disabled={loading} className="flex items-center gap-2 h-10 px-5 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold hover:bg-[#D4713A]">
+          <button data-tutorial="quote-save-send" onClick={() => handleSave('send')} disabled={loading} className="flex items-center gap-2 h-10 px-5 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold hover:bg-[#D4713A]">
             <Send size={14}/>{loading ? 'Saving...' : 'Save & Send'}
           </button>
         </div>

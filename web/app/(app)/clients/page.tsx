@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Users, X, CheckCircle } from 'lucide-react';
 
 import { apiFetch } from '../../../lib/api';
+import { useTutorial } from '../../../components/tutorial/TutorialContext';
+import { shouldShowTutorial } from '../../../lib/tutorials';
 
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 const SOURCES = ['Referral','Google','Website','Social Media','Yard Sign','Repeat Client','Other'];
@@ -55,7 +57,7 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
           {step === 1 ? (
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <div><label className={lbl}>First Name *</label><input className={inp} placeholder="Linda" value={form.firstName} onChange={e => set('firstName', e.target.value)} /></div>
+                <div><label className={lbl}>First Name *</label><input data-tutorial="client-first-name" className={inp} placeholder="Linda" value={form.firstName} onChange={e => set('firstName', e.target.value)} /></div>
                 <div><label className={lbl}>Last Name *</label><input className={inp} placeholder="Davis" value={form.lastName} onChange={e => set('lastName', e.target.value)} /></div>
               </div>
               <div><label className={lbl}>Phone *</label><input className={inp} placeholder="(941) 555-0000" value={form.phone} onChange={e => set('phone', e.target.value)} /></div>
@@ -71,7 +73,7 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
             </div>
           ) : (
             <div className="space-y-3">
-              <div><label className={lbl}>Street Address</label><input className={inp} placeholder="321 Cedar Blvd" value={form.address} onChange={e => set('address', e.target.value)} /></div>
+              <div><label className={lbl}>Street Address</label><input data-tutorial="client-address" className={inp} placeholder="321 Cedar Blvd" value={form.address} onChange={e => set('address', e.target.value)} /></div>
               <div className="grid grid-cols-3 gap-2">
                 <div className="col-span-1"><label className={lbl}>City</label><input className={inp} placeholder="Sarasota" value={form.city} onChange={e => set('city', e.target.value)} /></div>
                 <div><label className={lbl}>State</label>
@@ -90,7 +92,7 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#E8E4DF] text-[13px] font-semibold text-[#6B7280]">Cancel</button>
           {step === 1
             ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold disabled:opacity-40">Next</button>
-            : <button onClick={save} disabled={loading} className="h-9 px-5 rounded-[9px] bg-[#34C78A] text-white text-[13px] font-semibold disabled:opacity-40">{loading ? 'Saving...' : 'Save Client'}</button>
+            : <button data-tutorial="client-save-btn" onClick={save} disabled={loading} className="h-9 px-5 rounded-[9px] bg-[#34C78A] text-white text-[13px] font-semibold disabled:opacity-40">{loading ? 'Saving...' : 'Save Client'}</button>
           }
         </div>
       </div>
@@ -141,12 +143,24 @@ export default function ClientsPage() {
   const [selected, setSelected] = useState<Client | null>(null);
   const [showNew, setShowNew] = useState(false);
   const [search, setSearch] = useState('');
+  const { startTutorial } = useTutorial();
 
   useEffect(() => {
     apiFetch('/clients')
       .then(r => r.json())
-      .then(data => { setClients(Array.isArray(data) ? data : []); setLoading(false); })
+      .then(data => {
+        const arr = Array.isArray(data) ? data : [];
+        setClients(arr);
+        setLoading(false);
+        // Auto-start tutorial if no clients yet
+        if (arr.length === 0) {
+          setTimeout(() => {
+            if (shouldShowTutorial('create_client')) startTutorial('create_client');
+          }, 500);
+        }
+      })
       .catch(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filtered = clients.filter(c =>
@@ -161,7 +175,7 @@ export default function ClientsPage() {
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{clients.length} total</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
-        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#D4713A]">+ New Client</button>
+        <button data-tutorial="new-client-btn" onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#D4713A]">+ New Client</button>
       </header>
       <div className="p-5">
         {loading ? (

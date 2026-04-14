@@ -1,13 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { X, CheckCircle, Circle, Settings, Users, FileText, Building2, UserPlus } from 'lucide-react';
+import { X, CheckCircle, Circle, Settings, Users, FileText, Building2, UserPlus, BookOpen } from 'lucide-react';
+import { shouldShowTutorial } from '../lib/tutorials';
+import { useTutorial } from './tutorial/TutorialContext';
 
 const STEPS = [
-  { id: 'company-info',   label: 'Add your company info',      href: '/settings',       Icon: Settings },
-  { id: 'upload-logo',    label: 'Upload your logo',           href: '/settings',       Icon: Building2 },
-  { id: 'first-client',   label: 'Add your first client',      href: '/clients',        Icon: Users },
-  { id: 'first-quote',    label: 'Create your first quote',    href: '/quotes',         Icon: FileText },
-  { id: 'invite-member',  label: 'Invite a team member',       href: '/team',           Icon: UserPlus },
+  { id: 'company-info',   label: 'Add your company info',      href: '/settings',       Icon: Settings,  tutorialId: 'settings_setup' },
+  { id: 'upload-logo',    label: 'Upload your logo',           href: '/settings',       Icon: Building2, tutorialId: 'settings_setup' },
+  { id: 'first-client',   label: 'Add your first client',      href: '/clients',        Icon: Users,     tutorialId: 'create_client'  },
+  { id: 'first-quote',    label: 'Create your first quote',    href: '/quotes/new',     Icon: FileText,  tutorialId: 'create_quote'   },
+  { id: 'invite-member',  label: 'Invite a team member',       href: '/team',           Icon: UserPlus,  tutorialId: null             },
 ];
 
 const STORAGE_KEY = 'onboarding_completed_steps';
@@ -15,6 +17,8 @@ const STORAGE_KEY = 'onboarding_completed_steps';
 export default function OnboardingChecklist() {
   const [visible, setVisible] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
+  const [tick, setTick] = useState(0);
+  const { startTutorial } = useTutorial();
 
   useEffect(() => {
     const isNew = typeof window !== 'undefined' && localStorage.getItem('onboarding_new') === '1';
@@ -34,6 +38,21 @@ export default function OnboardingChecklist() {
   const dismiss = () => {
     setVisible(false);
     localStorage.removeItem('onboarding_new');
+  };
+
+  const handleStepClick = (id: string, href: string, tutorialId: string | null) => {
+    toggle(id);
+    if (tutorialId && shouldShowTutorial(tutorialId)) {
+      // If on the same page, start tutorial directly; otherwise navigate (tutorial auto-starts on the target page)
+      if (window.location.pathname === href || (href === '/settings' && window.location.pathname === '/settings')) {
+        startTutorial(tutorialId);
+        setTick(t => t + 1);
+      } else {
+        window.location.href = href;
+      }
+    } else {
+      window.location.href = href;
+    }
   };
 
   if (!visible) return null;
@@ -71,11 +90,12 @@ export default function OnboardingChecklist() {
 
       {/* Steps */}
       <div style={{ padding: '12px 0' }}>
-        {STEPS.map(({ id, label, href, Icon }) => {
+        {STEPS.map(({ id, label, href, Icon, tutorialId }) => {
           const done = completed.includes(id);
+          const hasTutorial = tutorialId && shouldShowTutorial(tutorialId);
           return (
             <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 20px', cursor: 'pointer', transition: 'background 0.1s' }}
-              onClick={() => { toggle(id); window.location.href = href; }}
+              onClick={() => handleStepClick(id, href, tutorialId)}
               onMouseEnter={e => (e.currentTarget.style.background = '#F8F6F3')}
               onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
               {done
@@ -85,6 +105,9 @@ export default function OnboardingChecklist() {
               <span style={{ fontSize: 13, color: done ? '#9CA3AF' : '#1A1A2E', textDecoration: done ? 'line-through' : 'none', flex: 1 }}>
                 {label}
               </span>
+              {!done && hasTutorial && (
+                <span title="Tutorial available"><BookOpen size={12} color="#E8834A" strokeWidth={2}/></span>
+              )}
             </div>
           );
         })}

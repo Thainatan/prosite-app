@@ -4,6 +4,8 @@ import { Users, ClipboardList, HardHat, DollarSign, Home, Clock, MapPin } from '
 import { apiFetch } from '../../../lib/api';
 import OnboardingChecklist from '../../../components/OnboardingChecklist';
 import TrialBanner from '../../../components/TrialBanner';
+import { useTutorial } from '../../../components/tutorial/TutorialContext';
+import { shouldShowTutorial } from '../../../lib/tutorials';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
@@ -47,12 +49,19 @@ export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState('');
+  const { startTutorial } = useTutorial();
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem('prosite_user');
       if (raw) { const u = JSON.parse(raw); setUserName(u.firstName || ''); }
     } catch {}
+    // Auto-start welcome tutorial on first visit
+    const t = setTimeout(() => {
+      if (shouldShowTutorial('welcome')) startTutorial('welcome');
+    }, 1200);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
