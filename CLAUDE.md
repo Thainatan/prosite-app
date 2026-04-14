@@ -54,12 +54,26 @@
 - POST /quotes uses 'items' array field (not 'lineItems')
 - Quote approve is triggered via the UI Approve button (no /approve REST endpoint)
 
+## Super Admin Panel
+- Login: admin@prosite.com — password stored in project memory
+- Role: SUPER_ADMIN (assigned in JWT at login time, not stored in DB)
+- Routes: /admin/* — completely separate layout from regular app
+- /admin/dashboard — platform overview: stats, charts, alerts, recent signups
+- /admin/tenants — all companies with search/filter/sort, inline extend/suspend
+- /admin/tenants/:id — company detail: stats, activity timeline, team, plan management
+- /admin/promo — promo code CRUD + usage detail with tenant info, copy register link
+- /admin/reports — revenue/signups charts, plan distribution, top 10 companies
+- API: GET/PATCH /admin/tenants/:id, GET /admin/overview, GET /admin/reports
+- Admin Panel link appears in regular sidebar only for SUPER_ADMIN role
+- Guard: req.user.role === 'SUPER_ADMIN' (checked per-endpoint)
+- ADMIN_EMAIL env var (defaults to admin@prosite.com)
+
 ## Status
-- V1: 95% complete
+- V1: 100% complete
 - V2: Not started
 
 ## Roles
-ADMIN, OFFICE_MANAGER, PROJECT_MANAGER, FIELD_TECH, SUBCONTRACTOR
+ADMIN, OFFICE_MANAGER, PROJECT_MANAGER, FIELD_TECH, SUBCONTRACTOR, SUPER_ADMIN (JWT only)
 
 ## API Endpoints
 /clients, /quotes, /projects, /invoices, /tasks, /subcontractors, /team, /settings, /auth, /reports, /change-orders, /promo
