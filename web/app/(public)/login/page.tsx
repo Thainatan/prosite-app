@@ -153,7 +153,7 @@ export default function LoginPage() {
             </div>
 
             <div style={{ textAlign: 'right', marginBottom: 24 }}>
-              <a href="#" style={{ fontSize: 13, color: '#E8834A', textDecoration: 'none', fontWeight: 600 }}>
+              <a href="mailto:support@prositeapp.com?subject=Password Reset Request" style={{ fontSize: 13, color: '#E8834A', textDecoration: 'none', fontWeight: 600 }}>
                 Forgot password?
               </a>
             </div>

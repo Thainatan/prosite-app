@@ -39,7 +39,7 @@ export default function HomePage() {
       {/* STATS */}
       <section style={{background:'#F7F8FC',padding:'40px',borderBottom:'1px solid #EAECF2'}}>
         <div style={{display:'flex',justifyContent:'center',gap:60,flexWrap:'wrap'}}>
-          {[{v:'500+',l:'Contractors using ProSite'},{v:'$2.4M',l:'Invoices processed monthly'},{v:'4.9★',l:'Average rating'},{v:'2 min',l:'Average quote time'}].map(({v,l})=>(
+          {[{v:'14 days',l:'Free trial — no credit card'},{v:'Free',l:'Cancel anytime'},{v:'5 min',l:'Setup time'},{v:'Early',l:'Beta access — limited spots'}].map(({v,l})=>(
             <div key={l} style={{textAlign:'center'}}>
               <div style={{fontSize:32,fontWeight:800,color:'#E8834A',marginBottom:4}}>{v}</div>
               <div style={{fontSize:13,color:'#6B7280'}}>{l}</div>
@@ -111,8 +111,8 @@ export default function HomePage() {
             <Users size={28} color="#E8834A" strokeWidth={1.8}/>
           </div>
           <h3 style={{fontSize:22,fontWeight:800,color:'#1C2B3A',marginBottom:10}}>Partner Program</h3>
-          <p style={{fontSize:15,color:'#6B7280',lineHeight:1.6,marginBottom:20}}>Are you a supplier, trade association, or industry partner? Apply for a free partner code and give your network access to ProSite.</p>
-          <a href="/partner" style={{display:'inline-block',padding:'12px 28px',background:'#1C2B3A',color:'white',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none'}}>Apply for Partner Code →</a>
+          <p style={{fontSize:15,color:'#6B7280',lineHeight:1.6,marginBottom:20}}>Are you a supplier, trade association, or industry partner? Email us to get a free partner code and give your network access to ProSite.</p>
+          <a href="mailto:support@prositeapp.com?subject=Partner Code Request" style={{display:'inline-block',padding:'12px 28px',background:'#1C2B3A',color:'white',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none'}}>Apply for Partner Code →</a>
         </div>
       </section>
 
@@ -120,6 +120,7 @@ export default function HomePage() {
       <footer style={{background:'#1C2B3A',padding:'40px',textAlign:'center'}}>
         <span style={{fontSize:16,fontWeight:800,color:'white'}}>ProSite</span>
         <p style={{color:'#6B7280',fontSize:13,margin:'8px 0 0'}}>© 2026 ProSite · Built for remodeling contractors.</p>
+        <p style={{color:'#4A5568',fontSize:13,margin:'6px 0 0'}}><a href="mailto:support@prositeapp.com" style={{color:'#8BA3B8',textDecoration:'none'}}>support@prositeapp.com</a></p>
       </footer>
     </div>
   );

@@ -68,8 +68,17 @@
 - Guard: req.user.role === 'SUPER_ADMIN' (checked per-endpoint)
 - ADMIN_EMAIL env var (defaults to admin@prosite.com)
 
+## Beta Launch
+- Launched: April 2026
+- Outreach templates: web/public/beta-launch.md
+- Install guide: /install page
+- Personalized invite links: /invite/[CODE] (validates promo code, redirects to /register?code=CODE)
+- Home page: removed placeholder stats, fixed dead /partner link → mailto
+- Login page: Forgot password → mailto:support@prositeapp.com
+- Support email: support@prositeapp.com
+
 ## Status
-- V1: 100% complete
+- V1: 100% complete — Beta launched April 2026
 - V2: Not started
 
 ## Roles
