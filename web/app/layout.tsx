@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import SidebarWrapper from './(app)/SidebarWrapper';
 import BottomNav from '../components/BottomNav';
+import MobileHeader from '../components/MobileHeader';
 import { TutorialProvider } from '../components/tutorial/TutorialContext';
 import TutorialHelpButton from '../components/tutorial/TutorialHelpButton';
 
@@ -22,7 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* Viewport: viewport-fit=cover for notch, maximum-scale=1 prevents zoom on input focus */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#E8834A" />
 
@@ -71,9 +73,20 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Desktop sidebar + mobile sliding overlay sidebar */}
       <SidebarWrapper />
-      <main style={{ flex: 1, overflow: 'auto', minWidth: 0 }}>{children}</main>
+
+      {/* Content area */}
+      <main style={{ flex: 1, overflow: 'auto', minWidth: 0 }}>
+        {children}
+      </main>
+
       <TutorialHelpButton />
+
+      {/* Mobile only: fixed header (z-index 100) */}
+      <MobileHeader />
+
+      {/* Mobile only: fixed bottom nav (z-index 90) */}
       <BottomNav />
     </div>
   );

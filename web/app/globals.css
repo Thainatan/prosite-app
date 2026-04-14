@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
+/* ===================================================
+   DESIGN TOKENS
+   =================================================== */
 :root {
+  /* Colors */
   --background: #F8F6F3;
   --foreground: #1A1A2E;
   --card: #FFFFFF;
@@ -11,8 +15,34 @@
   --border: #E8E4DF;
   --input-bg: #FAF9F7;
   --text-secondary: #6B7280;
+
+  /* Safe area insets */
+  --sat: env(safe-area-inset-top,    0px);
+  --sar: env(safe-area-inset-right,  0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left,   0px);
+
+  /* Layout */
+  --header-height:   56px;
+  --bottom-nav-height: 60px;
+  --sidebar-width:   240px;
+
+  /* Touch targets */
+  --touch-target:       44px;
+  --touch-target-large: 52px;
 }
 
+/* Standalone PWA — account for status bar */
+@media (display-mode: standalone) {
+  :root {
+    --header-height: calc(56px + var(--sat));
+  }
+  body { padding-top: var(--sat); }
+}
+
+/* ===================================================
+   BASE
+   =================================================== */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -20,10 +50,12 @@ body {
   margin: 0;
 }
 
-/* ── Keyframe animations ─────────────────────────────────────── */
+/* ===================================================
+   KEYFRAMES
+   =================================================== */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0);    }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -31,99 +63,146 @@ body {
 }
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0);    }
+  to   { opacity: 1; transform: translateX(0); }
 }
 @keyframes pulse {
-  0%, 100% { opacity: 1;   }
+  0%, 100% { opacity: 1; }
   50%       { opacity: 0.5; }
 }
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1);    }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slideUpModal {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
-/* ── Animation helpers ───────────────────────────────────────── */
-.animate-fadeInUp    { animation: fadeInUp     0.4s ease forwards; }
-.animate-fadeIn      { animation: fadeIn       0.3s ease forwards; }
-.animate-slideInRight{ animation: slideInRight 0.3s ease forwards; }
-.animate-pulse       { animation: pulse        1.5s infinite;      }
-.animate-scaleIn     { animation: scaleIn      0.25s ease forwards;}
+/* ===================================================
+   ANIMATION HELPERS
+   =================================================== */
+.animate-fadeInUp     { animation: fadeInUp     0.4s ease forwards; }
+.animate-fadeIn       { animation: fadeIn       0.3s ease forwards; }
+.animate-slideInRight { animation: slideInRight 0.3s ease forwards; }
+.animate-pulse        { animation: pulse        1.5s infinite; }
+.animate-scaleIn      { animation: scaleIn      0.25s ease forwards; }
 
-/* ── Stagger children ────────────────────────────────────────── */
 .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
 .stagger-children > *:nth-child(2) { animation-delay: 0.10s; }
 .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
 .stagger-children > *:nth-child(4) { animation-delay: 0.20s; }
 .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
 
-/* ── Card hover ──────────────────────────────────────────────── */
+/* ===================================================
+   COMPONENT HELPERS
+   =================================================== */
 .card-hover { transition: all 0.2s ease; }
 .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
 
-/* ── Smooth global transitions ───────────────────────────────── */
 * { transition: background-color 0.15s ease, border-color 0.15s ease; }
 
-/* ── Button press effect ─────────────────────────────────────── */
 .btn-press:active { transform: scale(0.97); }
 
-/* ── Orange focus glow ───────────────────────────────────────── */
 .input-focus:focus {
   outline: none;
   border-color: #E8834A !important;
   box-shadow: 0 0 0 3px rgba(232,131,74,0.15);
 }
 
-/* ── Modal open animation ────────────────────────────────────── */
 .modal-content { animation: scaleIn 0.25s ease forwards; }
 
-/* ── Sidebar active indicator ────────────────────────────────── */
 .sidebar-active {
   border-left: 3px solid #E8834A;
   padding-left: calc(10px - 3px) !important;
 }
 
-/* ── Empty-state pulse on CTA ────────────────────────────────── */
 .cta-pulse { animation: pulse 2s infinite; }
+.toast     { animation: slideInRight 0.3s ease forwards; }
 
-/* ── Toast animation ─────────────────────────────────────────── */
-.toast { animation: slideInRight 0.3s ease forwards; }
+/* ===================================================
+   LAYER SYSTEM  (z-index reference)
+   bottom-nav:      90
+   mobile-header:  100
+   sidebar-overlay: 150
+   sidebar:         200
+   =================================================== */
 
-/* ── Bottom Navigation (hidden on desktop) ───────────────────── */
-.bottom-nav {
-  display: none;
+/* ===================================================
+   DESKTOP DEFAULT — mobile elements hidden
+   =================================================== */
+.mobile-header  { display: none; }
+.bottom-nav     { display: none; }
+.auth-left-panel { display: flex; }
+
+/* ===================================================
+   DESKTOP (>768px) — desktop sidebar visible
+   =================================================== */
+@media (min-width: 769px) {
+  .desktop-sidebar  { display: flex !important; }
+  .mobile-sidebar   { display: none !important; }
+  .sidebar-overlay  { display: none !important; }
+  .sidebar-close-btn { display: none !important; }
 }
 
-/* ── Login / Register left panel (hidden on mobile) ─────────── */
-.auth-left-panel {
-  display: flex;
-}
-
-/* ── Mobile responsive (≤ 768px) ────────────────────────────── */
+/* ===================================================
+   MOBILE (≤768px)
+   =================================================== */
 @media (max-width: 768px) {
+  /* ── Global resets ─── */
+  * { -webkit-tap-highlight-color: transparent; }
+  body { overflow-x: hidden; -webkit-overflow-scrolling: touch; }
 
-  /* ── Sidebar ─────────────────────────────────────────────── */
-  .mobile-hamburger  { display: flex !important; }
+  /* ── Sidebar visibility ─── */
   .desktop-sidebar   { display: none !important; }
   .mobile-sidebar    { display: block !important; }
   .sidebar-overlay   { display: block !important; }
   .sidebar-close-btn { display: flex !important; }
 
-  /* ── App main content ────────────────────────────────────── */
-  main {
-    margin-left: 0 !important;
-    padding-top: 56px;
-    padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important;
+  /* ── Mobile header ─── */
+  .mobile-header {
+    display: flex;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-height);
+    padding-top: var(--sat);
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    z-index: 100;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 4px;
+    padding-right: 4px;
   }
 
-  /* ── Bottom navigation ───────────────────────────────────── */
+  .mobile-header-btn {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: none; cursor: pointer;
+    border-radius: 10px; flex-shrink: 0;
+  }
+
+  .mobile-header-logo {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── Main content offset ─── */
+  main {
+    margin-left: 0 !important;
+    padding-top: var(--header-height) !important;
+    padding-bottom: calc(var(--bottom-nav-height) + var(--sab) + 8px) !important;
+  }
+
+  /* ── Bottom navigation ─── */
   .bottom-nav {
     display: flex;
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 60px;
-    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(var(--bottom-nav-height) + var(--sab));
+    padding-bottom: var(--sab);
     background: #FFFFFF;
-    border-top: 1px solid #E8E4DF;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
     z-index: 90;
     align-items: stretch;
   }
@@ -138,32 +217,28 @@ body {
     text-decoration: none;
     color: #9CA3AF;
     font-size: 10px;
-    font-weight: 500;
+    font-weight: 600;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
-    min-height: 44px;
-    -webkit-tap-highlight-color: transparent;
+    min-height: var(--touch-target);
     transition: color 0.15s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .bottom-nav-tab.active {
     color: #E8834A;
   }
 
-  .bottom-nav-more {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  /* ── Tables ──────────────────────────────────────────────── */
+  /* ── Tables ─── */
   table {
     display: block;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  /* ── Modals: full-screen slide-up ────────────────────────── */
+  /* ── Modals: slide up from bottom ─── */
   .modal-overlay {
     align-items: flex-end !important;
     padding: 0 !important;
@@ -178,65 +253,36 @@ body {
     overflow-y: auto;
   }
 
-  /* ── Stat cards: 2×2 grid ────────────────────────────────── */
-  .stats-grid,
-  [style*="grid-template-columns:repeat(4, 1fr)"],
-  [style*="grid-template-columns: repeat(4, 1fr)"] {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  /* ── Cards / list rows ───────────────────────────────────── */
-  .card-row-desktop {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* ── Forms ───────────────────────────────────────────────── */
+  /* ── Forms: prevent iOS zoom, good touch targets ─── */
   input, select, textarea {
+    font-size: 16px !important;
     min-height: 48px !important;
-    font-size: 16px !important;  /* prevents iOS zoom */
   }
-  button { min-height: 44px; }
+  textarea { min-height: 80px !important; height: auto !important; }
+  button   { min-height: var(--touch-target); }
 
-  /* ── Auth pages: hide left panel ─────────────────────────── */
-  .auth-left-panel {
-    display: none !important;
-  }
-  .auth-right-panel {
-    padding: 32px 24px !important;
-  }
+  /* ── Auth pages ─── */
+  .auth-left-panel  { display: none !important; }
+  .auth-right-panel { padding: 32px 24px !important; }
+  .plan-grid        { grid-template-columns: 1fr !important; }
 
-  /* ── Register: stack plan cards ──────────────────────────── */
-  .plan-grid {
-    grid-template-columns: 1fr !important;
-  }
+  /* ── List page headers on mobile ─── */
+  .page-search-input { display: none !important; }
+  .page-btn-text     { display: none !important; }
+  .page-btn-icon     { display: flex !important; }
 
-  /* ── Name row in register: still 2-col is fine, but stack on very small ── */
-  @media (max-width: 400px) {
-    .name-grid {
-      grid-template-columns: 1fr !important;
-    }
+  /* ── Touch-friendly list rows ─── */
+  .list-row {
+    min-height: 64px;
+    padding: 14px 16px;
   }
 
-  /* ── Dashboard cards row ─────────────────────────────────── */
-  .dashboard-cards-row {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* ── Padding / spacing tweaks ────────────────────────────── */
-  .page-padding {
-    padding: 16px !important;
-  }
+  /* ── Padding tweaks ─── */
+  .page-padding { padding: 16px !important; }
 }
 
-/* ── Slide-up modal animation ────────────────────────────────── */
-@keyframes slideUpModal {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-/* ── PWA standalone: respect safe areas ─────────────────────── */
-@media (display-mode: standalone) {
-  body {
-    padding-top: env(safe-area-inset-top);
-  }
+/* ── Nested mobile-only inside the @media above can't be nested in CSS3.
+   The name-grid rule needs to be at the outer level if nested: ─── */
+@media (max-width: 400px) {
+  .name-grid { grid-template-columns: 1fr !important; }
 }

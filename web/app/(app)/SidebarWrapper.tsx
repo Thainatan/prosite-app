@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, FileText, HardHat, Receipt,
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
-  ChevronRight, LogOut, Bell, CheckSquare, Wrench, Menu, X, Smartphone, Tag, Shield,
+  ChevronRight, LogOut, Bell, CheckSquare, Wrench, X, Smartphone, Tag, Shield,
 } from 'lucide-react';
 import { ROLE_PERMISSIONS } from '../../lib/permissions';
 
@@ -61,16 +61,13 @@ export default function SidebarWrapper() {
       }
     } catch {}
 
-    // Open sidebar from BottomNav "More" button
+    // Open sidebar from MobileHeader hamburger or BottomNav "More"
     const openHandler = () => setMobileOpen(true);
     window.addEventListener('open-sidebar', openHandler);
 
     // PWA install prompt
     if (localStorage.getItem('pwa_installed')) setAppInstalled(true);
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-    };
+    const handler = (e: Event) => { e.preventDefault(); setInstallPrompt(e); };
     window.addEventListener('beforeinstallprompt', handler as EventListener);
     window.addEventListener('appinstalled', () => {
       setAppInstalled(true);
@@ -117,11 +114,11 @@ export default function SidebarWrapper() {
 
   const sidebarContent = (
     <aside style={{
-      width: 240, background: '#1C2B3A', height: '100%',
+      width: '100%', background: '#1C2B3A', height: '100%',
       display: 'flex', flexDirection: 'column',
       borderRight: '1px solid rgba(255,255,255,0.06)',
     }}>
-      {/* Logo */}
+      {/* Logo + close */}
       <div style={{ padding: '18px 16px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <img src="/logo.png" alt="ProSite" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }}/>
@@ -131,7 +128,8 @@ export default function SidebarWrapper() {
           </div>
         </div>
         {/* Close button — mobile only */}
-        <button onClick={() => setMobileOpen(false)} className="sidebar-close-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'none', color: 'rgba(255,255,255,0.5)' }}>
+        <button onClick={() => setMobileOpen(false)} className="sidebar-close-btn"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, display: 'none', color: 'rgba(255,255,255,0.6)', width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>
           <X size={18}/>
         </button>
       </div>
@@ -157,13 +155,13 @@ export default function SidebarWrapper() {
               return (
                 <a key={href} href={href} data-tutorial={tutorialId} style={{
                   display: 'flex', alignItems: 'center', gap: 9,
-                  padding: isActive ? '8px 10px 8px 7px' : '8px 10px',
-                  borderRadius: 8, marginBottom: 1, textDecoration: 'none',
+                  padding: isActive ? '10px 10px 10px 7px' : '10px 10px',
+                  borderRadius: 8, marginBottom: 2, textDecoration: 'none',
                   background: isActive ? 'rgba(232,131,74,0.12)' : 'transparent',
                   color: isActive ? '#FFFFFF' : '#8BA3B8',
                   fontWeight: isActive ? 600 : 400, fontSize: 13.5,
                   borderLeft: isActive ? '3px solid #E8834A' : '3px solid transparent',
-                  transition: 'all 0.15s ease',
+                  minHeight: 44,
                 }}>
                   <Icon size={16} color={isActive ? '#E8834A' : '#8BA3B8'} strokeWidth={isActive ? 2.5 : 1.8}/>
                   <span style={{ flex: 1 }}>{label}</span>
@@ -175,12 +173,12 @@ export default function SidebarWrapper() {
         ))}
       </nav>
 
-      {/* PWA Install button */}
+      {/* PWA Install */}
       {installPrompt && !appInstalled && (
         <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <button onClick={handleInstall} style={{
             width: '100%', display: 'flex', alignItems: 'center', gap: 8,
-            padding: '8px 12px', borderRadius: 8, cursor: 'pointer',
+            padding: '10px 12px', borderRadius: 8, cursor: 'pointer', minHeight: 44,
             background: 'transparent', border: '1px solid rgba(232,131,74,0.4)',
             color: '#E8834A', fontSize: 12.5, fontWeight: 600,
           }}>
@@ -190,11 +188,11 @@ export default function SidebarWrapper() {
         </div>
       )}
 
-      {/* Admin Panel link — only for SUPER_ADMIN */}
+      {/* Admin Panel — SUPER_ADMIN only */}
       {userRole === 'SUPER_ADMIN' && (
         <div style={{ padding: '0 12px 6px' }}>
           <a href="/admin/dashboard" style={{
-            display: 'flex', alignItems: 'center', gap: 9,
+            display: 'flex', alignItems: 'center', gap: 9, minHeight: 44,
             padding: '9px 12px', borderRadius: 9, textDecoration: 'none',
             background: 'rgba(232,131,74,0.1)', border: '1px solid rgba(232,131,74,0.25)',
           }}>
@@ -205,14 +203,13 @@ export default function SidebarWrapper() {
         </div>
       )}
 
-      {/* Wrench decoration */}
       <div style={{ padding: '0 16px 4px', display: 'flex', justifyContent: 'center' }}>
         <Wrench size={18} color="rgba(232,131,74,0.3)" strokeWidth={1.5}/>
       </div>
 
       {/* User */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 9, cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 9, cursor: 'pointer', minHeight: 44 }}>
           <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,#E8834A,#D4713A)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: 'white' }}>{userInitials}</span>
           </div>
@@ -220,7 +217,7 @@ export default function SidebarWrapper() {
             <div style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>{userName}</div>
             <div style={{ fontSize: 11, color: '#E8834A', fontWeight: 500 }}>{roleLabel[userRole] || userRole}</div>
           </div>
-          <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, minWidth: 32, minHeight: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <LogOut size={14} color="rgba(255,255,255,0.3)"/>
           </button>
         </div>
@@ -230,47 +227,36 @@ export default function SidebarWrapper() {
 
   return (
     <>
-      {/* Hamburger button — mobile only */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="mobile-hamburger"
-        style={{
-          display: 'none',
-          position: 'fixed', top: 12, left: 12, zIndex: 60,
-          width: 40, height: 40, borderRadius: 10,
-          background: '#1C2B3A', border: 'none', cursor: 'pointer',
-          alignItems: 'center', justifyContent: 'center',
-        }}
-      >
-        <Menu size={20} color="white"/>
-      </button>
-
-      {/* Desktop sidebar */}
+      {/* ── Desktop sidebar (flex column, 240px) ── */}
       <div className="desktop-sidebar" style={{ flexShrink: 0, width: 240, minHeight: '100vh' }}>
         {sidebarContent}
       </div>
 
-      {/* Mobile overlay */}
+      {/* ── Mobile: dark overlay backdrop (z-index 150) ── */}
       {mobileOpen && (
         <div
           className="sidebar-overlay"
           onClick={() => setMobileOpen(false)}
           style={{
-            display: 'none',
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40,
+            display: 'none',               /* CSS shows on mobile */
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.55)',
+            zIndex: 150,
+            animation: 'fadeIn 0.2s ease forwards',
           }}
         />
       )}
 
-      {/* Mobile sidebar */}
+      {/* ── Mobile: sliding sidebar (z-index 200) ── */}
       <div
-        className={`mobile-sidebar${mobileOpen ? ' open' : ''}`}
+        className="mobile-sidebar"
         style={{
-          display: 'none',
-          position: 'fixed', top: 0, left: 0, height: '100vh',
-          zIndex: 50, width: 240,
+          display: 'none',                /* CSS shows on mobile */
+          position: 'fixed', top: 0, left: 0,
+          height: '100vh', width: 280,
+          zIndex: 200,
           transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
-          transition: 'transform 0.3s ease',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         {sidebarContent}

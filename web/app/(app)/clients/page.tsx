@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Users, X, CheckCircle } from 'lucide-react';
+import { Users, X, CheckCircle, Plus } from 'lucide-react';
 
 import { apiFetch } from '../../../lib/api';
 import { useTutorial } from '../../../components/tutorial/TutorialContext';
@@ -169,13 +169,24 @@ export default function ClientsPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F6F3]">
-      <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-6 gap-3">
+      <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-4 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">Clients</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{clients.length} total</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{clients.length}</span>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..." className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
-        <button data-tutorial="new-client-btn" onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#D4713A]">+ New Client</button>
+        {/* Search — hidden on mobile */}
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..."
+          className="page-search-input flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
+        {/* Desktop button: text + icon */}
+        <button data-tutorial="new-client-btn" onClick={() => setShowNew(true)}
+          className="page-btn-text h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#D4713A]">
+          + New Client
+        </button>
+        {/* Mobile button: icon only */}
+        <button data-tutorial="new-client-btn" onClick={() => setShowNew(true)}
+          className="page-btn-icon hidden w-10 h-10 bg-[#E8834A] text-white rounded-[10px] items-center justify-center hover:bg-[#D4713A]">
+          <Plus size={20} color="white" strokeWidth={2.5}/>
+        </button>
       </header>
       <div className="p-5">
         {loading ? (
@@ -192,7 +203,7 @@ export default function ClientsPage() {
         ) : (
           <div className="bg-white rounded-[14px] border border-[#E8E4DF] overflow-hidden">
             {filtered.map(c => (
-              <div key={c.id} onClick={() => setSelected(c)} className="flex items-center gap-4 px-5 py-4 hover:bg-[#FAF9F7] cursor-pointer border-b border-[#E8E4DF] last:border-0 transition-colors">
+              <div key={c.id} onClick={() => setSelected(c)} className="list-row flex items-center gap-4 px-5 py-4 hover:bg-[#FAF9F7] cursor-pointer border-b border-[#E8E4DF] last:border-0 transition-colors">
                 <div className="w-10 h-10 rounded-full bg-[#FEF3EC] flex items-center justify-center flex-shrink-0">
                   <span className="text-[13px] font-bold text-[#E8834A]">{c.firstName[0]}{c.lastName[0]}</span>
                 </div>
