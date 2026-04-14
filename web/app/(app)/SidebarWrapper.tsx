@@ -6,7 +6,7 @@ import {
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
   ChevronRight, LogOut, Bell, CheckSquare, Wrench, X, Smartphone, Tag, Shield,
 } from 'lucide-react';
-import { ROLE_PERMISSIONS } from '../../lib/permissions';
+import { canSeeRoute } from '../../lib/permissions';
 
 const ALL_NAV = [
   { section: 'MAIN', items: [
@@ -35,15 +35,10 @@ const ALL_NAV = [
   ]},
 ];
 
-function canSee(role: string, href: string): boolean {
-  const perms = ROLE_PERMISSIONS[role] || [];
-  if (perms.includes('*')) return true;
-  return perms.some(p => href === p || href.startsWith(p + '/'));
-}
-
 export default function SidebarWrapper() {
   const pathname = usePathname();
   const [userRole, setUserRole] = useState('ADMIN');
+  const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('User');
   const [userInitials, setUserInitials] = useState('U');
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -56,6 +51,7 @@ export default function SidebarWrapper() {
       if (raw) {
         const u = JSON.parse(raw);
         setUserRole(u.role || 'ADMIN');
+        setUserEmail(u.email || '');
         setUserName(u.firstName || 'User');
         setUserInitials(`${(u.firstName || 'U')[0]}${(u.lastName || '')[0] || ''}`.toUpperCase());
       }
@@ -84,9 +80,15 @@ export default function SidebarWrapper() {
 
   const active = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
+  const isSuperAdmin = userRole === 'SUPER_ADMIN' || userEmail === 'admin@prosite.com';
+
   const filteredNav = ALL_NAV.map(section => ({
     ...section,
-    items: (section.items as Array<{ href: string; icon: React.FC<{ size: number; color: string; strokeWidth: number }>; label: string; tutorialId?: string }>).filter(item => canSee(userRole, item.href)),
+    items: (section.items as Array<{ href: string; icon: React.FC<{ size: number; color: string; strokeWidth: number }>; label: string; tutorialId?: string }>).filter(item => {
+      // Promo codes: SUPER_ADMIN only
+      if (item.href === '/promo') return isSuperAdmin;
+      return canSeeRoute(isSuperAdmin ? 'SUPER_ADMIN' : userRole, item.href);
+    }),
   })).filter(section => section.items.length > 0);
 
   const handleLogout = () => {
@@ -189,7 +191,7 @@ export default function SidebarWrapper() {
       )}
 
       {/* Admin Panel — SUPER_ADMIN only */}
-      {userRole === 'SUPER_ADMIN' && (
+      {isSuperAdmin && (
         <div style={{ padding: '0 12px 6px' }}>
           <a href="/admin/dashboard" style={{
             display: 'flex', alignItems: 'center', gap: 9, minHeight: 44,
