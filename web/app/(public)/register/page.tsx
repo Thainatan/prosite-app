@@ -158,8 +158,8 @@ function RegisterForm() {
   };
 
   const inp: React.CSSProperties = {
-    width: '100%', height: 44, background: '#FAF9F7', border: '1px solid #E8E4DF',
-    borderRadius: 9, padding: '0 12px', fontSize: 14, color: '#1A1A2E',
+    width: '100%', height: 48, background: '#FAF9F7', border: '1px solid #E8E4DF',
+    borderRadius: 9, padding: '0 12px', fontSize: 16, color: '#1A1A2E',
     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s, box-shadow 0.15s',
   };
   const focus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -174,10 +174,10 @@ function RegisterForm() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
 
-      {/* LEFT PANEL */}
-      <div style={{
+      {/* LEFT PANEL (hidden on mobile) */}
+      <div className="auth-left-panel" style={{
         flex: '0 0 42%', background: 'linear-gradient(145deg, #1C2B3A 0%, #2D4A6B 100%)',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        flexDirection: 'column', justifyContent: 'center',
         alignItems: 'center', padding: '48px 44px', position: 'relative', overflow: 'hidden',
       }}>
         <svg style={{ position: 'absolute', inset: 0, opacity: 0.05, width: '100%', height: '100%' }}>
@@ -231,7 +231,7 @@ function RegisterForm() {
       </div>
 
       {/* RIGHT PANEL */}
-      <div style={{ flex: 1, background: 'white', overflowY: 'auto', padding: '40px 52px', boxShadow: '-8px 0 40px rgba(0,0,0,0.06)' }}>
+      <div className="auth-right-panel" style={{ flex: 1, background: 'white', overflowY: 'auto', padding: '40px 52px', boxShadow: '-8px 0 40px rgba(0,0,0,0.06)' }}>
         <div style={{ maxWidth: 440, margin: '0 auto' }}>
           <div style={{ marginBottom: 28 }}>
             <h2 style={{ margin: '0 0 4px', fontSize: 24, fontWeight: 800, color: '#1A1A2E' }}>Create your account</h2>
@@ -247,7 +247,7 @@ function RegisterForm() {
             </div>
 
             {/* Name row */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+            <div className="name-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 5 }}>First Name *</label>
                 <input type="text" value={form.firstName} onChange={set('firstName')}
@@ -307,7 +307,7 @@ function RegisterForm() {
               <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 8 }}>
                 Choose your plan <span style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 400 }}>(upgrade anytime)</span>
               </label>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+              <div className="plan-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                 {PLANS.map(p => (
                   <div key={p.key} onClick={() => setForm(f => ({ ...f, plan: p.key }))}
                     style={{

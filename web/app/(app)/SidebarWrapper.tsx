@@ -61,6 +61,10 @@ export default function SidebarWrapper() {
       }
     } catch {}
 
+    // Open sidebar from BottomNav "More" button
+    const openHandler = () => setMobileOpen(true);
+    window.addEventListener('open-sidebar', openHandler);
+
     // PWA install prompt
     if (localStorage.getItem('pwa_installed')) setAppInstalled(true);
     const handler = (e: Event) => {
@@ -72,7 +76,10 @@ export default function SidebarWrapper() {
       setAppInstalled(true);
       localStorage.setItem('pwa_installed', '1');
     });
-    return () => window.removeEventListener('beforeinstallprompt', handler as EventListener);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler as EventListener);
+      window.removeEventListener('open-sidebar', openHandler);
+    };
   }, []);
 
   // Close mobile sidebar on route change

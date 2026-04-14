@@ -45,18 +45,18 @@ export default function LoginPage() {
   };
 
   const inp: React.CSSProperties = {
-    width: '100%', height: 46, background: '#FAF9F7', border: '1px solid #E8E4DF',
-    borderRadius: 10, padding: '0 14px', fontSize: 14, color: '#1A1A2E',
+    width: '100%', height: 48, background: '#FAF9F7', border: '1px solid #E8E4DF',
+    borderRadius: 10, padding: '0 14px', fontSize: 16, color: '#1A1A2E',
     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s, box-shadow 0.15s',
   };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
 
-      {/* ─── LEFT PANEL ─── */}
-      <div style={{
+      {/* ─── LEFT PANEL (hidden on mobile) ─── */}
+      <div className="auth-left-panel" style={{
         flex: '0 0 45%', background: 'linear-gradient(145deg, #1C2B3A 0%, #2D4A6B 100%)',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        flexDirection: 'column', justifyContent: 'center',
         alignItems: 'center', padding: '60px 48px', position: 'relative', overflow: 'hidden',
       }}>
         {/* Subtle grid pattern */}
@@ -108,7 +108,7 @@ export default function LoginPage() {
       </div>
 
       {/* ─── RIGHT PANEL ─── */}
-      <div style={{
+      <div className="auth-right-panel" style={{
         flex: 1, background: 'white', display: 'flex', flexDirection: 'column',
         justifyContent: 'center', padding: '60px 56px',
         boxShadow: '-8px 0 40px rgba(0,0,0,0.06)',

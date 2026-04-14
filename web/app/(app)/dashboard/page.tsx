@@ -139,7 +139,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="stagger-children" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
+      <div className="stagger-children" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
         {loading ? (
           [1,2,3,4].map(i => <div key={i} style={{ background: '#F3F4F6', borderRadius: 14, padding: '20px 18px', height: 90 }} className="animate-pulse"/>)
         ) : stats.map(({ label, value, Icon, color, bg }) => (
@@ -154,7 +154,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Cards row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16, marginBottom: 16 }}>
         {/* Today's Schedule */}
         <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8E4DF', overflow: 'hidden' }}>
           <div style={{ padding: '14px 18px', borderBottom: '1px solid #E8E4DF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

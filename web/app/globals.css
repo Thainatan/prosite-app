@@ -88,36 +88,155 @@ body {
 /* ── Toast animation ─────────────────────────────────────────── */
 .toast { animation: slideInRight 0.3s ease forwards; }
 
-/* ── Mobile responsive ───────────────────────────────────────── */
+/* ── Bottom Navigation (hidden on desktop) ───────────────────── */
+.bottom-nav {
+  display: none;
+}
+
+/* ── Login / Register left panel (hidden on mobile) ─────────── */
+.auth-left-panel {
+  display: flex;
+}
+
+/* ── Mobile responsive (≤ 768px) ────────────────────────────── */
 @media (max-width: 768px) {
-  /* Show hamburger, hide desktop sidebar */
-  .mobile-hamburger { display: flex !important; }
-  .desktop-sidebar  { display: none !important; }
 
-  /* Show mobile sidebar and overlay */
-  .mobile-sidebar   { display: block !important; }
-  .sidebar-overlay  { display: block !important; }
-
-  /* Show close button inside sidebar */
+  /* ── Sidebar ─────────────────────────────────────────────── */
+  .mobile-hamburger  { display: flex !important; }
+  .desktop-sidebar   { display: none !important; }
+  .mobile-sidebar    { display: block !important; }
+  .sidebar-overlay   { display: block !important; }
   .sidebar-close-btn { display: flex !important; }
 
-  /* Main content fills full width */
-  main { margin-left: 0 !important; padding-top: 56px; }
-
-  /* Tables: horizontal scroll */
-  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-  /* Modals: full screen on mobile */
-  .modal-content {
-    width: 100% !important; max-width: 100% !important;
-    height: 100vh !important; max-height: 100vh !important;
-    border-radius: 0 !important; margin: 0 !important;
+  /* ── App main content ────────────────────────────────────── */
+  main {
+    margin-left: 0 !important;
+    padding-top: 56px;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important;
   }
 
-  /* Stat cards: 2-column grid */
-  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  /* ── Bottom navigation ───────────────────────────────────── */
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: #FFFFFF;
+    border-top: 1px solid #E8E4DF;
+    z-index: 90;
+    align-items: stretch;
+  }
 
-  /* All interactive elements min 44px */
-  button, a[href] { min-height: 44px; }
-  input, select, textarea { min-height: 44px; font-size: 16px !important; }
+  .bottom-nav-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: #9CA3AF;
+    font-size: 10px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.15s;
+  }
+
+  .bottom-nav-tab.active {
+    color: #E8834A;
+  }
+
+  .bottom-nav-more {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* ── Tables ──────────────────────────────────────────────── */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── Modals: full-screen slide-up ────────────────────────── */
+  .modal-overlay {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+  .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 92vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
+    animation: slideUpModal 0.3s ease forwards !important;
+    overflow-y: auto;
+  }
+
+  /* ── Stat cards: 2×2 grid ────────────────────────────────── */
+  .stats-grid,
+  [style*="grid-template-columns:repeat(4, 1fr)"],
+  [style*="grid-template-columns: repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── Cards / list rows ───────────────────────────────────── */
+  .card-row-desktop {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Forms ───────────────────────────────────────────────── */
+  input, select, textarea {
+    min-height: 48px !important;
+    font-size: 16px !important;  /* prevents iOS zoom */
+  }
+  button { min-height: 44px; }
+
+  /* ── Auth pages: hide left panel ─────────────────────────── */
+  .auth-left-panel {
+    display: none !important;
+  }
+  .auth-right-panel {
+    padding: 32px 24px !important;
+  }
+
+  /* ── Register: stack plan cards ──────────────────────────── */
+  .plan-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Name row in register: still 2-col is fine, but stack on very small ── */
+  @media (max-width: 400px) {
+    .name-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* ── Dashboard cards row ─────────────────────────────────── */
+  .dashboard-cards-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Padding / spacing tweaks ────────────────────────────── */
+  .page-padding {
+    padding: 16px !important;
+  }
+}
+
+/* ── Slide-up modal animation ────────────────────────────────── */
+@keyframes slideUpModal {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── PWA standalone: respect safe areas ─────────────────────── */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+  }
 }
