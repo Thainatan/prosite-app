@@ -62,10 +62,13 @@ export class AuthController {
 
       const tenant = await prisma.tenant.findUnique({ where: { id: user.tenantId } });
 
+      const adminEmail = process.env.ADMIN_EMAIL || 'admin@prosite.com';
+      const jwtRole = user.email === adminEmail ? 'SUPER_ADMIN' : user.role;
+
       const token = this.jwtService.sign({
         sub: user.id,
         email: user.email,
-        role: user.role,
+        role: jwtRole,
         tenantId: user.tenantId,
       });
 
@@ -76,7 +79,7 @@ export class AuthController {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role,
+          role: jwtRole,
           tenantId: user.tenantId,
           plan: tenant?.plan ?? 'TRIAL',
           planExpiresAt: tenant?.planExpiresAt ?? null,

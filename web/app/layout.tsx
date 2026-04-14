@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isPublic = pathname === '/home' || pathname === '/login' || pathname === '/register' || pathname === '/' || pathname === '/offline';
+  const isPublic = pathname === '/home' || pathname === '/login' || pathname === '/register' || pathname === '/' || pathname === '/offline' || pathname.startsWith('/admin');
   if (isPublic) return <>{children}</>;
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, FileText, HardHat, Receipt,
   ClipboardList, Calendar, BarChart3, Settings, UserCog,
-  ChevronRight, LogOut, Bell, CheckSquare, Wrench, Menu, X, Smartphone, Tag,
+  ChevronRight, LogOut, Bell, CheckSquare, Wrench, Menu, X, Smartphone, Tag, Shield,
 } from 'lucide-react';
 import { ROLE_PERMISSIONS } from '../../lib/permissions';
 
@@ -180,6 +180,21 @@ export default function SidebarWrapper() {
             <Smartphone size={14} color="#E8834A"/>
             <span>Install App</span>
           </button>
+        </div>
+      )}
+
+      {/* Admin Panel link — only for SUPER_ADMIN */}
+      {userRole === 'SUPER_ADMIN' && (
+        <div style={{ padding: '0 12px 6px' }}>
+          <a href="/admin/dashboard" style={{
+            display: 'flex', alignItems: 'center', gap: 9,
+            padding: '9px 12px', borderRadius: 9, textDecoration: 'none',
+            background: 'rgba(232,131,74,0.1)', border: '1px solid rgba(232,131,74,0.25)',
+          }}>
+            <Shield size={15} color="#E8834A" strokeWidth={2.5}/>
+            <span style={{ flex: 1, fontSize: 13, fontWeight: 700, color: '#E8834A' }}>Admin Panel</span>
+            <ChevronRight size={12} color="#E8834A"/>
+          </a>
         </div>
       )}
 
