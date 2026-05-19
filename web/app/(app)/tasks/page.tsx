@@ -8,7 +8,7 @@ const TASK_TYPES = ['Site Visit', 'Meeting', 'Follow-up', 'Installation', 'Inspe
 type TaskType = typeof TASK_TYPES[number];
 
 const TYPE_STYLE: Record<TaskType, { bg: string; color: string; dot: string }> = {
-  'Site Visit':   { bg: '#EEF3FF', color: '#E8834A', dot: '#E8834A' },
+  'Site Visit':   { bg: '#EEF3FF', color: '#C4685A', dot: '#C4685A' },
   'Meeting':      { bg: '#F3F0FF', color: '#8B5CF6', dot: '#8B5CF6' },
   'Follow-up':    { bg: '#FFF7E9', color: '#F5A623', dot: '#F5A623' },
   'Installation': { bg: '#EAFAF3', color: '#34C78A', dot: '#34C78A' },
@@ -97,7 +97,7 @@ export default function TasksPage() {
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">Tasks</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#E8834A] rounded-full">{tasks.length} total</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#C4685A] rounded-full">{tasks.length} total</span>
         </div>
         <div className="flex items-center bg-[#F3F4F6] rounded-[9px] p-1 gap-1">
           <button onClick={() => setFilter('all')} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all ${filter === 'all' ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>All</button>
@@ -105,7 +105,7 @@ export default function TasksPage() {
             <button key={t} onClick={() => setFilter(t)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all ${filter === t ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>{t}</button>
           ))}
         </div>
-        <button onClick={() => setShowForm(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px]">+ New Task</button>
+        <button onClick={() => setShowForm(true)} className="h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px]">+ New Task</button>
       </header>
 
       <div className="p-5">
@@ -113,10 +113,10 @@ export default function TasksPage() {
           <div className="text-center py-12"><p className="text-[#6B7280]">Loading tasks...</p></div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-14 h-14 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><ClipboardList size={28} color="#E8834A" strokeWidth={1.5}/></div>
+            <div className="w-14 h-14 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><ClipboardList size={28} color="#C4685A" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{filter !== 'all' ? `No ${filter} tasks` : 'No tasks yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Click + New Task to schedule your first task</p>
-            <button onClick={() => setShowForm(true)} className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Task</button>
+            <button onClick={() => setShowForm(true)} className="inline-flex items-center px-6 py-2.5 bg-[#C4685A] text-white rounded-[9px] text-[14px] font-semibold">+ New Task</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
@@ -140,7 +140,7 @@ export default function TasksPage() {
                     </p>
                     {task.notes && <p className="text-[12px] text-[#A0A8B8] mt-1 truncate">{task.notes}</p>}
                   </div>
-                  <a href="/schedule" className="flex-shrink-0 text-[11px] text-[#E8834A] font-semibold hover:underline" style={{ textDecoration:'none' }}>View Calendar</a>
+                  <a href="/schedule" className="flex-shrink-0 text-[11px] text-[#C4685A] font-semibold hover:underline" style={{ textDecoration:'none' }}>View Calendar</a>
                 </div>
               );
             })}
@@ -214,7 +214,7 @@ export default function TasksPage() {
             </div>
             <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
               <button onClick={() => setShowForm(false)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-              <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-bold disabled:opacity-50">
                 {saving ? 'Saving...' : 'Create Task'}
               </button>
             </div>

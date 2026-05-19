@@ -25,7 +25,7 @@ interface PromoCode {
 const TYPE_META: Record<string, { label: string; color: string; bg: string; Icon: any }> = {
   TRIAL_EXTENSION: { label: 'Trial Extension', color: '#3B82F6', bg: '#EFF6FF', Icon: RefreshCw },
   FREE_FOREVER:   { label: 'Free Forever',     color: '#22C55E', bg: '#F0FDF4', Icon: Gift },
-  DISCOUNT_PERCENT: { label: 'Discount %',     color: '#E8834A', bg: '#FFF7ED', Icon: Percent },
+  DISCOUNT_PERCENT: { label: 'Discount %',     color: '#C4685A', bg: '#FFF7ED', Icon: Percent },
   DISCOUNT_FIXED:   { label: 'Discount $',     color: '#8B5CF6', bg: '#F5F3FF', Icon: DollarSign },
 };
 
@@ -150,7 +150,7 @@ export default function PromoAdminPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Tag size={22} color="#E8834A" strokeWidth={2}/>
+          <Tag size={22} color="#C4685A" strokeWidth={2}/>
           <div>
             <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#1A1A2E' }}>Promo Codes</h1>
             <p style={{ margin: 0, fontSize: 13, color: '#6B7280' }}>Manage partner and discount codes</p>
@@ -158,7 +158,7 @@ export default function PromoAdminPage() {
         </div>
         <button onClick={() => openCreate()} style={{
           display: 'flex', alignItems: 'center', gap: 7, height: 40, padding: '0 18px',
-          background: '#E8834A', color: 'white', border: 'none', borderRadius: 9,
+          background: '#C4685A', color: 'white', border: 'none', borderRadius: 9,
           fontSize: 13, fontWeight: 700, cursor: 'pointer',
         }}>
           <Plus size={15}/> New Code
@@ -234,7 +234,7 @@ export default function PromoAdminPage() {
                       {c.usedCount}/{c.maxUses === 0 ? '∞' : c.maxUses}
                       {c.maxUses > 0 && (
                         <div style={{ width: 60, height: 3, background: '#E8E4DF', borderRadius: 2, marginTop: 4 }}>
-                          <div style={{ width: `${Math.min(100, (c.usedCount / c.maxUses) * 100)}%`, height: '100%', background: '#E8834A', borderRadius: 2 }}/>
+                          <div style={{ width: `${Math.min(100, (c.usedCount / c.maxUses) * 100)}%`, height: '100%', background: '#C4685A', borderRadius: 2 }}/>
                         </div>
                       )}
                     </td>
@@ -254,7 +254,7 @@ export default function PromoAdminPage() {
                         <button onClick={() => openEdit(c)} title="Edit" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 6, color: '#6B7280' }}>
                           <Pencil size={14}/>
                         </button>
-                        <button onClick={() => handleToggle(c)} title={c.isActive ? 'Deactivate' : 'Activate'} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 6, color: c.isActive ? '#E8834A' : '#22C55E' }}>
+                        <button onClick={() => handleToggle(c)} title={c.isActive ? 'Deactivate' : 'Activate'} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 6, color: c.isActive ? '#C4685A' : '#22C55E' }}>
                           {c.isActive ? <ToggleRight size={16}/> : <ToggleLeft size={16}/>}
                         </button>
                         <button onClick={() => handleDelete(c.id)} title="Delete" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 5, borderRadius: 6, color: '#EF4444' }}>
@@ -312,9 +312,9 @@ export default function PromoAdminPage() {
                 <div style={{ display: 'flex', gap: 8 }}>
                   {PLANS.map(p => (
                     <button key={p} onClick={() => setForm(f => ({ ...f, plan: p }))} style={{
-                      flex: 1, height: 36, borderRadius: 8, border: `2px solid ${form.plan === p ? '#E8834A' : '#E8E4DF'}`,
-                      background: form.plan === p ? 'rgba(232,131,74,0.06)' : 'white',
-                      fontSize: 12, fontWeight: 700, cursor: 'pointer', color: form.plan === p ? '#E8834A' : '#374151',
+                      flex: 1, height: 36, borderRadius: 8, border: `2px solid ${form.plan === p ? '#C4685A' : '#E8E4DF'}`,
+                      background: form.plan === p ? 'rgba(196,104,90,0.06)' : 'white',
+                      fontSize: 12, fontWeight: 700, cursor: 'pointer', color: form.plan === p ? '#C4685A' : '#374151',
                     }}>{p}</button>
                   ))}
                 </div>
@@ -381,7 +381,7 @@ export default function PromoAdminPage() {
                 <button onClick={() => setShowModal(false)} style={{ flex: 1, height: 42, borderRadius: 9, border: '1px solid #E8E4DF', background: 'white', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#374151' }}>
                   Cancel
                 </button>
-                <button onClick={handleSave} disabled={saving} style={{ flex: 2, height: 42, borderRadius: 9, background: saving ? '#F0C4A8' : '#E8834A', color: 'white', border: 'none', fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer' }}>
+                <button onClick={handleSave} disabled={saving} style={{ flex: 2, height: 42, borderRadius: 9, background: saving ? '#D9A09A' : '#C4685A', color: 'white', border: 'none', fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer' }}>
                   {saving ? 'Saving…' : editing ? 'Save Changes' : 'Create Code'}
                 </button>
               </div>

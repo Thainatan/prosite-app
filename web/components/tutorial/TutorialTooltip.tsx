@@ -76,7 +76,7 @@ export default function TutorialTooltip({
       background: 'white',
       borderRadius: 14,
       boxShadow: '0 20px 60px rgba(0,0,0,0.35), 0 4px 20px rgba(0,0,0,0.2)',
-      borderTop: '3px solid #E8834A',
+      borderTop: '3px solid #C4685A',
       overflow: 'visible',
       animation: 'tutorialFadeIn 0.2s ease-out',
       fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -88,7 +88,7 @@ export default function TutorialTooltip({
       {/* Header */}
       <div style={{ padding: '14px 16px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div style={{ flex: 1, paddingRight: 24 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: '#E8834A', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: '#C4685A', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>
             Step {stepIndex + 1} of {totalSteps}
           </div>
           <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#1C2B3A', lineHeight: 1.3 }}>
@@ -102,7 +102,7 @@ export default function TutorialTooltip({
 
       {/* Progress bar */}
       <div style={{ height: 3, background: '#F3F4F6', margin: '0 16px' }}>
-        <div style={{ height: '100%', width: `${progress}%`, background: '#E8834A', borderRadius: 2, transition: 'width 0.3s ease' }} />
+        <div style={{ height: '100%', width: `${progress}%`, background: '#C4685A', borderRadius: 2, transition: 'width 0.3s ease' }} />
       </div>
 
       {/* Body */}
@@ -112,8 +112,8 @@ export default function TutorialTooltip({
         </p>
         {step.actionHint && (
           <div style={{ marginTop: 10, padding: '8px 10px', background: '#FEF3EC', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#E8834A', flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: '#E8834A', fontWeight: 600 }}>{step.actionHint}</span>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#C4685A', flexShrink: 0 }} />
+            <span style={{ fontSize: 12, color: '#C4685A', fontWeight: 600 }}>{step.actionHint}</span>
           </div>
         )}
       </div>
@@ -125,7 +125,7 @@ export default function TutorialTooltip({
           <div style={{ width: '100%' }}>
             {step.primaryBtn && (
               <button onClick={handlePrimary} style={{
-                width: '100%', padding: '10px', background: '#E8834A', color: 'white',
+                width: '100%', padding: '10px', background: '#C4685A', color: 'white',
                 border: 'none', borderRadius: 9, fontSize: 13.5, fontWeight: 700, cursor: 'pointer',
                 marginBottom: step.secondaryBtn ? 8 : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
               }}>
@@ -167,7 +167,7 @@ export default function TutorialTooltip({
             ) : (
               <button onClick={onNext} style={{
                 display: 'flex', alignItems: 'center', gap: 5, padding: '6px 14px',
-                background: '#E8834A', border: 'none', borderRadius: 8,
+                background: '#C4685A', border: 'none', borderRadius: 8,
                 fontSize: 12.5, fontWeight: 700, color: 'white', cursor: 'pointer',
               }}>
                 Next <ArrowRight size={12} />

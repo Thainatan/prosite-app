@@ -59,7 +59,7 @@ export default function TutorialHelpButton() {
             <MenuItem
               icon={<RotateCcw size={13} />}
               label="Restart page tutorial"
-              color="#E8834A"
+              color="#C4685A"
               onClick={() => {
                 setOpen(false);
                 resetTutorial(pageTutorialId);
@@ -108,9 +108,9 @@ export default function TutorialHelpButton() {
         title="Tutorial help"
         style={{
           width: 44, height: 44, borderRadius: '50%',
-          background: open ? '#1C2B3A' : '#E8834A',
+          background: open ? '#1C2B3A' : '#C4685A',
           border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 16px rgba(232,131,74,0.4)',
+          boxShadow: '0 4px 16px rgba(196,104,90,0.4)',
           transition: 'all 0.2s',
           position: 'relative',
         }}

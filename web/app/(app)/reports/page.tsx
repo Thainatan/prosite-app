@@ -122,7 +122,7 @@ export default function ReportsPage() {
         { label: 'Punch List',  value: statusCounts['PUNCH_LIST'] || 0, color: '#0EA5E9' },
         { label: 'Waiting Mat.', value: statusCounts['WAITING_MATERIALS'] || 0, color: '#F5A623' },
         { label: 'On Hold',     value: statusCounts['ON_HOLD'] || 0, color: '#F0584C' },
-        { label: 'Completed',   value: statusCounts['COMPLETED'] || 0, color: '#E8834A' },
+        { label: 'Completed',   value: statusCounts['COMPLETED'] || 0, color: '#C4685A' },
       ];
 
       setData({ revenueMonth, revenueYear, outstanding, topClients, winRate, approvedQuotes, totalQuotes, projectSlices });
@@ -159,11 +159,11 @@ export default function ReportsPage() {
               <div className="flex items-center gap-6">
                 <div className="text-center">
                   <p className="text-[11px] font-bold text-[#A0A8B8] uppercase mb-1">Win Rate</p>
-                  <p className="text-[36px] font-bold text-[#E8834A]">{data.winRate}%</p>
+                  <p className="text-[36px] font-bold text-[#C4685A]">{data.winRate}%</p>
                 </div>
                 <div className="flex-1">
                   <div className="h-3 bg-[#F3F4F6] rounded-full overflow-hidden mb-2">
-                    <div className="h-full bg-[#E8834A] rounded-full transition-all" style={{ width: `${data.winRate}%` }}/>
+                    <div className="h-full bg-[#C4685A] rounded-full transition-all" style={{ width: `${data.winRate}%` }}/>
                   </div>
                   <p className="text-[12px] text-[#6B7280]">{data.approvedQuotes} approved out of {data.totalQuotes} total quotes</p>
                 </div>
@@ -184,7 +184,7 @@ export default function ReportsPage() {
                 ) : data.topClients.map((c: any, i: number) => (
                   <div key={i} className="flex items-center justify-between px-4 py-3 border-b border-[#EAECF2] last:border-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-full bg-[#EEF3FF] flex items-center justify-center text-[11px] font-bold text-[#E8834A]">{i + 1}</div>
+                      <div className="w-7 h-7 rounded-full bg-[#EEF3FF] flex items-center justify-center text-[11px] font-bold text-[#C4685A]">{i + 1}</div>
                       <span className="text-[13px] font-semibold text-[#1A1A2E]">{c.name}</span>
                     </div>
                     <span className="text-[13px] font-bold text-[#34C78A]">{fmt(c.total)}</span>

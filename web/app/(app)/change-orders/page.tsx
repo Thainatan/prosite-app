@@ -107,7 +107,7 @@ export default function ChangeOrdersPage() {
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">Change Orders</h1>
           {pending > 0 && <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FFF7E9] text-[#F5A623] rounded-full">{pending} pending</span>}
         </div>
-        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px]">+ New Change Order</button>
+        <button onClick={() => setShowNew(true)} className="h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px]">+ New Change Order</button>
       </header>
 
       <div className="bg-white border-b border-[#EAECF2] px-6 py-3 flex gap-4">
@@ -128,10 +128,10 @@ export default function ChangeOrdersPage() {
           <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="bg-white rounded-[14px] border border-[#EAECF2] h-20 animate-pulse"/>)}</div>
         ) : orders.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><ClipboardList size={32} color="#E8834A" strokeWidth={1.5}/></div>
+            <div className="w-16 h-16 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><ClipboardList size={32} color="#C4685A" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">No change orders yet</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Track scope changes and additional costs for your projects</p>
-            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Change Order</button>
+            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#C4685A] text-white rounded-[9px] text-[14px] font-semibold">+ New Change Order</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
@@ -248,7 +248,7 @@ export default function ChangeOrdersPage() {
             </div>
             <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
               <button onClick={() => setShowNew(false)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-              <button onClick={handleCreate} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
+              <button onClick={handleCreate} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-bold disabled:opacity-50">
                 {saving ? 'Creating...' : 'Create Change Order'}
               </button>
             </div>

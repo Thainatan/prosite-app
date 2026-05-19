@@ -8,7 +8,7 @@ const ROLES = [
   { value: 'ADMIN',           label: 'Admin',           desc: 'Full access to all features and settings',                color: '#4F7EF7', bg: '#EEF3FF' },
   { value: 'OFFICE_MANAGER',  label: 'Office Manager',  desc: 'Manages clients, quotes, invoices. No settings access.',  color: '#8B5CF6', bg: '#F3EEFF' },
   { value: 'PROJECT_MANAGER', label: 'Project Manager', desc: 'Manages projects and schedule. No financial data.',        color: '#2ECC71', bg: '#EAFAF3' },
-  { value: 'FIELD_TECH',      label: 'Field Tech',      desc: 'Views only assigned projects and daily schedule.',         color: '#E8834A', bg: '#FEF3EC' },
+  { value: 'FIELD_TECH',      label: 'Field Tech',      desc: 'Views only assigned projects and daily schedule.',         color: '#C4685A', bg: '#FEF3EC' },
   { value: 'SUBCONTRACTOR',   label: 'Subcontractor',   desc: 'Views only assigned projects. No financial data.',         color: '#6B7280', bg: '#F3F4F6' },
 ];
 
@@ -27,7 +27,7 @@ function getAvatarGradient(role: string) {
     ADMIN: 'linear-gradient(135deg,#4F7EF7,#8B5CF6)',
     OFFICE_MANAGER: 'linear-gradient(135deg,#8B5CF6,#C084FC)',
     PROJECT_MANAGER: 'linear-gradient(135deg,#2ECC71,#059669)',
-    FIELD_TECH: 'linear-gradient(135deg,#E8834A,#D4713A)',
+    FIELD_TECH: 'linear-gradient(135deg,#C4685A,#B5564A)',
     SUBCONTRACTOR: 'linear-gradient(135deg,#9CA3AF,#6B7280)',
   };
   return map[role] || 'linear-gradient(135deg,#9CA3AF,#6B7280)';
@@ -70,7 +70,7 @@ function InviteModal({ onClose, onSave }: { onClose: () => void; onSave: (m: Mem
         <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid #E8E4DF', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <h2 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: '#1A1A2E' }}>Invite Team Member</h2>
-            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7280' }}>Add someone to your ProSite team</p>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#6B7280' }}>Add someone to your finesse. team</p>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: '#9CA3AF', lineHeight: 1 }}>✕</button>
         </div>
@@ -118,7 +118,7 @@ function InviteModal({ onClose, onSave }: { onClose: () => void; onSave: (m: Mem
           <button onClick={onClose} style={{ height: 38, padding: '0 16px', border: '1px solid #E8E4DF', borderRadius: 9, background: 'white', fontSize: 13, fontWeight: 600, color: '#6B7280', cursor: 'pointer' }}>
             Cancel
           </button>
-          <button onClick={save} disabled={loading} className="btn-press" style={{ height: 38, padding: '0 20px', border: 'none', borderRadius: 9, background: loading ? '#F0C4A8' : '#E8834A', color: 'white', fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
+          <button onClick={save} disabled={loading} className="btn-press" style={{ height: 38, padding: '0 20px', border: 'none', borderRadius: 9, background: loading ? '#D9A09A' : '#C4685A', color: 'white', fontSize: 13, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
             {loading ? 'Saving…' : 'Invite Member'}
           </button>
         </div>
@@ -190,7 +190,7 @@ function EditRoleModal({ member, onClose, onSave }: { member: Member; onClose: (
         </div>
         <div style={{ padding: '16px 24px', borderTop: '1px solid #E8E4DF', display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <button onClick={onClose} style={{ height: 36, padding: '0 14px', border: '1px solid #E8E4DF', borderRadius: 9, background: 'white', fontSize: 13, fontWeight: 600, color: '#6B7280', cursor: 'pointer' }}>Cancel</button>
-          <button onClick={save} disabled={loading} className="btn-press" style={{ height: 36, padding: '0 16px', border: 'none', borderRadius: 9, background: '#E8834A', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+          <button onClick={save} disabled={loading} className="btn-press" style={{ height: 36, padding: '0 16px', border: 'none', borderRadius: 9, background: '#C4685A', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
             {loading ? 'Saving…' : 'Save Role'}
           </button>
         </div>
@@ -232,13 +232,13 @@ export default function TeamPage() {
       <header style={{ background: 'white', borderBottom: '1px solid #E8E4DF', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <h1 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: '#1A1A2E' }}>Team</h1>
-          <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 10px', background: '#FEF3EC', color: '#E8834A', borderRadius: 999 }}>{members.length} members</span>
+          <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 10px', background: '#FEF3EC', color: '#C4685A', borderRadius: 999 }}>{members.length} members</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search members..."
           style={{ flex: 1, maxWidth: 300, height: 34, background: '#FAF9F7', border: '1px solid #E8E4DF', borderRadius: 999, padding: '0 14px', fontSize: 13, color: '#1A1A2E', outline: 'none' }}
         />
         <button onClick={() => setShowInvite(true)} className="btn-press"
-          style={{ height: 34, padding: '0 16px', background: '#E8834A', color: 'white', border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+          style={{ height: 34, padding: '0 16px', background: '#C4685A', color: 'white', border: 'none', borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
           + Invite Member
         </button>
       </header>
@@ -251,16 +251,16 @@ export default function TeamPage() {
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
             <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style={{ margin: '0 auto 16px', display: 'block' }}>
-              <circle cx="40" cy="40" r="38" fill="#FEF3EC" stroke="#E8834A" strokeWidth="2"/>
-              <circle cx="40" cy="30" r="12" fill="#E8834A" opacity="0.8"/>
-              <path d="M18 65c0-12.15 9.85-22 22-22s22 9.85 22 22" stroke="#E8834A" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+              <circle cx="40" cy="40" r="38" fill="#FEF3EC" stroke="#C4685A" strokeWidth="2"/>
+              <circle cx="40" cy="30" r="12" fill="#C4685A" opacity="0.8"/>
+              <path d="M18 65c0-12.15 9.85-22 22-22s22 9.85 22 22" stroke="#C4685A" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
               <rect x="52" y="18" width="16" height="2.5" rx="1.25" fill="#1C2B3A"/>
               <rect x="52" y="24" width="12" height="2.5" rx="1.25" fill="#1C2B3A"/>
             </svg>
             <p style={{ fontSize: 15, fontWeight: 600, color: '#1A1A2E', margin: '0 0 6px' }}>{search ? 'No members found' : 'No team members yet'}</p>
             <p style={{ fontSize: 13, color: '#6B7280', margin: '0 0 16px' }}>Invite your first team member to get started</p>
             <button onClick={() => setShowInvite(true)} className="btn-press"
-              style={{ padding: '10px 24px', background: '#E8834A', color: 'white', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
+              style={{ padding: '10px 24px', background: '#C4685A', color: 'white', border: 'none', borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
               + Invite Member
             </button>
           </div>

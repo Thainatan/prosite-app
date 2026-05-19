@@ -169,7 +169,7 @@ function NewClientModal({ onClose, onSave, initialName }: {
           <button onClick={onClose} style={{ height: 38, padding: '0 16px', border: '1px solid #E8E4DF', borderRadius: 9, background: 'white', fontSize: 13, fontWeight: 600, color: '#6B7280', cursor: 'pointer' }}>
             Cancel
           </button>
-          <button onClick={save} disabled={saving} className="btn-press" style={{ height: 38, padding: '0 20px', border: 'none', borderRadius: 9, background: saving ? '#F0C4A8' : '#E8834A', color: 'white', fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer' }}>
+          <button onClick={save} disabled={saving} className="btn-press" style={{ height: 38, padding: '0 20px', border: 'none', borderRadius: 9, background: saving ? '#D9A09A' : '#C4685A', color: 'white', fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer' }}>
             {saving ? 'Saving…' : 'Save Client'}
           </button>
         </div>
@@ -277,7 +277,7 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
                 borderRadius: 9, padding: '0 36px 0 12px', fontSize: 13, color: '#1A1A2E',
                 outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s, box-shadow 0.15s',
               }}
-              onFocusCapture={e => { e.target.style.borderColor = '#E8834A'; e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)'; }}
+              onFocusCapture={e => { e.target.style.borderColor = '#C4685A'; e.target.style.boxShadow = '0 0 0 3px rgba(196,104,90,0.15)'; }}
               onBlur={e => { e.target.style.borderColor = '#E8E4DF'; e.target.style.boxShadow = 'none'; }}
             />
             <div style={{ position: 'absolute', right: 10, pointerEvents: 'none' }}>
@@ -309,7 +309,7 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
               onMouseLeave={e => (e.currentTarget.style.background = 'none')}
             >
               <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#FEF3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <User size={14} color="#E8834A"/>
+                <User size={14} color="#C4685A"/>
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>{c.firstName} {c.lastName}</div>
@@ -327,14 +327,14 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
             onMouseEnter={e => (e.currentTarget.style.background = '#FDE9D5')}
             onMouseLeave={e => (e.currentTarget.style.background = '#FEF3EC')}
           >
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#E8834A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Plus size={14} color="white"/>
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: '#E8834A' }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#C4685A' }}>
                 {query ? `Create "${query}"` : 'Create new client'}
               </div>
-              <div style={{ fontSize: 11, color: '#F0C4A8' }}>Add a new client to ProSite</div>
+              <div style={{ fontSize: 11, color: '#D9A09A' }}>Add a new client to finesse.</div>
             </div>
           </button>
         </div>

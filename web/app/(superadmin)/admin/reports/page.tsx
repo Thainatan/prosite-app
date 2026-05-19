@@ -64,8 +64,8 @@ export default function AdminReportsPage() {
 
   const btn = (v: '6' | '12') => ({
     padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer' as const,
-    background: range === v ? '#E8834A' : 'rgba(255,255,255,0.06)',
-    border: `1px solid ${range === v ? '#E8834A' : 'rgba(255,255,255,0.1)'}`,
+    background: range === v ? '#C4685A' : 'rgba(255,255,255,0.06)',
+    border: `1px solid ${range === v ? '#C4685A' : 'rgba(255,255,255,0.1)'}`,
     color: range === v ? 'white' : 'rgba(255,255,255,0.5)',
   });
 
@@ -75,7 +75,7 @@ export default function AdminReportsPage() {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <BarChart3 size={20} color="#E8834A" strokeWidth={2}/>
+            <BarChart3 size={20} color="#C4685A" strokeWidth={2}/>
             <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>Platform Reports</h1>
           </div>
           <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>Platform-wide analytics and insights</p>
@@ -94,7 +94,7 @@ export default function AdminReportsPage() {
         {[
           { label: 'Total Revenue', value: `$${data.totalRevenue.toFixed(0)}`, sub: `${revenueThisMonth > 0 ? '+' : ''}$${revenueThisMonth.toFixed(0)} this month`, color: '#22C55E', icon: DollarSign },
           { label: 'Revenue Growth', value: `${revGrowth >= 0 ? '+' : ''}${revGrowth}%`, sub: 'vs last month', color: revGrowth >= 0 ? '#22C55E' : '#EF4444', icon: TrendingUp },
-          { label: 'Total Companies', value: String(data.totalTenants), sub: `${signupsThisMonth} new this month`, color: '#E8834A', icon: Users },
+          { label: 'Total Companies', value: String(data.totalTenants), sub: `${signupsThisMonth} new this month`, color: '#C4685A', icon: Users },
           { label: 'New Signups MoM', value: `${signupsThisMonth > signupsLastMonth ? '+' : ''}${signupsThisMonth - signupsLastMonth}`, sub: `${signupsThisMonth} this month vs ${signupsLastMonth} last month`, color: '#3B82F6', icon: TrendingUp },
         ].map(card => (
           <div key={card.label} style={{ background: '#1A2D3F', borderRadius: 14, padding: '18px 20px', border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -116,7 +116,7 @@ export default function AdminReportsPage() {
         </div>
         <div style={{ background: '#1A2D3F', borderRadius: 14, padding: 22, border: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize: 13.5, fontWeight: 700, color: 'white', marginBottom: 20 }}>New Signups per Month</div>
-          <BarChart data={signups.map(s => ({ label: s.month, value: s.count }))} color="#E8834A" height={120}/>
+          <BarChart data={signups.map(s => ({ label: s.month, value: s.count }))} color="#C4685A" height={120}/>
         </div>
       </div>
 
@@ -181,7 +181,7 @@ export default function AdminReportsPage() {
           @page { margin: 1cm; }
         }
         @media print {
-          footer::after { content: "Confidential — ProSite Admin Report"; display: block; text-align: center; margin-top: 20px; font-size: 10px; color: #aaa; }
+          footer::after { content: "Confidential — finesse. Admin Report"; display: block; text-align: center; margin-top: 20px; font-size: 10px; color: #aaa; }
         }
       `}</style>
     </div>

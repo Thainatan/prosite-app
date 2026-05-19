@@ -40,10 +40,12 @@ export default function SidebarWrapper() {
       {/* Logo */}
       <div style={{ padding:'18px 16px 14px', borderBottom:'1px solid #1E2130' }}>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <img src="/logo.png" alt="ProSite" style={{ width:32, height:32, borderRadius:8, objectFit:'contain' }}/>
+          <div style={{ width:32, height:32, borderRadius:8, background:'#C4685A', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+            <span style={{ fontSize:8, fontWeight:300, letterSpacing:'0.05em', color:'#E8C4BC' }}>finesse.</span>
+          </div>
           <div>
-            <div style={{ fontSize:15, fontWeight:800, color:'white' }}>ProSite</div>
-            <div style={{ fontSize:10, color:'#4F7EF7', fontWeight:600, letterSpacing:'0.05em' }}>REMODELING OS</div>
+            <div style={{ fontSize:15, fontWeight:300, letterSpacing:'0.05em', color:'white' }}>finesse.</div>
+            <div style={{ fontSize:10, color:'#C4685A', fontWeight:600, letterSpacing:'0.05em' }}>REMODELING OS</div>
           </div>
         </div>
       </div>

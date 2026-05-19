@@ -11,26 +11,24 @@ export default function HomePage() {
       {/* NAV */}
       <nav style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 40px',height:64,borderBottom:'1px solid #EAECF2',background:'#fff',position:'sticky',top:0,zIndex:100}}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <div style={{width:34,height:34,background:'#E8834A',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <div style={{display:'flex',alignItems:'flex-end',gap:2}}>
-              {[7,11,15].map(h=><div key={h} style={{width:3,height:h,background:'white',borderRadius:2}}/>)}
-            </div>
+          <div style={{width:34,height:34,background:'#C4685A',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <span style={{fontSize:8,fontWeight:300,letterSpacing:'0.05em',color:'#E8C4BC'}}>finesse.</span>
           </div>
-          <span style={{fontSize:18,fontWeight:800,color:'#1C2B3A'}}>ProSite</span>
+          <span style={{fontSize:18,fontWeight:300,letterSpacing:'0.05em',color:'#1C2B3A'}}>finesse.</span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:8}}>
           <a href="/login" style={{padding:'8px 16px',fontSize:14,fontWeight:600,color:'#6B7280',textDecoration:'none'}}>Sign In</a>
-          <a href="/register" style={{padding:'8px 20px',background:'#E8834A',color:'white',borderRadius:9,fontSize:14,fontWeight:700,textDecoration:'none'}}>Start Free Trial</a>
+          <a href="/register" style={{padding:'8px 20px',background:'#C4685A',color:'white',borderRadius:9,fontSize:14,fontWeight:700,textDecoration:'none'}}>Start Free Trial</a>
         </div>
       </nav>
 
       {/* HERO */}
       <section style={{background:'linear-gradient(135deg,#1C2B3A 0%,#2D4A6B 100%)',padding:'80px 40px',textAlign:'center'}}>
-        <div style={{display:'inline-block',background:'#E8834A',color:'white',fontSize:12,fontWeight:700,padding:'4px 14px',borderRadius:999,marginBottom:20}}>BUILT FOR HOME REMODELING COMPANIES</div>
-        <h1 style={{fontSize:52,fontWeight:800,color:'white',margin:'0 0 16px',lineHeight:1.15}}>Run Your Entire<br/><span style={{color:'#E8834A'}}>Remodeling Business</span><br/>From One Place</h1>
+        <div style={{display:'inline-block',background:'#C4685A',color:'white',fontSize:12,fontWeight:700,padding:'4px 14px',borderRadius:999,marginBottom:20}}>BUILT FOR HOME REMODELING COMPANIES</div>
+        <h1 style={{fontSize:52,fontWeight:800,color:'white',margin:'0 0 16px',lineHeight:1.15}}>Run Your Entire<br/><span style={{color:'#C4685A'}}>Remodeling Business</span><br/>From One Place</h1>
         <p style={{fontSize:18,color:'#9BA3C4',maxWidth:560,margin:'0 auto 36px',lineHeight:1.6}}>Leads, quotes, projects, change orders, and invoices — all connected. Built specifically for remodeling contractors.</p>
         <div style={{display:'flex',gap:12,justifyContent:'center'}}>
-          <a href="/register" style={{padding:'14px 32px',background:'#E8834A',color:'white',borderRadius:12,fontSize:16,fontWeight:700,textDecoration:'none'}}>Start Free — 14 Days Trial</a>
+          <a href="/register" style={{padding:'14px 32px',background:'#C4685A',color:'white',borderRadius:12,fontSize:16,fontWeight:700,textDecoration:'none'}}>Start Free — 14 Days Trial</a>
           <a href="#pricing" style={{padding:'14px 32px',background:'rgba(255,255,255,0.08)',color:'white',borderRadius:12,fontSize:16,fontWeight:700,textDecoration:'none',border:'1px solid rgba(255,255,255,0.15)'}}>See Pricing →</a>
         </div>
         <p style={{color:'#6B7280',fontSize:13,marginTop:16}}>No credit card required · Cancel anytime</p>
@@ -41,7 +39,7 @@ export default function HomePage() {
         <div style={{display:'flex',justifyContent:'center',gap:60,flexWrap:'wrap'}}>
           {[{v:'14 days',l:'Free trial — no credit card'},{v:'Free',l:'Cancel anytime'},{v:'5 min',l:'Setup time'},{v:'Early',l:'Beta access — limited spots'}].map(({v,l})=>(
             <div key={l} style={{textAlign:'center'}}>
-              <div style={{fontSize:32,fontWeight:800,color:'#E8834A',marginBottom:4}}>{v}</div>
+              <div style={{fontSize:32,fontWeight:800,color:'#C4685A',marginBottom:4}}>{v}</div>
               <div style={{fontSize:13,color:'#6B7280'}}>{l}</div>
             </div>
           ))}
@@ -52,7 +50,7 @@ export default function HomePage() {
       <section style={{padding:'80px 40px',maxWidth:1100,margin:'0 auto'}}>
         <div style={{textAlign:'center',marginBottom:48}}>
           <h2 style={{fontSize:36,fontWeight:800,color:'#1C2B3A',marginBottom:12}}>Everything you need to run your business</h2>
-          <p style={{fontSize:16,color:'#6B7280'}}>Stop using spreadsheets. ProSite keeps everything organized and connected.</p>
+          <p style={{fontSize:16,color:'#6B7280'}}>Stop using spreadsheets. finesse. keeps everything organized and connected.</p>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}>
           {[
@@ -67,7 +65,7 @@ export default function HomePage() {
             return (
               <div key={t} style={{background:'#F8F6F3',borderRadius:16,padding:'28px 24px',border:'1px solid #E8E4DF'}}>
                 <div style={{width:48,height:48,borderRadius:12,background:'#FEF3EC',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:16}}>
-                  <IconComp size={24} color="#E8834A" strokeWidth={1.8}/>
+                  <IconComp size={24} color="#C4685A" strokeWidth={1.8}/>
                 </div>
                 <h3 style={{fontSize:17,fontWeight:700,color:'#1C2B3A',marginBottom:8}}>{t}</h3>
                 <p style={{fontSize:14,color:'#6B7280',lineHeight:1.6,margin:0}}>{d}</p>
@@ -90,14 +88,14 @@ export default function HomePage() {
             {name:'Enterprise',price:'$149',desc:'For large operations',bg:'#fff',featured:false,features:['Up to 20 users','Everything in Company','Advanced reporting','API access','Dedicated onboarding','Phone support']},
           ].map(({name,price,desc,bg,featured,features})=>(
             <div key={name} style={{background:bg,borderRadius:20,padding:'32px 28px',border:featured?'none':'1px solid #EAECF2',flex:1,minWidth:240,maxWidth:280,boxShadow:featured?'0 20px 60px rgba(79,126,247,0.25)':'none',position:'relative'}}>
-              {featured&&<div style={{position:'absolute',top:-12,left:'50%',transform:'translateX(-50%)',background:'#E8834A',color:'white',fontSize:11,fontWeight:700,padding:'4px 14px',borderRadius:999,whiteSpace:'nowrap'}}>MOST POPULAR</div>}
+              {featured&&<div style={{position:'absolute',top:-12,left:'50%',transform:'translateX(-50%)',background:'#C4685A',color:'white',fontSize:11,fontWeight:700,padding:'4px 14px',borderRadius:999,whiteSpace:'nowrap'}}>MOST POPULAR</div>}
               <h3 style={{fontSize:20,fontWeight:800,color:featured?'white':'#1C2B3A',marginBottom:4}}>{name}</h3>
               <p style={{fontSize:13,color:featured?'#9BA3C4':'#6B7280',marginBottom:16}}>{desc}</p>
               <div style={{marginBottom:24}}><span style={{fontSize:40,fontWeight:800,color:featured?'white':'#1C2B3A'}}>{price}</span><span style={{fontSize:14,color:featured?'#9BA3C4':'#6B7280'}}>/month</span></div>
               <ul style={{listStyle:'none',padding:0,margin:'0 0 28px',display:'flex',flexDirection:'column',gap:10}}>
-                {features.map(f=><li key={f} style={{display:'flex',alignItems:'center',gap:8,fontSize:14,color:featured?'#E5E7EB':'#374151'}}><Check size={14} color={featured?'#34C78A':'#E8834A'} strokeWidth={2.5}/>{f}</li>)}
+                {features.map(f=><li key={f} style={{display:'flex',alignItems:'center',gap:8,fontSize:14,color:featured?'#E5E7EB':'#374151'}}><Check size={14} color={featured?'#34C78A':'#C4685A'} strokeWidth={2.5}/>{f}</li>)}
               </ul>
-              <a href="/register" style={{display:'block',textAlign:'center',padding:'12px',background:featured?'#E8834A':'#F7F8FC',color:featured?'white':'#1C2B3A',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none',border:featured?'none':'1px solid #EAECF2'}}>Start Free Trial</a>
+              <a href="/register" style={{display:'block',textAlign:'center',padding:'12px',background:featured?'#C4685A':'#F7F8FC',color:featured?'white':'#1C2B3A',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none',border:featured?'none':'1px solid #EAECF2'}}>Start Free Trial</a>
             </div>
           ))}
         </div>
@@ -108,18 +106,18 @@ export default function HomePage() {
       <section style={{padding:'60px 40px',background:'#fff',borderTop:'1px solid #EAECF2'}}>
         <div style={{maxWidth:600,margin:'0 auto',textAlign:'center',background:'#F7F8FC',borderRadius:20,padding:'40px',border:'1px solid #EAECF2'}}>
           <div style={{width:56,height:56,borderRadius:14,background:'#FEF3EC',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 14px'}}>
-            <Users size={28} color="#E8834A" strokeWidth={1.8}/>
+            <Users size={28} color="#C4685A" strokeWidth={1.8}/>
           </div>
           <h3 style={{fontSize:22,fontWeight:800,color:'#1C2B3A',marginBottom:10}}>Partner Program</h3>
-          <p style={{fontSize:15,color:'#6B7280',lineHeight:1.6,marginBottom:20}}>Are you a supplier, trade association, or industry partner? Email us to get a free partner code and give your network access to ProSite.</p>
+          <p style={{fontSize:15,color:'#6B7280',lineHeight:1.6,marginBottom:20}}>Are you a supplier, trade association, or industry partner? Email us to get a free partner code and give your network access to finesse.</p>
           <a href="mailto:support@prositeapp.com?subject=Partner Code Request" style={{display:'inline-block',padding:'12px 28px',background:'#1C2B3A',color:'white',borderRadius:10,fontSize:14,fontWeight:700,textDecoration:'none'}}>Apply for Partner Code →</a>
         </div>
       </section>
 
       {/* FOOTER */}
       <footer style={{background:'#1C2B3A',padding:'40px',textAlign:'center'}}>
-        <span style={{fontSize:16,fontWeight:800,color:'white'}}>ProSite</span>
-        <p style={{color:'#6B7280',fontSize:13,margin:'8px 0 0'}}>© 2026 ProSite · Built for remodeling contractors.</p>
+        <span style={{fontSize:16,fontWeight:300,letterSpacing:'0.05em',color:'#E8C4BC'}}>finesse.</span>
+        <p style={{color:'#6B7280',fontSize:13,margin:'8px 0 0'}}>© 2026 finesse. · Built for remodeling contractors.</p>
         <p style={{color:'#4A5568',fontSize:13,margin:'6px 0 0'}}><a href="mailto:support@prositeapp.com" style={{color:'#8BA3B8',textDecoration:'none'}}>support@prositeapp.com</a></p>
       </footer>
     </div>

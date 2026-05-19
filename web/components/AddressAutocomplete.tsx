@@ -214,8 +214,8 @@ export default function AddressAutocomplete({
           placeholder={placeholder}
           style={inputStyle}
           onFocus={e => {
-            e.target.style.borderColor = '#E8834A';
-            e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)';
+            e.target.style.borderColor = '#C4685A';
+            e.target.style.boxShadow = '0 0 0 3px rgba(196,104,90,0.15)';
             if (suggestions.length > 0) setOpen(true);
           }}
           onBlur={e => {
@@ -255,7 +255,7 @@ export default function AddressAutocomplete({
               onMouseEnter={e => (e.currentTarget.style.background = '#FAF9F7')}
               onMouseLeave={e => (e.currentTarget.style.background = 'none')}
             >
-              <MapPin size={13} color="#E8834A" style={{ flexShrink: 0 }}/>
+              <MapPin size={13} color="#C4685A" style={{ flexShrink: 0 }}/>
               <div>
                 <div style={{ fontSize: 13, color: '#1A1A2E', fontWeight: 500 }}>{s.label}</div>
                 {s.sub && <div style={{ fontSize: 11, color: '#9CA3AF' }}>{s.sub}</div>}

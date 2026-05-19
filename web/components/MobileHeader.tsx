@@ -13,10 +13,12 @@ export default function MobileHeader() {
       </button>
 
       <div className="mobile-header-logo">
-        <img src="/logo.png" alt="ProSite" style={{ width: 28, height: 28, borderRadius: 7, objectFit: 'contain' }}/>
+        <div style={{ width: 28, height: 28, borderRadius: 7, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: 7, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+        </div>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: '#1C2B3A', lineHeight: 1.1 }}>ProSite</div>
-          <div style={{ fontSize: 8, fontWeight: 700, color: '#E8834A', letterSpacing: '0.08em' }}>REMODELING OS</div>
+          <div style={{ fontSize: 15, fontWeight: 300, letterSpacing: '0.05em', color: '#1C2B3A', lineHeight: 1.1 }}>finesse.</div>
+          <div style={{ fontSize: 8, fontWeight: 600, color: '#C4685A', letterSpacing: '0.08em' }}>REMODELING OS</div>
         </div>
       </div>
 
@@ -27,7 +29,7 @@ export default function MobileHeader() {
           <div style={{
             position: 'absolute', top: -2, right: -2,
             width: 8, height: 8, borderRadius: '50%',
-            background: '#E8834A', border: '1.5px solid white',
+            background: '#C4685A', border: '1.5px solid white',
           }}/>
         </div>
       </button>

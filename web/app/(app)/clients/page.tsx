@@ -23,7 +23,7 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ firstName:'', lastName:'', email:'', phone:'', address:'', city:'', state:'FL', zip:'', source:'Referral', notes:'' });
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
-  const inp = 'w-full h-10 bg-white border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all';
+  const inp = 'w-full h-10 bg-white border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#C4685A] transition-all';
   const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
 
   const save = async () => {
@@ -52,7 +52,7 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-[#E8E4DF] flex items-center justify-center text-[#6B7280]">✕</button>
         </div>
-        <div className="h-1 bg-[#E8E4DF]"><div className="h-full bg-[#E8834A]" style={{ width: step === 1 ? '50%' : '100%' }} /></div>
+        <div className="h-1 bg-[#E8E4DF]"><div className="h-full bg-[#C4685A]" style={{ width: step === 1 ? '50%' : '100%' }} /></div>
         <div className="flex-1 overflow-y-auto p-5">
           {step === 1 ? (
             <div className="space-y-3">
@@ -91,7 +91,7 @@ function NewClientModal({ onClose, onSave }: { onClose: () => void; onSave: (c: 
           <div className="flex-1" />
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#E8E4DF] text-[13px] font-semibold text-[#6B7280]">Cancel</button>
           {step === 1
-            ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold disabled:opacity-40">Next</button>
+            ? <button onClick={() => setStep(2)} disabled={!form.firstName || !form.phone} className="h-9 px-5 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-semibold disabled:opacity-40">Next</button>
             : <button data-tutorial="client-save-btn" onClick={save} disabled={loading} className="h-9 px-5 rounded-[9px] bg-[#34C78A] text-white text-[13px] font-semibold disabled:opacity-40">{loading ? 'Saving...' : 'Save Client'}</button>
           }
         </div>
@@ -107,7 +107,7 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
         <div className="p-5 border-b border-[#E8E4DF] flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-[#FEF3EC] flex items-center justify-center">
-              <span className="text-[16px] font-bold text-[#E8834A]">{client.firstName[0]}{client.lastName[0]}</span>
+              <span className="text-[16px] font-bold text-[#C4685A]">{client.firstName[0]}{client.lastName[0]}</span>
             </div>
             <div>
               <h2 className="text-[18px] font-bold text-[#1A1A2E]">{client.firstName} {client.lastName}</h2>
@@ -130,7 +130,7 @@ function ClientDetail({ client, onClose }: { client: Client; onClose: () => void
         <div className="flex gap-2 p-4 border-t border-[#E8E4DF]">
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#E8E4DF] text-[13px] font-semibold text-[#6B7280]">Close</button>
           <div className="flex-1" />
-          <a href="/quotes/new" style={{display:'flex',alignItems:'center',height:36,padding:'0 16px',background:'#E8834A',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>
+          <a href="/quotes/new" style={{display:'flex',alignItems:'center',height:36,padding:'0 16px',background:'#C4685A',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New Quote</a>
         </div>
       </div>
     </div>
@@ -172,19 +172,19 @@ export default function ClientsPage() {
       <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-4 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">Clients</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{clients.length}</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#C4685A] rounded-full">{clients.length}</span>
         </div>
         {/* Search — hidden on mobile */}
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search clients..."
-          className="page-search-input flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
+          className="page-search-input flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#C4685A] transition-all"/>
         {/* Desktop button: text + icon */}
         <button data-tutorial="new-client-btn" onClick={() => setShowNew(true)}
-          className="page-btn-text h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#D4713A]">
+          className="page-btn-text h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px] hover:bg-[#B5564A]">
           + New Client
         </button>
         {/* Mobile button: icon only */}
         <button data-tutorial="new-client-btn" onClick={() => setShowNew(true)}
-          className="page-btn-icon hidden w-10 h-10 bg-[#E8834A] text-white rounded-[10px] items-center justify-center hover:bg-[#D4713A]">
+          className="page-btn-icon hidden w-10 h-10 bg-[#C4685A] text-white rounded-[10px] items-center justify-center hover:bg-[#B5564A]">
           <Plus size={20} color="white" strokeWidth={2.5}/>
         </button>
       </header>
@@ -195,17 +195,17 @@ export default function ClientsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-16 h-16 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><Users size={32} color="#E8834A" strokeWidth={1.5}/></div>
+            <div className="w-16 h-16 bg-[#FEF3EC] rounded-full flex items-center justify-center mx-auto mb-4"><Users size={32} color="#C4685A" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No clients found' : 'No clients yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Click New Client to get started</p>
-            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Client</button>
+            <button onClick={() => setShowNew(true)} className="inline-flex px-6 py-2.5 bg-[#C4685A] text-white rounded-[9px] text-[14px] font-semibold">+ New Client</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#E8E4DF] overflow-hidden">
             {filtered.map(c => (
               <div key={c.id} onClick={() => setSelected(c)} className="list-row flex items-center gap-4 px-5 py-4 hover:bg-[#FAF9F7] cursor-pointer border-b border-[#E8E4DF] last:border-0 transition-colors">
                 <div className="w-10 h-10 rounded-full bg-[#FEF3EC] flex items-center justify-center flex-shrink-0">
-                  <span className="text-[13px] font-bold text-[#E8834A]">{c.firstName[0]}{c.lastName[0]}</span>
+                  <span className="text-[13px] font-bold text-[#C4685A]">{c.firstName[0]}{c.lastName[0]}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-bold text-[#1A1A2E]">{c.firstName} {c.lastName}</p>

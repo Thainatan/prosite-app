@@ -8,15 +8,17 @@ export default function OfflinePage() {
       fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     }}>
       <div style={{ textAlign: 'center', padding: '0 24px', maxWidth: 400 }}>
-        <img src="/logo.png" alt="ProSite" style={{ width: 64, height: 64, borderRadius: 16, objectFit: 'contain', margin: '0 auto 24px', display: 'block' }}/>
+        <div style={{ width: 64, height: 64, borderRadius: 16, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+          <span style={{ fontSize: 14, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+        </div>
 
         {/* Hard hat SVG illustration */}
         <svg width="120" height="100" viewBox="0 0 120 100" fill="none" style={{ margin: '0 auto 24px', display: 'block' }}>
           <rect x="10" y="70" width="100" height="18" rx="9" fill="#E8E4DF"/>
           <path d="M20 70 C20 40 40 25 60 25 C80 25 100 40 100 70Z" fill="#1C2B3A"/>
-          <path d="M25 70 C25 45 42 32 60 32 C78 32 95 45 95 70Z" fill="#E8834A"/>
+          <path d="M25 70 C25 45 42 32 60 32 C78 32 95 45 95 70Z" fill="#C4685A"/>
           <rect x="54" y="14" width="12" height="18" rx="4" fill="#1C2B3A"/>
-          <circle cx="60" cy="12" r="6" fill="#E8834A"/>
+          <circle cx="60" cy="12" r="6" fill="#C4685A"/>
           <rect x="0" y="68" width="120" height="6" rx="3" fill="#1C2B3A"/>
         </svg>
 
@@ -30,7 +32,7 @@ export default function OfflinePage() {
           onClick={() => window.location.reload()}
           style={{
             height: 44, padding: '0 28px',
-            background: '#E8834A', color: 'white',
+            background: '#C4685A', color: 'white',
             border: 'none', borderRadius: 10,
             fontSize: 15, fontWeight: 700, cursor: 'pointer',
           }}

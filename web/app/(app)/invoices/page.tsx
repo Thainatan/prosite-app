@@ -196,7 +196,7 @@ export default function InvoicesPage() {
 
   const inp = (err?: string) => 'w-full h-9 bg-[#F7F8FC] border rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none ' + (err ? 'border-[#F0584C]' : 'border-[#EAECF2]');
 
-  const brandColor = settings?.brandColor || '#E8834A';
+  const brandColor = settings?.brandColor || '#C4685A';
 
   return (
     <div className="min-h-screen bg-[#F7F8FC]">
@@ -214,7 +214,7 @@ export default function InvoicesPage() {
             </button>
           ))}
         </div>
-        <a href="/invoices/new" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration: 'none' }}>+ New Invoice</a>
+        <a href="/invoices/new" className="h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration: 'none' }}>+ New Invoice</a>
       </header>
 
       <div className="bg-white border-b border-[#EAECF2] px-6 py-3 flex gap-4">
@@ -239,7 +239,7 @@ export default function InvoicesPage() {
           <div className="text-center py-12">
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{filter !== 'all' ? `No ${IS[filter as IStatus]?.label} invoices` : 'No invoices yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Approve a quote or create a direct invoice</p>
-            <button onClick={() => setShowNew(true)} className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ New Invoice</button>
+            <button onClick={() => setShowNew(true)} className="inline-flex items-center px-6 py-2.5 bg-[#C4685A] text-white rounded-[9px] text-[14px] font-semibold">+ New Invoice</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">
@@ -393,7 +393,7 @@ export default function InvoicesPage() {
                 <label className="block text-[11.5px] font-semibold text-[#6B7280] mb-1.5">Invoice Type</label>
                 <div className="flex gap-2">
                   {['deposit','progress','final'].map(t => (
-                    <button key={t} onClick={() => setNewType(t)} className="flex-1 h-9 rounded-[9px] border text-[12.5px] font-semibold capitalize transition-all" style={{ background: newType === t ? '#EEF3FF' : 'white', color: newType === t ? '#E8834A' : '#6B7280', borderColor: newType === t ? '#E8834A' : '#EAECF2' }}>
+                    <button key={t} onClick={() => setNewType(t)} className="flex-1 h-9 rounded-[9px] border text-[12.5px] font-semibold capitalize transition-all" style={{ background: newType === t ? '#EEF3FF' : 'white', color: newType === t ? '#C4685A' : '#6B7280', borderColor: newType === t ? '#C4685A' : '#EAECF2' }}>
                       {TYPE_ICON[t]} {t}
                     </button>
                   ))}
@@ -404,7 +404,7 @@ export default function InvoicesPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[11.5px] font-semibold text-[#6B7280]">Line Items *</label>
-                  <button onClick={() => setNewLines(p => [...p, EMPTY_LINE()])} className="text-[11.5px] font-semibold text-[#E8834A]">+ Add line</button>
+                  <button onClick={() => setNewLines(p => [...p, EMPTY_LINE()])} className="text-[11.5px] font-semibold text-[#C4685A]">+ Add line</button>
                 </div>
                 {newErrors.lines && <p className="text-[11px] text-[#F0584C] mb-2">{newErrors.lines}</p>}
                 <div className="space-y-2">
@@ -438,7 +438,7 @@ export default function InvoicesPage() {
             </div>
             <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
               <button onClick={() => setShowNew(false)} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-              <button onClick={handleCreateInvoice} disabled={newSaving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
+              <button onClick={handleCreateInvoice} disabled={newSaving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-bold disabled:opacity-50">
                 {newSaving ? 'Creating...' : 'Create Invoice'}
               </button>
             </div>

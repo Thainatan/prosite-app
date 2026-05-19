@@ -108,7 +108,7 @@ export default function AdminPromoPage() {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-            <Tag size={20} color="#E8834A" strokeWidth={2}/>
+            <Tag size={20} color="#C4685A" strokeWidth={2}/>
             <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>Promo Codes</h1>
           </div>
           <div style={{ display: 'flex', gap: 16 }}>
@@ -117,7 +117,7 @@ export default function AdminPromoPage() {
             <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)' }}>Total uses: <strong style={{ color: 'white' }}>{totalUses}</strong></span>
           </div>
         </div>
-        <button onClick={() => openCreate()} style={{ display: 'flex', alignItems: 'center', gap: 7, height: 40, padding: '0 16px', background: '#E8834A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+        <button onClick={() => openCreate()} style={{ display: 'flex', alignItems: 'center', gap: 7, height: 40, padding: '0 16px', background: '#C4685A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
           <Plus size={15}/> Create Code
         </button>
       </div>
@@ -173,7 +173,7 @@ export default function AdminPromoPage() {
                         <span style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>{c.usedCount}</span>
                         {c.maxUses > 0 && (
                           <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 2, width: 40 }}>
-                            <div style={{ height: '100%', width: `${Math.min((c.usedCount / c.maxUses) * 100, 100)}%`, background: '#E8834A', borderRadius: 2 }}/>
+                            <div style={{ height: '100%', width: `${Math.min((c.usedCount / c.maxUses) * 100, 100)}%`, background: '#C4685A', borderRadius: 2 }}/>
                           </div>
                         )}
                       </div>
@@ -236,7 +236,7 @@ export default function AdminPromoPage() {
                 <label style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: 6 }}>Plan to Grant *</label>
                 <div style={{ display: 'flex', gap: 8 }}>
                   {['SOLO','COMPANY','ENTERPRISE'].map(p => (
-                    <button key={p} type="button" onClick={() => set('plan', p)} style={{ flex: 1, height: 36, borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `2px solid ${form.plan === p ? (PLAN_COLORS[p] || '#E8834A') : 'rgba(255,255,255,0.1)'}`, background: form.plan === p ? `${PLAN_COLORS[p] || '#E8834A'}15` : 'transparent', color: form.plan === p ? (PLAN_COLORS[p] || '#E8834A') : 'rgba(255,255,255,0.5)' }}>{p}</button>
+                    <button key={p} type="button" onClick={() => set('plan', p)} style={{ flex: 1, height: 36, borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `2px solid ${form.plan === p ? (PLAN_COLORS[p] || '#C4685A') : 'rgba(255,255,255,0.1)'}`, background: form.plan === p ? `${PLAN_COLORS[p] || '#C4685A'}15` : 'transparent', color: form.plan === p ? (PLAN_COLORS[p] || '#C4685A') : 'rgba(255,255,255,0.5)' }}>{p}</button>
                   ))}
                 </div>
               </div>
@@ -291,7 +291,7 @@ export default function AdminPromoPage() {
 
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
               <button onClick={() => setModal(null)} style={{ flex: 1, height: 42, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, color: 'rgba(255,255,255,0.6)', fontSize: 13, cursor: 'pointer' }}>Cancel</button>
-              <button onClick={handleSave} disabled={saving || !form.code} style={{ flex: 2, height: 42, background: '#E8834A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: saving ? 0.7 : 1 }}>{saving ? 'Saving…' : modal === 'create' ? 'Create Code' : 'Save Changes'}</button>
+              <button onClick={handleSave} disabled={saving || !form.code} style={{ flex: 2, height: 42, background: '#C4685A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', opacity: saving ? 0.7 : 1 }}>{saving ? 'Saving…' : modal === 'create' ? 'Create Code' : 'Save Changes'}</button>
             </div>
           </div>
         </div>

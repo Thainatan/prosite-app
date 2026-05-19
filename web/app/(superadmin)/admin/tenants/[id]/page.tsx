@@ -22,7 +22,7 @@ const PLAN_COLORS: Record<string, string> = { TRIAL: '#F59E0B', SOLO: '#3B82F6',
 const STATUS_COLOR: Record<string, string> = { ACTIVE: '#22C55E', SUSPENDED: '#EF4444', CANCELLED: '#9CA3AF', INACTIVE: '#9CA3AF' };
 const PLAN_OPTIONS = ['TRIAL','SOLO','COMPANY','ENTERPRISE','FREE_FOREVER'];
 
-function StatBox({ label, value, sub, color = '#E8834A' }: { label: string; value: string | number; sub?: string; color?: string }) {
+function StatBox({ label, value, sub, color = '#C4685A' }: { label: string; value: string | number; sub?: string; color?: string }) {
   return (
     <div style={{ background: '#1A2D3F', borderRadius: 12, padding: '16px 18px', border: '1px solid rgba(255,255,255,0.06)' }}>
       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>{label}</div>
@@ -106,7 +106,7 @@ export default function TenantDetailPage() {
     width: '100%', height: 42, boxSizing: 'border-box', outline: 'none',
   };
 
-  const TIMELINE_COLORS: Record<string, string> = { client: '#22C55E', project: '#3B82F6', invoice: '#8B5CF6', quote: '#E8834A' };
+  const TIMELINE_COLORS: Record<string, string> = { client: '#22C55E', project: '#3B82F6', invoice: '#8B5CF6', quote: '#C4685A' };
 
   if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh', color: 'rgba(255,255,255,0.3)' }}>Loading…</div>;
   if (!tenant || (tenant as any).error) return <div style={{ padding: 28, color: 'rgba(255,255,255,0.4)' }}>Tenant not found</div>;
@@ -124,8 +124,8 @@ export default function TenantDetailPage() {
         </a>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(232,131,74,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Building2 size={22} color="#E8834A" strokeWidth={2}/>
+            <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(196,104,90,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Building2 size={22} color="#C4685A" strokeWidth={2}/>
             </div>
             <div>
               <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: 'white' }}>{tenant.name}</h1>
@@ -224,8 +224,8 @@ export default function TenantDetailPage() {
               </div>
               {tenant.teamMembers.slice(0,6).map((m, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 18px', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(232,131,74,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: '#E8834A' }}>{m.firstName[0]}{m.lastName[0]}</span>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(196,104,90,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: '#C4685A' }}>{m.firstName[0]}{m.lastName[0]}</span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 12.5, fontWeight: 600, color: 'white' }}>{m.firstName} {m.lastName}</div>
@@ -248,12 +248,12 @@ export default function TenantDetailPage() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
               {PLAN_OPTIONS.map(p => (
-                <button key={p} onClick={() => setNewPlan(p)} style={{ height: 40, borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: `2px solid ${newPlan === p ? PLAN_COLORS[p] || '#E8834A' : 'rgba(255,255,255,0.1)'}`, background: newPlan === p ? `${PLAN_COLORS[p] || '#E8834A'}15` : 'transparent', color: newPlan === p ? (PLAN_COLORS[p] || '#E8834A') : 'rgba(255,255,255,0.6)' }}>{p}</button>
+                <button key={p} onClick={() => setNewPlan(p)} style={{ height: 40, borderRadius: 9, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: `2px solid ${newPlan === p ? PLAN_COLORS[p] || '#C4685A' : 'rgba(255,255,255,0.1)'}`, background: newPlan === p ? `${PLAN_COLORS[p] || '#C4685A'}15` : 'transparent', color: newPlan === p ? (PLAN_COLORS[p] || '#C4685A') : 'rgba(255,255,255,0.6)' }}>{p}</button>
               ))}
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => setPlanModal(false)} style={{ flex: 1, height: 40, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, color: 'rgba(255,255,255,0.6)', fontSize: 13, cursor: 'pointer' }}>Cancel</button>
-              <button onClick={handleChangePlan} disabled={saving} style={{ flex: 1, height: 40, background: '#E8834A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{saving ? 'Saving…' : 'Save'}</button>
+              <button onClick={handleChangePlan} disabled={saving} style={{ flex: 1, height: 40, background: '#C4685A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{saving ? 'Saving…' : 'Save'}</button>
             </div>
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function TenantDetailPage() {
             <input type="date" value={newExpiry} onChange={e => setNewExpiry(e.target.value)} style={{ ...inp }}/>
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
               <button onClick={() => setTrialModal(false)} style={{ flex: 1, height: 40, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, color: 'rgba(255,255,255,0.6)', fontSize: 13, cursor: 'pointer' }}>Cancel</button>
-              <button onClick={handleExtendTrial} disabled={saving} style={{ flex: 1, height: 40, background: '#E8834A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{saving ? 'Saving…' : 'Extend'}</button>
+              <button onClick={handleExtendTrial} disabled={saving} style={{ flex: 1, height: 40, background: '#C4685A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{saving ? 'Saving…' : 'Extend'}</button>
             </div>
           </div>
         </div>

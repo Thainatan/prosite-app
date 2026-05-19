@@ -17,7 +17,7 @@ const ST: Record<Status, { label: string; bg: string; color: string }> = {
   on_hold:           { label: 'On Hold',           bg: '#FFF0EF', color: '#F0584C' },
 };
 const TRADE_COLOR: Record<string, string> = {
-  Electrical:'#F5A623', Plumbing:'#0EA5E9', HVAC:'#E8834A', Framing:'#34C78A',
+  Electrical:'#F5A623', Plumbing:'#0EA5E9', HVAC:'#C4685A', Framing:'#34C78A',
   Drywall:'#6B7280', Flooring:'#EC4899', Painting:'#F0584C', Roofing:'#374151',
   Tile:'#8B5CF6', Concrete:'#9CA3AF', Landscaping:'#059669', Other:'#6B7280',
 };
@@ -267,7 +267,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
                 <div className="space-y-2">
                   {assignments.map(a => {
                     const tc = TRADE_COLOR[a.trade] || '#6B7280';
-                    const statColors: Record<string,string> = { SCHEDULED:'#6B7280', IN_PROGRESS:'#34C78A', COMPLETED:'#E8834A', ON_HOLD:'#F0584C' };
+                    const statColors: Record<string,string> = { SCHEDULED:'#6B7280', IN_PROGRESS:'#34C78A', COMPLETED:'#C4685A', ON_HOLD:'#F0584C' };
                     return (
                       <div key={a.id} className="bg-[#F9FAFB] border border-[#EAECF2] rounded-[10px] p-3 flex items-start gap-3">
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0"
@@ -325,7 +325,7 @@ function ProjectDetail({ p, projectSubs, allSubs, onSubAssigned, onSubRemoved, o
         <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
           <button onClick={onClose} className="h-9 px-4 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Close</button>
           <div className="flex-1"/>
-          <a href="/invoices" className="h-9 px-4 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold flex items-center no-underline" style={{ textDecoration:'none' }}>View Invoices</a>
+          <a href="/invoices" className="h-9 px-4 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-semibold flex items-center no-underline" style={{ textDecoration:'none' }}>View Invoices</a>
         </div>
       </div>
     </div>
@@ -422,8 +422,8 @@ export default function ProjectsPage() {
           <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EAFAF3] text-[#34C78A] rounded-full">{active} active</span>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..."
-          className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#E8834A] transition-all"/>
-        <a href="/quotes/new" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration:'none' }}>+ New Quote</a>
+          className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#C4685A] transition-all"/>
+        <a href="/quotes/new" className="h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px] flex items-center" style={{ textDecoration:'none' }}>+ New Quote</a>
       </header>
 
       {loading ? (
@@ -435,7 +435,7 @@ export default function ProjectsPage() {
           <div className="w-16 h-16 bg-[#EAFAF3] rounded-full flex items-center justify-center mx-auto mb-4"><HardHat size={32} color="#2ECC71" strokeWidth={1.5}/></div>
           <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No projects found' : 'No projects yet'}</p>
           <p className="text-[12px] text-[#6B7280] mb-4">Approve a quote to create your first project</p>
-          <a href="/quotes" className="inline-flex items-center px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold no-underline" style={{ textDecoration:'none' }}>Go to Quotes</a>
+          <a href="/quotes" className="inline-flex items-center px-6 py-2.5 bg-[#C4685A] text-white rounded-[9px] text-[14px] font-semibold no-underline" style={{ textDecoration:'none' }}>Go to Quotes</a>
         </div>
       ) : (
         <>
@@ -505,7 +505,7 @@ export default function ProjectsPage() {
                     {/* Quick assign button */}
                     <button
                       onClick={e => { e.stopPropagation(); setQuickAssignProject(p); }}
-                      className="ml-auto text-[10.5px] font-semibold px-2.5 py-1 rounded-full border border-[#EAECF2] text-[#6B7280] hover:border-[#E8834A] hover:text-[#E8834A] transition-colors flex-shrink-0">
+                      className="ml-auto text-[10.5px] font-semibold px-2.5 py-1 rounded-full border border-[#EAECF2] text-[#6B7280] hover:border-[#C4685A] hover:text-[#C4685A] transition-colors flex-shrink-0">
                       + Assign Sub
                     </button>
                   </div>

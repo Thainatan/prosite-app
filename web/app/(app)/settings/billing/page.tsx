@@ -39,7 +39,7 @@ const PLANS = [
   },
 ];
 
-const brand = '#E8834A';
+const brand = '#C4685A';
 
 export default function BillingPage() {
   const [status, setStatus] = useState<BillingStatus | null>(null);
@@ -171,7 +171,7 @@ export default function BillingPage() {
               <div key={key} style={{
                 background: 'white', borderRadius: 14, padding: '22px 20px',
                 border: `2px solid ${isCurrent ? brand : popular ? '#BFDBFE' : '#E8E4DF'}`,
-                boxShadow: isCurrent ? `0 0 0 4px rgba(232,131,74,0.12)` : '0 1px 4px rgba(0,0,0,0.04)',
+                boxShadow: isCurrent ? `0 0 0 4px rgba(196,104,90,0.12)` : '0 1px 4px rgba(0,0,0,0.04)',
                 position: 'relative',
               }}>
                 {popular && !isCurrent && (
@@ -235,7 +235,7 @@ export default function BillingPage() {
                 borderRadius: 9, padding: '0 14px', fontSize: 14, color: '#1A1A2E',
                 outline: 'none', letterSpacing: '0.05em', fontWeight: 600,
               }}
-              onFocus={e => { e.target.style.borderColor = brand; e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)'; }}
+              onFocus={e => { e.target.style.borderColor = brand; e.target.style.boxShadow = '0 0 0 3px rgba(196,104,90,0.15)'; }}
               onBlur={e => { e.target.style.borderColor = '#E8E4DF'; e.target.style.boxShadow = 'none'; }}
             />
             <button

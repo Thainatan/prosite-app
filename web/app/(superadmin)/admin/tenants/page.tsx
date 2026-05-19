@@ -118,7 +118,7 @@ export default function TenantsPage() {
 
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-          <Building2 size={20} color="#E8834A" strokeWidth={2}/>
+          <Building2 size={20} color="#C4685A" strokeWidth={2}/>
           <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>Companies</h1>
           <span style={{ background: 'rgba(255,255,255,0.08)', padding: '2px 10px', borderRadius: 99, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{tenants.length}</span>
         </div>
@@ -195,7 +195,7 @@ export default function TenantsPage() {
                     </td>
                     <td style={{ padding: '12px 14px' }} onClick={e => e.stopPropagation()}>
                       <div style={{ display: 'flex', gap: 6 }}>
-                        <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 11.5, color: '#E8834A', fontWeight: 600, textDecoration: 'none', padding: '4px 8px', border: '1px solid rgba(232,131,74,0.3)', borderRadius: 6 }}>View</a>
+                        <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 11.5, color: '#C4685A', fontWeight: 600, textDecoration: 'none', padding: '4px 8px', border: '1px solid rgba(196,104,90,0.3)', borderRadius: 6 }}>View</a>
                         <button onClick={() => { setExtendModal(t); setExtendDate(t.planExpiresAt ? t.planExpiresAt.slice(0,10) : ''); }}
                           style={{ fontSize: 11.5, color: '#F59E0B', fontWeight: 600, background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 6, padding: '4px 8px', cursor: 'pointer' }}>Extend</button>
                         <button onClick={() => handleSuspend(t)}
@@ -227,7 +227,7 @@ export default function TenantsPage() {
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
               <button onClick={() => setExtendModal(null)} style={{ flex: 1, height: 40, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, color: 'rgba(255,255,255,0.6)', fontSize: 13, cursor: 'pointer' }}>Cancel</button>
               <button onClick={handleExtend} disabled={extendLoading || !extendDate}
-                style={{ flex: 1, height: 40, background: '#E8834A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{extendLoading ? 'Saving…' : 'Save'}</button>
+                style={{ flex: 1, height: 40, background: '#C4685A', border: 'none', borderRadius: 9, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{extendLoading ? 'Saving…' : 'Save'}</button>
             </div>
           </div>
         </div>

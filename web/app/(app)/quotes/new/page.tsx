@@ -34,7 +34,7 @@ const NICHES = [
   { id: 'TILE',       label: 'Tile & Stone',    icon: Grid3x3,    color: '#0EA5E9' },
   { id: 'FLOORING',   label: 'Flooring',        icon: Layers,     color: '#F59E0B' },
   { id: 'PAINTING',   label: 'Painting',        icon: Paintbrush, color: '#10B981' },
-  { id: 'REMODELING', label: 'Remodeling',      icon: Hammer,     color: '#E8834A' },
+  { id: 'REMODELING', label: 'Remodeling',      icon: Hammer,     color: '#C4685A' },
   { id: 'DESIGN',     label: 'Interior Design', icon: Sofa,       color: '#EC4899' },
 ];
 
@@ -75,7 +75,7 @@ const FINISHES_BY_NICHE: Record<string, string[]> = {
 };
 
 const TRADE_COLOR: Record<string, string> = {
-  Electrical:'#F5A623', Plumbing:'#0EA5E9', HVAC:'#E8834A', Framing:'#34C78A',
+  Electrical:'#F5A623', Plumbing:'#0EA5E9', HVAC:'#C4685A', Framing:'#34C78A',
   Flooring:'#EC4899', Painting:'#10B981', Tile:'#8B5CF6', Cabinets:'#F59E0B', Other:'#6B7280',
 };
 
@@ -258,7 +258,7 @@ function AIItemPanel({ niche, onClose, onApply }: {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<Omit<LineItem, 'id' | 'niche'> | null>(null);
   const nicheInfo = NICHES.find(n => n.id === niche);
-  const color = nicheInfo?.color || '#E8834A';
+  const color = nicheInfo?.color || '#C4685A';
   const allEmpty = answers.every(a => !a.trim());
 
   const handleGenerate = async () => {
@@ -313,7 +313,7 @@ function AIItemPanel({ niche, onClose, onApply }: {
               <div style={{ padding:'14px 16px',background:'#F8F6F3',borderRadius:10,border:'1px solid #E8E4DF' }}>
                 <div style={{ display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:8,marginBottom:8 }}>
                   <span style={{ fontSize:11,fontWeight:700,color,textTransform:'uppercase',letterSpacing:0.5 }}>{preview.section}</span>
-                  <span style={{ fontSize:14,fontWeight:700,color:'#E8834A' }}>{fmt(preview.qty*preview.price)}</span>
+                  <span style={{ fontSize:14,fontWeight:700,color:'#C4685A' }}>{fmt(preview.qty*preview.price)}</span>
                 </div>
                 <p style={{ fontSize:13,color:'#1A1A2E',lineHeight:1.5,margin:'0 0 8px' }}>{preview.description}</p>
                 <div style={{ fontSize:11,color:'#9CA3AF' }}>{preview.qty} {preview.unit} × {fmt(preview.price)}</div>
@@ -335,7 +335,7 @@ function AIItemPanel({ niche, onClose, onApply }: {
             </button>
           ) : (
             <button onClick={()=>{onApply(preview);onClose();}}
-              style={{ height:36,padding:'0 20px',border:'none',borderRadius:8,background:'#E8834A',color:'white',fontSize:13,fontWeight:700,cursor:'pointer',display:'flex',alignItems:'center',gap:6 }}>
+              style={{ height:36,padding:'0 20px',border:'none',borderRadius:8,background:'#C4685A',color:'white',fontSize:13,fontWeight:700,cursor:'pointer',display:'flex',alignItems:'center',gap:6 }}>
               <Plus size={13}/>Add to Quote
             </button>
           )}
@@ -470,7 +470,7 @@ export default function NewQuotePage() {
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <button onClick={()=>handleSave('draft')} disabled={loading} className="flex items-center gap-2 h-9 px-4 rounded-[9px] border border-[#E8E4DF] bg-[#FAF9F7] text-[13px] font-semibold text-[#6B7280] hover:text-[#1A1A2E] transition-all"><Save size={14}/>Save Draft</button>
-          <button onClick={()=>handleSave('send')}  disabled={loading} className="flex items-center gap-2 h-9 px-4 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-semibold hover:bg-[#D4713A] transition-all"><Send size={14}/>{loading?'Saving...':'Save & Send'}</button>
+          <button onClick={()=>handleSave('send')}  disabled={loading} className="flex items-center gap-2 h-9 px-4 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-semibold hover:bg-[#B5564A] transition-all"><Send size={14}/>{loading?'Saving...':'Save & Send'}</button>
         </div>
       </header>
 
@@ -508,7 +508,7 @@ export default function NewQuotePage() {
             </div>
             <div className="col-span-2">
               <label className={lbl}>Quote Title</label>
-              <input className="w-full h-10 bg-[#FAF9F7] border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"
+              <input className="w-full h-10 bg-[#FAF9F7] border border-[#E8E4DF] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#C4685A] transition-all"
                 placeholder="e.g. Kitchen & Flooring Remodel — Smith Residence" value={title} onChange={e=>setTitle(e.target.value)}/>
             </div>
           </div>
@@ -571,7 +571,7 @@ export default function NewQuotePage() {
                         <Sparkles size={11}/>AI Generate
                       </button>
                       <button onClick={()=>addItem(nicheId)}
-                        style={{ display:'flex',alignItems:'center',gap:5,height:28,padding:'0 10px',borderRadius:7,background:'#FEF3EC',border:'none',fontSize:11,fontWeight:600,color:'#E8834A',cursor:'pointer' }}>
+                        style={{ display:'flex',alignItems:'center',gap:5,height:28,padding:'0 10px',borderRadius:7,background:'#FEF3EC',border:'none',fontSize:11,fontWeight:600,color:'#C4685A',cursor:'pointer' }}>
                         <Plus size={12}/>Add Item
                       </button>
                     </div>
@@ -604,7 +604,7 @@ export default function NewQuotePage() {
                             <div style={{ display:'flex',alignItems:'center',gap:4 }}>
                               <input value={item.description} onChange={e=>updateItem(item.id,'description',e.target.value)} placeholder="Describe item..."
                                 style={{ width:'100%',height:32,background:'#F8F6F3',border:'1px solid #E8E4DF',borderRadius:7,padding:'0 10px',fontSize:12.5,color:'#1A1A2E',outline:'none',boxSizing:'border-box' }}/>
-                              {item.aiGenerated && <Sparkles size={11} color="#E8834A" style={{ flexShrink:0 }}/>}
+                              {item.aiGenerated && <Sparkles size={11} color="#C4685A" style={{ flexShrink:0 }}/>}
                             </div>
                             {showMats && (
                               <div style={{ display:'flex',flexDirection:'column',gap:2 }}>
@@ -634,7 +634,7 @@ export default function NewQuotePage() {
                             <div style={{ fontSize:13,fontWeight:600,color:'#1A1A2E',textAlign:'right' }}>{fmt(item.qty*item.price)}</div>
                             <div style={{ display:'flex',alignItems:'center',justifyContent:'flex-end',gap:2,position:'relative' }}>
                               <button type="button" onClick={()=>setPickerForItem(pickerForItem===item.id?null:item.id)}
-                                style={{ width:28,height:28,borderRadius:6,border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',background:item.subcontractorId?'#FEF3EC':'#F8F6F3',color:item.subcontractorId?'#E8834A':'#9CA3AF' }}>
+                                style={{ width:28,height:28,borderRadius:6,border:'none',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',background:item.subcontractorId?'#FEF3EC':'#F8F6F3',color:item.subcontractorId?'#C4685A':'#9CA3AF' }}>
                                 <UserPlus size={12}/>
                               </button>
                               {pickerForItem===item.id && (
@@ -681,7 +681,7 @@ export default function NewQuotePage() {
                 </div>
                 <div style={{ display:'flex',justifyContent:'space-between',borderTop:'2px solid #E8E4DF',paddingTop:10 }}>
                   <span style={{ fontSize:15,fontWeight:700,color:'#1A1A2E' }}>Total</span>
-                  <span style={{ fontSize:22,fontWeight:800,color:'#E8834A' }}>{fmt(subtotal)}</span>
+                  <span style={{ fontSize:22,fontWeight:800,color:'#C4685A' }}>{fmt(subtotal)}</span>
                 </div>
               </div>
             </div>
@@ -708,7 +708,7 @@ export default function NewQuotePage() {
         <div style={{ display:'flex',justifyContent:'flex-end',gap:10,paddingBottom:32 }}>
           <a href="/quotes" style={{ display:'flex',alignItems:'center',height:40,padding:'0 20px',borderRadius:9,border:'1px solid #E8E4DF',fontSize:13,fontWeight:600,color:'#6B7280',textDecoration:'none' }}>Cancel</a>
           <button onClick={()=>handleSave('draft')} disabled={loading} style={{ display:'flex',alignItems:'center',gap:6,height:40,padding:'0 20px',borderRadius:9,border:'1px solid #E8E4DF',background:'#FAF9F7',fontSize:13,fontWeight:600,color:'#6B7280',cursor:'pointer' }}><Save size={14}/>Save Draft</button>
-          <button onClick={()=>handleSave('send')}  disabled={loading} style={{ display:'flex',alignItems:'center',gap:6,height:40,padding:'0 20px',borderRadius:9,border:'none',background:'#E8834A',color:'white',fontSize:13,fontWeight:700,cursor:'pointer' }}><Send size={14}/>{loading?'Saving...':'Save & Send'}</button>
+          <button onClick={()=>handleSave('send')}  disabled={loading} style={{ display:'flex',alignItems:'center',gap:6,height:40,padding:'0 20px',borderRadius:9,border:'none',background:'#C4685A',color:'white',fontSize:13,fontWeight:700,cursor:'pointer' }}><Send size={14}/>{loading?'Saving...':'Save & Send'}</button>
         </div>
       </div>
 

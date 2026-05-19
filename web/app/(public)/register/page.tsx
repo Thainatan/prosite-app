@@ -163,8 +163,8 @@ function RegisterForm() {
     outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s, box-shadow 0.15s',
   };
   const focus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.style.borderColor = '#E8834A';
-    e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)';
+    e.target.style.borderColor = '#C4685A';
+    e.target.style.boxShadow = '0 0 0 3px rgba(196,104,90,0.15)';
   };
   const blur = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.style.borderColor = '#E8E4DF';
@@ -183,7 +183,7 @@ function RegisterForm() {
         <svg style={{ position: 'absolute', inset: 0, opacity: 0.05, width: '100%', height: '100%' }}>
           <defs>
             <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.5" fill="#E8834A"/>
+              <circle cx="2" cy="2" r="1.5" fill="#C4685A"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#dots)"/>
@@ -191,17 +191,19 @@ function RegisterForm() {
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 360, width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 40 }}>
-            <img src="/logo.png" alt="ProSite" style={{ width: 42, height: 42, borderRadius: 10, objectFit: 'contain' }}/>
+            <div style={{ width: 42, height: 42, borderRadius: 10, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontSize: 9.5, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+            </div>
             <div>
-              <div style={{ fontSize: 20, fontWeight: 800, color: 'white' }}>ProSite</div>
-              <div style={{ fontSize: 10, color: '#E8834A', fontWeight: 700, letterSpacing: '0.08em' }}>REMODELING OS</div>
+              <div style={{ fontSize: 20, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
+              <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>REMODELING OS</div>
             </div>
           </div>
 
           <h1 style={{ fontSize: 26, fontWeight: 800, color: 'white', margin: '0 0 10px', lineHeight: 1.3 }}>
             Join 500+ remodeling<br/>
-            <span style={{ color: '#E8834A' }}>contractors</span> who trust<br/>
-            ProSite
+            <span style={{ color: '#C4685A' }}>contractors</span> who trust<br/>
+            finesse.
           </h1>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '0 0 32px' }}>
             14-day free trial — no credit card required
@@ -210,8 +212,8 @@ function RegisterForm() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 36 }}>
             {BENEFITS.map(({ Icon, title, desc }) => (
               <div key={title} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 38, height: 38, borderRadius: 9, background: 'rgba(232,131,74,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={17} color="#E8834A" strokeWidth={2}/>
+                <div style={{ width: 38, height: 38, borderRadius: 9, background: 'rgba(196,104,90,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={17} color="#C4685A" strokeWidth={2}/>
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>{title}</div>
@@ -221,9 +223,9 @@ function RegisterForm() {
             ))}
           </div>
 
-          <div style={{ background: 'rgba(232,131,74,0.1)', border: '1px solid rgba(232,131,74,0.2)', borderRadius: 10, padding: '12px 16px' }}>
+          <div style={{ background: 'rgba(196,104,90,0.1)', border: '1px solid rgba(196,104,90,0.2)', borderRadius: 10, padding: '12px 16px' }}>
             <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
-              <span style={{ color: '#E8834A', fontWeight: 700 }}>Free for 14 days.</span>{' '}
+              <span style={{ color: '#C4685A', fontWeight: 700 }}>Free for 14 days.</span>{' '}
               No credit card needed. Cancel anytime.
             </p>
           </div>
@@ -311,18 +313,18 @@ function RegisterForm() {
                 {PLANS.map(p => (
                   <div key={p.key} onClick={() => setForm(f => ({ ...f, plan: p.key }))}
                     style={{
-                      border: `2px solid ${form.plan === p.key ? '#E8834A' : '#E8E4DF'}`,
+                      border: `2px solid ${form.plan === p.key ? '#C4685A' : '#E8E4DF'}`,
                       borderRadius: 10, padding: '12px 10px', cursor: 'pointer',
-                      background: form.plan === p.key ? 'rgba(232,131,74,0.06)' : 'white',
+                      background: form.plan === p.key ? 'rgba(196,104,90,0.06)' : 'white',
                       position: 'relative', transition: 'all 0.15s',
                     }}>
                     {p.popular && (
-                      <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#E8834A', color: 'white', fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 99, whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>
+                      <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#C4685A', color: 'white', fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 99, whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>
                         POPULAR
                       </div>
                     )}
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1A1A2E', marginBottom: 2 }}>{p.name}</div>
-                    <div style={{ fontSize: 17, fontWeight: 800, color: '#E8834A' }}>${p.price}<span style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}>/mo</span></div>
+                    <div style={{ fontSize: 17, fontWeight: 800, color: '#C4685A' }}>${p.price}<span style={{ fontSize: 11, fontWeight: 500, color: '#9CA3AF' }}>/mo</span></div>
                     <div style={{ fontSize: 10.5, color: '#6B7280', marginTop: 4 }}>{p.users}</div>
                     <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 3 }}>
                       {p.features.slice(0,2).map(f => (
@@ -404,7 +406,7 @@ function RegisterForm() {
             )}
 
             <button type="submit" disabled={loading} style={{
-              width: '100%', height: 48, background: loading ? '#F0C4A8' : '#E8834A',
+              width: '100%', height: 48, background: loading ? '#D9A09A' : '#C4685A',
               color: 'white', border: 'none', borderRadius: 10, fontSize: 15,
               fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'background 0.15s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -417,7 +419,7 @@ function RegisterForm() {
 
           <p style={{ fontSize: 13, color: '#6B7280', textAlign: 'center', margin: '16px 0 0' }}>
             Already have an account?{' '}
-            <a href="/login" style={{ color: '#E8834A', fontWeight: 700, textDecoration: 'none' }}>Sign in</a>
+            <a href="/login" style={{ color: '#C4685A', fontWeight: 700, textDecoration: 'none' }}>Sign in</a>
           </p>
           <p style={{ textAlign: 'center', color: '#C4C9D4', fontSize: 11, margin: '24px 0 0' }}>
             <a href="/home" style={{ color: '#C4C9D4', textDecoration: 'none' }}>← Back to home</a>

@@ -31,7 +31,7 @@ export default function BottomNav() {
           >
             <Icon
               size={22}
-              color={active ? '#E8834A' : '#9CA3AF'}
+              color={active ? '#C4685A' : '#9CA3AF'}
               strokeWidth={active ? 2.5 : 1.8}
             />
             <span>{label}</span>

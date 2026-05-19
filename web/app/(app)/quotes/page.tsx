@@ -9,7 +9,7 @@ const fmtD = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'sh
 
 const STATUS: Record<string, { label: string; bg: string; color: string }> = {
   DRAFT:    { label: 'Draft',    bg: '#F3F4F6', color: '#6B7280' },
-  SENT:     { label: 'Sent',     bg: '#FEF3EC', color: '#E8834A' },
+  SENT:     { label: 'Sent',     bg: '#FEF3EC', color: '#C4685A' },
   APPROVED: { label: 'Approved', bg: '#EAFAF3', color: '#2ECC71' },
   REJECTED: { label: 'Rejected', bg: '#FFF0EF', color: '#E74C3C' },
 };
@@ -59,7 +59,7 @@ function DotsMenu({ onView, onDuplicate, onArchive, onDelete }: { onView: () => 
 
 function PdfPreview({ quote, settings, onClose }: { quote: Quote; settings: CompanySettings | null; onClose: () => void }) {
   const docLabel = settings?.useEstimate ? 'Estimate' : 'Quote';
-  const brand = settings?.brandColor || '#E8834A';
+  const brand = settings?.brandColor || '#C4685A';
   const items = quote.lineItems || [];
   const hasQty = settings?.showQty !== false;
   const hasUP = settings?.showUnitPrice !== false;
@@ -276,10 +276,10 @@ export default function QuotesPage() {
       <header className="bg-white border-b border-[#E8E4DF] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">{docLabel}</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#E8834A] rounded-full">{quotes.length} total</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#FEF3EC] text-[#C4685A] rounded-full">{quotes.length} total</span>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder={`Search ${docLabel.toLowerCase()}...`} className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8834A] transition-all"/>
-        <a href="/quotes/new" style={{display:'flex',alignItems:'center',gap:6,height:34,padding:'0 16px',background:'#E8834A',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New {settings?.useEstimate ? 'Estimate' : 'Quote'}</a>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder={`Search ${docLabel.toLowerCase()}...`} className="flex-1 max-w-sm h-[34px] bg-[#FAF9F7] border border-[#E8E4DF] rounded-full px-4 text-[13px] text-[#1A1A2E] placeholder-[#9CA3AF] outline-none focus:border-[#C4685A] transition-all"/>
+        <a href="/quotes/new" style={{display:'flex',alignItems:'center',gap:6,height:34,padding:'0 16px',background:'#C4685A',color:'white',fontSize:13,fontWeight:700,borderRadius:9,textDecoration:'none'}}>+ New {settings?.useEstimate ? 'Estimate' : 'Quote'}</a>
       </header>
 
       <div className="p-5">
@@ -288,7 +288,7 @@ export default function QuotesPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search ? 'No results' : `No ${docLabel.toLowerCase()} yet`}</p>
-            <a href="/quotes/new" style={{display:'inline-flex',alignItems:'center',padding:'10px 24px',background:'#E8834A',color:'white',borderRadius:9,fontSize:14,fontWeight:600,textDecoration:'none'}}>+ New {settings?.useEstimate ? 'Estimate' : 'Quote'}</a>
+            <a href="/quotes/new" style={{display:'inline-flex',alignItems:'center',padding:'10px 24px',background:'#C4685A',color:'white',borderRadius:9,fontSize:14,fontWeight:600,textDecoration:'none'}}>+ New {settings?.useEstimate ? 'Estimate' : 'Quote'}</a>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#E8E4DF] overflow-hidden">
@@ -319,7 +319,7 @@ export default function QuotesPage() {
                     </button>
                   )}
                   {q.status === 'APPROVED' && (
-                    <a href="/projects" className="flex-shrink-0 h-8 px-3 rounded-[8px] text-[11.5px] font-bold no-underline flex items-center" style={{ background: '#0C1A3A', color: '#E8834A', border: '1px solid #4F7EF744' }}>
+                    <a href="/projects" className="flex-shrink-0 h-8 px-3 rounded-[8px] text-[11.5px] font-bold no-underline flex items-center" style={{ background: '#0C1A3A', color: '#C4685A', border: '1px solid #4F7EF744' }}>
                       View Project
                     </a>
                   )}

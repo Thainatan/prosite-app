@@ -41,10 +41,12 @@ export default function InvitePage() {
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 32 }}>
-          <img src="/logo.png" alt="ProSite" style={{ width: 40, height: 40, borderRadius: 10, objectFit: 'contain' }} />
+          <div style={{ width: 40, height: 40, borderRadius: 10, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 9, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+          </div>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: '#1C2B3A' }}>ProSite</div>
-            <div style={{ fontSize: 10, color: '#E8834A', fontWeight: 700, letterSpacing: '0.06em' }}>REMODELING OS</div>
+            <div style={{ fontSize: 18, fontWeight: 300, letterSpacing: '0.05em', color: '#1C2B3A' }}>finesse.</div>
+            <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.06em' }}>REMODELING OS</div>
           </div>
         </div>
 
@@ -57,7 +59,7 @@ export default function InvitePage() {
             </div>
             <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1C2B3A', margin: '0 0 10px' }}>Invalid Invite Code</h2>
             <p style={{ fontSize: 15, color: '#6B7280', margin: '0 0 28px' }}>This invite link has expired or doesn't exist. You can still start a free trial without a code.</p>
-            <a href="/register" style={{ display: 'inline-block', padding: '14px 32px', background: '#E8834A', color: 'white', borderRadius: 12, fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>
+            <a href="/register" style={{ display: 'inline-block', padding: '14px 32px', background: '#C4685A', color: 'white', borderRadius: 12, fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>
               Start Free Trial →
             </a>
           </>
@@ -65,10 +67,10 @@ export default function InvitePage() {
           <>
             {/* Gift icon */}
             <div style={{ width: 72, height: 72, borderRadius: 20, background: '#FEF3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-              {isForever ? <Zap size={36} color="#E8834A" strokeWidth={1.8} /> : <Gift size={36} color="#E8834A" strokeWidth={1.8} />}
+              {isForever ? <Zap size={36} color="#C4685A" strokeWidth={1.8} /> : <Gift size={36} color="#C4685A" strokeWidth={1.8} />}
             </div>
 
-            <div style={{ display: 'inline-block', background: '#E8834A', color: 'white', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 999, marginBottom: 16, letterSpacing: '0.06em' }}>
+            <div style={{ display: 'inline-block', background: '#C4685A', color: 'white', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 999, marginBottom: 16, letterSpacing: '0.06em' }}>
               EXCLUSIVE INVITE
             </div>
 
@@ -78,8 +80,8 @@ export default function InvitePage() {
 
             <p style={{ fontSize: 15, color: '#6B7280', margin: '0 0 28px', lineHeight: 1.6 }}>
               {promo.description || (isForever
-                ? 'You\'ve been given free lifetime access to ProSite.'
-                : `You've been invited to try ProSite free for ${trialDays} days — no credit card required.`)}
+                ? 'You\'ve been given free lifetime access to finesse.'
+                : `You've been invited to try finesse. free for ${trialDays} days — no credit card required.`)}
             </p>
 
             {/* Perks */}
@@ -101,14 +103,14 @@ export default function InvitePage() {
             {/* Promo code display */}
             <div style={{ background: '#1C2B3A', borderRadius: 10, padding: '10px 18px', marginBottom: 24, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 12, color: '#8BA3B8', fontWeight: 600 }}>YOUR CODE</span>
-              <span style={{ fontFamily: 'monospace', fontSize: 18, fontWeight: 800, color: '#E8834A', letterSpacing: '0.1em' }}>{code}</span>
+              <span style={{ fontFamily: 'monospace', fontSize: 18, fontWeight: 800, color: '#C4685A', letterSpacing: '0.1em' }}>{code}</span>
             </div>
 
             <br />
 
             <a
               href={`/register?code=${encodeURIComponent(code)}`}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 36px', background: '#E8834A', color: 'white', borderRadius: 14, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 14 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 36px', background: '#C4685A', color: 'white', borderRadius: 14, fontSize: 16, fontWeight: 700, textDecoration: 'none', marginBottom: 14 }}
             >
               Claim Your Invite <ArrowRight size={18} />
             </a>
@@ -118,7 +120,7 @@ export default function InvitePage() {
         )}
       </div>
 
-      <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 24 }}>© 2026 ProSite · Built for remodeling contractors</p>
+      <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 24 }}>© 2026 finesse. · Built for remodeling contractors</p>
     </div>
   );
 }

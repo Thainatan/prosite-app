@@ -49,7 +49,7 @@ function StatCard({ label, value, sub, color, icon: Icon }: { label: string; val
   );
 }
 
-function BarChart({ data, color = '#E8834A', height = 80 }: { data: { label: string; value: number }[]; color?: string; height?: number }) {
+function BarChart({ data, color = '#C4685A', height = 80 }: { data: { label: string; value: number }[]; color?: string; height?: number }) {
   const max = Math.max(...data.map(d => d.value), 1);
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height }}>
@@ -112,15 +112,15 @@ export default function AdminDashboard() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Shield size={24} color="#E8834A" strokeWidth={2}/>
+          <Shield size={24} color="#C4685A" strokeWidth={2}/>
           <div>
-            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: 'white' }}>ProSite Admin Panel</h1>
+            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: 'white' }}>finesse. Admin Panel</h1>
             <p style={{ margin: 0, fontSize: 12.5, color: 'rgba(255,255,255,0.4)' }}>
               {now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
         </div>
-        <div style={{ background: 'rgba(232,131,74,0.12)', border: '1px solid rgba(232,131,74,0.25)', borderRadius: 8, padding: '6px 14px', fontSize: 12, color: '#E8834A', fontWeight: 600 }}>
+        <div style={{ background: 'rgba(196,104,90,0.12)', border: '1px solid rgba(196,104,90,0.25)', borderRadius: 8, padding: '6px 14px', fontSize: 12, color: '#C4685A', fontWeight: 600 }}>
           Logged in as Super Admin
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
       {/* Stats row */}
       {overview && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 14, marginBottom: 24 }}>
-          <StatCard label="Total Companies" value={fmtNum(overview.totalTenants)} sub={`+${overview.newTenantsThisMonth} this month`} color="#E8834A" icon={Building2}/>
+          <StatCard label="Total Companies" value={fmtNum(overview.totalTenants)} sub={`+${overview.newTenantsThisMonth} this month`} color="#C4685A" icon={Building2}/>
           <StatCard label="Active This Month" value={fmtNum(overview.activeTenants)} sub="had activity in 30d" color="#22C55E" icon={TrendingUp}/>
           <StatCard label="Trial Accounts" value={fmtNum(overview.trialTenants)} sub={trialsExpiringSoon.length > 0 ? `${trialsExpiringSoon.length} expiring soon` : 'no expiring soon'} color="#F59E0B" icon={AlertTriangle}/>
           <StatCard label="Paid Accounts" value={fmtNum(overview.paidTenants)} sub="active subscriptions" color="#3B82F6" icon={Users}/>
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
         {/* Signups chart */}
         <div style={{ background: '#1A2D3F', borderRadius: 14, padding: 20, border: '1px solid rgba(255,255,255,0.06)' }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: 'white', marginBottom: 16 }}>New Signups — Last 6 Months</div>
-          <BarChart data={signups} color="#E8834A" height={100}/>
+          <BarChart data={signups} color="#C4685A" height={100}/>
         </div>
         {/* Revenue chart */}
         <div style={{ background: '#1A2D3F', borderRadius: 14, padding: 20, border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
                     <strong style={{ color: 'white' }}>{t.name}</strong> — trial expires {t.planExpiresAt ? new Date(t.planExpiresAt).toLocaleDateString() : 'soon'}
                   </span>
                 </div>
-                <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 12, color: '#E8834A', fontWeight: 600, textDecoration: 'none' }}>Extend →</a>
+                <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 12, color: '#C4685A', fontWeight: 600, textDecoration: 'none' }}>Extend →</a>
               </div>
             ))}
             {suspended.map(t => (
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
                 <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)' }}>
                   <strong style={{ color: 'white' }}>{t.name}</strong> — account suspended
                 </span>
-                <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 12, color: '#E8834A', fontWeight: 600, textDecoration: 'none' }}>View →</a>
+                <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 12, color: '#C4685A', fontWeight: 600, textDecoration: 'none' }}>View →</a>
               </div>
             ))}
           </div>
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
       <div style={{ background: '#1A2D3F', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>Recent Signups</span>
-          <a href="/admin/tenants" style={{ fontSize: 12, color: '#E8834A', fontWeight: 600, textDecoration: 'none' }}>View all →</a>
+          <a href="/admin/tenants" style={{ fontSize: 12, color: '#C4685A', fontWeight: 600, textDecoration: 'none' }}>View all →</a>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
                     <span style={{ background: `${STATUS_COLOR[t.status] || '#9CA3AF'}20`, color: STATUS_COLOR[t.status] || '#9CA3AF', padding: '3px 8px', borderRadius: 99, fontSize: 11, fontWeight: 700 }}>{t.status}</span>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
-                    <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 12, color: '#E8834A', fontWeight: 600, textDecoration: 'none' }}>View →</a>
+                    <a href={`/admin/tenants/${t.id}`} style={{ fontSize: 12, color: '#C4685A', fontWeight: 600, textDecoration: 'none' }}>View →</a>
                   </td>
                 </tr>
               ))}

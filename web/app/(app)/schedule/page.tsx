@@ -10,7 +10,7 @@ const TASK_TYPES = ['Site Visit', 'Meeting', 'Follow-up', 'Installation', 'Inspe
 type TaskType = typeof TASK_TYPES[number];
 
 const TYPE_STYLE: Record<string, { bg: string; color: string }> = {
-  'Site Visit':   { bg: '#E8834A', color: 'white' },
+  'Site Visit':   { bg: '#C4685A', color: 'white' },
   'Meeting':      { bg: '#8B5CF6', color: 'white' },
   'Follow-up':    { bg: '#F5A623', color: 'white' },
   'Installation': { bg: '#34C78A', color: 'white' },
@@ -101,7 +101,7 @@ export default function SchedulePage() {
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3 flex-shrink-0">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">Schedule</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#E8834A] rounded-full">{tasks.length} tasks</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#C4685A] rounded-full">{tasks.length} tasks</span>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={goToday} className="h-8 px-3 rounded-[8px] border border-[#EAECF2] text-[12.5px] font-semibold text-[#6B7280] hover:bg-[#F3F4F6]">Today</button>
@@ -110,7 +110,7 @@ export default function SchedulePage() {
               <button key={v} onClick={() => setView(v)} className={`h-7 px-3 rounded-[7px] text-[11.5px] font-semibold capitalize transition-all ${view === v ? 'bg-white text-[#1A1A2E] shadow-sm' : 'text-[#9CA3AF]'}`}>{v}</button>
             ))}
           </div>
-          <a data-tutorial="new-task-btn" href="/tasks" className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px] flex items-center no-underline" style={{ textDecoration:'none' }}>+ New Task</a>
+          <a data-tutorial="new-task-btn" href="/tasks" className="h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px] flex items-center no-underline" style={{ textDecoration:'none' }}>+ New Task</a>
         </div>
       </header>
 
@@ -161,7 +161,7 @@ export default function SchedulePage() {
                       className="border-r border-b border-[#EAECF2] p-2 cursor-pointer hover:bg-[#F7F8FC] transition-colors"
                       style={{ background: isSel ? '#EEF3FF' : undefined }}
                     >
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold mb-1 ${isToday ? 'bg-[#E8834A] text-white' : 'text-[#1A1A2E]'} ${isSel && !isToday ? 'ring-2 ring-[#4F7EF7]' : ''}`}>
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold mb-1 ${isToday ? 'bg-[#C4685A] text-white' : 'text-[#1A1A2E]'} ${isSel && !isToday ? 'ring-2 ring-[#4F7EF7]' : ''}`}>
                         {day.getDate()}
                       </div>
                       <div className="space-y-0.5">
@@ -196,7 +196,7 @@ export default function SchedulePage() {
                       className="border-r border-b border-[#EAECF2] p-3 cursor-pointer hover:bg-[#F7F8FC] min-h-[200px]"
                       style={{ background: isSel ? '#EEF3FF' : undefined }}
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold mb-2 ${isToday ? 'bg-[#E8834A] text-white' : 'text-[#1A1A2E]'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold mb-2 ${isToday ? 'bg-[#C4685A] text-white' : 'text-[#1A1A2E]'}`}>
                         {day.getDate()}
                       </div>
                       <div className="space-y-1">
@@ -234,7 +234,7 @@ export default function SchedulePage() {
             {selectedDay && selectedTasks.length === 0 && (
               <div className="text-center mt-8">
                 <p className="text-[13px] text-[#6B7280] mb-3">No tasks this day</p>
-                <a href="/tasks" className="text-[12px] text-[#E8834A] font-semibold" style={{ textDecoration:'none' }}>+ Add Task</a>
+                <a href="/tasks" className="text-[12px] text-[#C4685A] font-semibold" style={{ textDecoration:'none' }}>+ Add Task</a>
               </div>
             )}
             {selectedTasks.map(t => {

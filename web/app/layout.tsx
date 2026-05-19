@@ -25,13 +25,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Viewport: viewport-fit=cover for notch, maximum-scale=1 prevents zoom on input focus */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+        <title>finesse. — Remodeling OS</title>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#E8834A" />
+        <meta name="theme-color" content="#C4685A" />
 
         {/* PWA / Apple */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="ProSite" />
+        <meta name="apple-mobile-web-app-title" content="finesse." />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="apple-touch-icon" sizes="152x152" href="/logo.png" />

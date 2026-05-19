@@ -9,7 +9,7 @@ const TRADES = ['Electrical','Plumbing','HVAC','Framing','Drywall','Flooring','P
 const TRADE_COLORS: Record<string, { bg: string; color: string }> = {
   Electrical: { bg: '#FFF7E9', color: '#F5A623' },
   Plumbing:   { bg: '#E0F2FE', color: '#0EA5E9' },
-  HVAC:       { bg: '#EEF3FF', color: '#E8834A' },
+  HVAC:       { bg: '#EEF3FF', color: '#C4685A' },
   Framing:    { bg: '#EAFAF3', color: '#34C78A' },
   Drywall:    { bg: '#F3F4F6', color: '#6B7280' },
   Flooring:   { bg: '#FDF2F8', color: '#EC4899' },
@@ -200,7 +200,7 @@ function SubModal({ initial, onClose, onSave }: {
               {['ACTIVE','INACTIVE'].map(s => (
                 <button key={s} type="button" onClick={() => set('status', s)}
                   className="flex-1 h-9 rounded-[9px] border text-[12.5px] font-semibold capitalize transition-all"
-                  style={{ background: form.status === s ? '#EEF3FF' : 'white', color: form.status === s ? '#E8834A' : '#6B7280', borderColor: form.status === s ? '#E8834A' : '#EAECF2' }}>
+                  style={{ background: form.status === s ? '#EEF3FF' : 'white', color: form.status === s ? '#C4685A' : '#6B7280', borderColor: form.status === s ? '#C4685A' : '#EAECF2' }}>
                   {s === 'ACTIVE' ? 'Active' : 'Inactive'}
                 </button>
               ))}
@@ -216,7 +216,7 @@ function SubModal({ initial, onClose, onSave }: {
 
         <div className="flex gap-2 p-4 border-t border-[#EAECF2] bg-[#F9FAFB]">
           <button onClick={onClose} className="flex-1 h-10 rounded-[9px] border border-[#EAECF2] bg-white text-[13px] font-semibold text-[#6B7280]">Cancel</button>
-          <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#E8834A] text-white text-[13px] font-bold disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="flex-2 h-10 px-6 rounded-[9px] bg-[#C4685A] text-white text-[13px] font-bold disabled:opacity-50">
             {saving ? 'Saving...' : initial ? 'Save Changes' : 'Add Subcontractor'}
           </button>
         </div>
@@ -278,10 +278,10 @@ export default function SubcontractorsPage() {
       <header className="bg-white border-b border-[#EAECF2] h-14 flex items-center justify-between px-6 gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-[17px] font-bold text-[#1A1A2E]">Subcontractors</h1>
-          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#E8834A] rounded-full">{subs.filter(s => s.status === 'ACTIVE').length} active</span>
+          <span className="text-[11px] font-bold px-2.5 py-1 bg-[#EEF3FF] text-[#C4685A] rounded-full">{subs.filter(s => s.status === 'ACTIVE').length} active</span>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search subs..." className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#E8834A] transition-all"/>
-        <button onClick={() => { setEditSub(null); setShowModal(true); }} className="h-[34px] px-4 bg-[#E8834A] text-white text-[13px] font-semibold rounded-[9px]">+ New Sub</button>
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search subs..." className="flex-1 max-w-sm h-[34px] bg-[#F7F8FC] border border-[#EAECF2] rounded-full px-4 text-[13px] outline-none focus:border-[#C4685A] transition-all"/>
+        <button onClick={() => { setEditSub(null); setShowModal(true); }} className="h-[34px] px-4 bg-[#C4685A] text-white text-[13px] font-semibold rounded-[9px]">+ New Sub</button>
       </header>
 
       {/* Trade filters */}
@@ -305,7 +305,7 @@ export default function SubcontractorsPage() {
             <div className="w-16 h-16 bg-[#F3F4F6] rounded-full flex items-center justify-center mx-auto mb-4"><Wrench size={32} color="#6B7280" strokeWidth={1.5}/></div>
             <p className="text-[14px] font-semibold text-[#1A1A2E] mb-2">{search || tradeFilter !== 'All' ? 'No subs found' : 'No subcontractors yet'}</p>
             <p className="text-[12px] text-[#6B7280] mb-4">Add your trusted trade partners to assign them to projects</p>
-            <button onClick={() => setShowModal(true)} className="inline-flex px-6 py-2.5 bg-[#E8834A] text-white rounded-[9px] text-[14px] font-semibold">+ Add Subcontractor</button>
+            <button onClick={() => setShowModal(true)} className="inline-flex px-6 py-2.5 bg-[#C4685A] text-white rounded-[9px] text-[14px] font-semibold">+ Add Subcontractor</button>
           </div>
         ) : (
           <div className="bg-white rounded-[14px] border border-[#EAECF2] overflow-hidden">

@@ -5,12 +5,10 @@ export default function LandingPage() {
       {/* NAV */}
       <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 40px', height: 64, borderBottom: '1px solid #EAECF2', background: '#fff', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 34, height: 34, background: '#4F7EF7', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2 }}>
-              {[7,11,15].map(h => <div key={h} style={{ width: 3, height: h, background: 'white', borderRadius: 2 }} />)}
-            </div>
+          <div style={{ width: 34, height: 34, background: '#C4685A', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
           </div>
-          <span style={{ fontSize: 18, fontWeight: 800, color: '#1A1D2E' }}>ProSite</span>
+          <span style={{ fontSize: 18, fontWeight: 300, letterSpacing: '0.05em', color: '#1A1D2E' }}>finesse.</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <a href="/login" style={{ padding: '8px 16px', fontSize: 14, fontWeight: 600, color: '#6B7280', textDecoration: 'none' }}>Sign In</a>
@@ -46,7 +44,7 @@ export default function LandingPage() {
       <section style={{ background: '#F7F8FC', padding: '40px', borderBottom: '1px solid #EAECF2' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 60, flexWrap: 'wrap' }}>
           {[
-            { value: '500+', label: 'Contractors using ProSite' },
+            { value: '500+', label: 'Contractors using finesse.' },
             { value: '$2.4M', label: 'Invoices processed monthly' },
             { value: '4.9★', label: 'Average rating' },
             { value: '2 min', label: 'Average quote creation time' },
@@ -63,7 +61,7 @@ export default function LandingPage() {
       <section style={{ padding: '80px 40px', maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <h2 style={{ fontSize: 36, fontWeight: 800, color: '#1A1D2E', marginBottom: 12 }}>Everything you need to run your business</h2>
-          <p style={{ fontSize: 16, color: '#6B7280', maxWidth: 500, margin: '0 auto' }}>Stop using spreadsheets and sticky notes. ProSite keeps everything organized and connected.</p>
+          <p style={{ fontSize: 16, color: '#6B7280', maxWidth: 500, margin: '0 auto' }}>Stop using spreadsheets and sticky notes. finesse. keeps everything organized and connected.</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
           {[
@@ -143,7 +141,7 @@ export default function LandingPage() {
           <div style={{ fontSize: 36, marginBottom: 14 }}>🤝</div>
           <h3 style={{ fontSize: 22, fontWeight: 800, color: '#1A1D2E', marginBottom: 10 }}>Partner Program</h3>
           <p style={{ fontSize: 15, color: '#6B7280', lineHeight: 1.6, marginBottom: 20 }}>
-            Are you a supplier, trade association, or industry partner? Apply for a free partner code and give your network access to ProSite at no cost.
+            Are you a supplier, trade association, or industry partner? Apply for a free partner code and give your network access to finesse. at no cost.
           </p>
           <a href="/partner" style={{ display: 'inline-block', padding: '12px 28px', background: '#1A1D2E', color: 'white', borderRadius: 10, fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
             Apply for Partner Code →
@@ -154,14 +152,12 @@ export default function LandingPage() {
       {/* FOOTER */}
       <footer style={{ background: '#1A1D2E', padding: '40px', textAlign: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 16 }}>
-          <div style={{ width: 28, height: 28, background: '#4F7EF7', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 1.5 }}>
-              {[6,9,12].map(h => <div key={h} style={{ width: 2.5, height: h, background: 'white', borderRadius: 2 }} />)}
-            </div>
+          <div style={{ width: 28, height: 28, background: '#C4685A', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 7, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
           </div>
-          <span style={{ fontSize: 16, fontWeight: 800, color: 'white' }}>ProSite</span>
+          <span style={{ fontSize: 16, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
         </div>
-        <p style={{ color: '#6B7280', fontSize: 13, margin: 0 }}>© 2026 ProSite. Built for remodeling contractors.</p>
+        <p style={{ color: '#6B7280', fontSize: 13, margin: 0 }}>© 2026 finesse. Built for remodeling contractors.</p>
       </footer>
     </div>
   );

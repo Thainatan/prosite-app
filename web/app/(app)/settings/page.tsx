@@ -19,7 +19,7 @@ interface Settings {
 
 const DEFAULT: Settings = {
   companyName:'', phone:'', email:'', address:'', city:'', state:'FL', zip:'', website:'',
-  logoBase64: null, brandColor:'#E8834A',
+  logoBase64: null, brandColor:'#C4685A',
   headerLayout:'Classic',
   showQty: true, showUnitPrice: true, showLineTotal: true,
   footerDisclaimer:'', useEstimate: false,
@@ -36,7 +36,7 @@ function Toggle({ on, onToggle, label }: { on: boolean; onToggle: () => void; la
   return (
     <div className="flex items-center justify-between py-3 border-b border-[#EAECF2] last:border-0">
       <span className="text-[13.5px] text-[#374151]">{label}</span>
-      <button onClick={onToggle} className="w-11 h-6 rounded-full transition-colors relative flex-shrink-0" style={{ background: on ? '#E8834A' : '#D1D5DB' }}>
+      <button onClick={onToggle} className="w-11 h-6 rounded-full transition-colors relative flex-shrink-0" style={{ background: on ? '#C4685A' : '#D1D5DB' }}>
         <div className="w-5 h-5 bg-white rounded-full shadow absolute top-0.5 transition-all" style={{ left: on ? '22px' : '2px' }}/>
       </button>
     </div>
@@ -108,7 +108,7 @@ export default function SettingsPage() {
     reader.readAsDataURL(file);
   };
 
-  const inp = 'w-full h-10 bg-white border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none focus:border-[#E8834A] transition-all';
+  const inp = 'w-full h-10 bg-white border border-[#EAECF2] rounded-[9px] px-3 text-[13px] text-[#1A1A2E] outline-none focus:border-[#C4685A] transition-all';
   const lbl = 'block text-[11.5px] font-semibold text-[#6B7280] mb-1.5';
   const card = 'bg-white rounded-[14px] border border-[#EAECF2] p-5 mb-4';
 
@@ -127,7 +127,7 @@ export default function SettingsPage() {
           onClick={save} disabled={saving}
           data-tutorial="settings-save-btn"
           className="h-9 px-5 rounded-[9px] text-[13px] font-bold text-white transition-all disabled:opacity-60"
-          style={{ background: saved ? '#34C78A' : '#E8834A' }}
+          style={{ background: saved ? '#34C78A' : '#C4685A' }}
         >
           {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
         </button>
@@ -140,8 +140,8 @@ export default function SettingsPage() {
             {TABS.map(t => {
               const IconComp = TAB_ICONS[t.id];
               return (
-                <button key={t.id} onClick={() => setTab(t.id)} className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[#EAECF2] last:border-0 transition-colors" style={{ background: tab === t.id ? '#EEF3FF' : 'white', color: tab === t.id ? '#E8834A' : '#374151' }}>
-                  <IconComp size={15} color={tab === t.id ? '#E8834A' : '#6B7280'} />
+                <button key={t.id} onClick={() => setTab(t.id)} className="w-full flex items-center gap-3 px-4 py-3 text-left border-b border-[#EAECF2] last:border-0 transition-colors" style={{ background: tab === t.id ? '#EEF3FF' : 'white', color: tab === t.id ? '#C4685A' : '#374151' }}>
+                  <IconComp size={15} color={tab === t.id ? '#C4685A' : '#6B7280'} />
                   <span className="text-[13px] font-semibold">{t.label}</span>
                 </button>
               );
@@ -203,7 +203,7 @@ export default function SettingsPage() {
                     <div
                       onClick={() => logoRef.current?.click()}
                       data-tutorial="logo-upload"
-                      className="h-24 border-2 border-dashed border-[#EAECF2] rounded-[10px] flex flex-col items-center justify-center cursor-pointer hover:border-[#E8834A] transition-colors"
+                      className="h-24 border-2 border-dashed border-[#EAECF2] rounded-[10px] flex flex-col items-center justify-center cursor-pointer hover:border-[#C4685A] transition-colors"
                     >
                       {s.logoBase64 ? (
                         <img src={s.logoBase64} alt="Logo" className="max-h-20 max-w-full object-contain rounded"/>
@@ -257,14 +257,14 @@ export default function SettingsPage() {
                     <button
                       key={layout} onClick={() => set('headerLayout', layout)}
                       className="border-2 rounded-[10px] p-3 text-left transition-all"
-                      style={{ borderColor: s.headerLayout === layout ? '#E8834A' : '#EAECF2', background: s.headerLayout === layout ? '#EEF3FF' : 'white' }}
+                      style={{ borderColor: s.headerLayout === layout ? '#C4685A' : '#EAECF2', background: s.headerLayout === layout ? '#EEF3FF' : 'white' }}
                     >
                       <div className="h-14 bg-[#F3F4F6] rounded-[6px] mb-2 flex items-center p-2 gap-2">
-                        {layout === 'Classic' && <><div className="w-6 h-6 bg-[#E8834A] rounded"/><div className="flex-1"><div className="h-2 bg-[#D1D5DB] rounded mb-1 w-3/4"/><div className="h-1.5 bg-[#E5E7EB] rounded w-1/2"/></div></>}
-                        {layout === 'Modern' && <div className="w-full h-full flex flex-col justify-center"><div className="h-2 bg-[#E8834A] rounded w-full mb-1"/><div className="h-1.5 bg-[#D1D5DB] rounded w-2/3"/></div>}
+                        {layout === 'Classic' && <><div className="w-6 h-6 bg-[#C4685A] rounded"/><div className="flex-1"><div className="h-2 bg-[#D1D5DB] rounded mb-1 w-3/4"/><div className="h-1.5 bg-[#E5E7EB] rounded w-1/2"/></div></>}
+                        {layout === 'Modern' && <div className="w-full h-full flex flex-col justify-center"><div className="h-2 bg-[#C4685A] rounded w-full mb-1"/><div className="h-1.5 bg-[#D1D5DB] rounded w-2/3"/></div>}
                         {layout === 'Minimal' && <div className="w-full"><div className="h-2 bg-[#1A1D2E] rounded w-1/2"/></div>}
                       </div>
-                      <p className="text-[12.5px] font-semibold" style={{ color: s.headerLayout === layout ? '#E8834A' : '#374151' }}>{layout}</p>
+                      <p className="text-[12.5px] font-semibold" style={{ color: s.headerLayout === layout ? '#C4685A' : '#374151' }}>{layout}</p>
                     </button>
                   ))}
                 </div>
@@ -288,7 +288,7 @@ export default function SettingsPage() {
                   onChange={e => set('footerDisclaimer', e.target.value)}
                   placeholder="e.g. Payment due within 30 days. Late payments subject to 1.5% monthly fee..."
                   rows={4}
-                  className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2.5 text-[13px] text-[#1A1A2E] outline-none focus:border-[#E8834A] resize-none"
+                  className="w-full bg-[#F7F8FC] border border-[#EAECF2] rounded-[9px] px-3 py-2.5 text-[13px] text-[#1A1A2E] outline-none focus:border-[#C4685A] resize-none"
                 />
               </div>
             </>
@@ -312,7 +312,7 @@ export default function SettingsPage() {
               <div className={card}>
                 <h2 className="text-[15px] font-bold text-[#1A1A2E] mb-4">Profile</h2>
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E8834A] to-[#D4713A] flex items-center justify-center text-white text-xl font-bold">{profileInitials || 'U'}</div>
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#C4685A] to-[#B5564A] flex items-center justify-center text-white text-xl font-bold">{profileInitials || 'U'}</div>
                   <div>
                     <p className="text-[15px] font-bold text-[#1A1A2E]">{profileName || 'User'}</p>
                     <p className="text-[13px] text-[#6B7280]">{profileEmail}{profileRole ? ` · ${profileRole.replace('_',' ')}` : ''}</p>
@@ -356,7 +356,7 @@ export default function SettingsPage() {
           {/* ── Tutorials (always visible) ── */}
           <div id="tutorials" className={card} style={{ marginTop: 8 }}>
             <div className="flex items-center gap-2 mb-1">
-              <BookOpen size={16} color="#E8834A" />
+              <BookOpen size={16} color="#C4685A" />
               <h2 className="text-[15px] font-bold text-[#1A1A2E]">Tutorials &amp; Onboarding</h2>
             </div>
             <p className="text-[12px] text-[#6B7280] mb-4">Manage your learning experience</p>
@@ -383,7 +383,7 @@ export default function SettingsPage() {
                         setTutorialTick(n => n + 1);
                       }}
                       className="flex items-center gap-1.5 h-7 px-3 rounded-[7px] text-[11.5px] font-semibold transition-all"
-                      style={{ background: isDone ? '#F3F4F6' : '#FEF3EC', color: isDone ? '#6B7280' : '#E8834A', border: `1px solid ${isDone ? '#E8E4DF' : '#E8834A'}` }}
+                      style={{ background: isDone ? '#F3F4F6' : '#FEF3EC', color: isDone ? '#6B7280' : '#C4685A', border: `1px solid ${isDone ? '#E8E4DF' : '#C4685A'}` }}
                     >
                       {isDone ? <><RotateCcw size={11} /> Restart</> : <><Play size={11} /> Start</>}
                     </button>
@@ -395,7 +395,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between pt-2">
               <button
                 onClick={() => { resetAll(); setTutorialTick(n => n + 1); }}
-                className="text-[12px] font-semibold text-[#6B7280] flex items-center gap-1.5 hover:text-[#E8834A] transition-colors"
+                className="text-[12px] font-semibold text-[#6B7280] flex items-center gap-1.5 hover:text-[#C4685A] transition-colors"
               >
                 <RotateCcw size={12} /> Reset all tutorials
               </button>
@@ -404,14 +404,14 @@ export default function SettingsPage() {
                 <button
                   onClick={() => { setDisabled(!isDisabled); setTutorialTick(n => n + 1); }}
                   className="w-10 h-5 rounded-full transition-colors relative flex-shrink-0"
-                  style={{ background: isDisabled ? '#E8834A' : '#D1D5DB' }}
+                  style={{ background: isDisabled ? '#C4685A' : '#D1D5DB' }}
                 >
                   <div className="w-4 h-4 bg-white rounded-full shadow absolute top-0.5 transition-all" style={{ left: isDisabled ? '22px' : '2px' }} />
                 </button>
               </div>
             </div>
             {isDisabled && (
-              <p className="text-[11.5px] text-[#E8834A] mt-2">Tutorials are disabled. Toggle to re-enable them.</p>
+              <p className="text-[11.5px] text-[#C4685A] mt-2">Tutorials are disabled. Toggle to re-enable them.</p>
             )}
           </div>
         </div>

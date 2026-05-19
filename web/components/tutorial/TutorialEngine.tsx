@@ -187,8 +187,8 @@ export default function TutorialEngine() {
             position: 'fixed',
             top: rect.top - PAD, left: rect.left - PAD,
             width: rect.width + PAD * 2, height: rect.height + PAD * 2,
-            borderRadius: 10, border: '2px solid #E8834A',
-            boxShadow: '0 0 0 4px rgba(232,131,74,0.25), 0 0 20px rgba(232,131,74,0.2)',
+            borderRadius: 10, border: '2px solid #C4685A',
+            boxShadow: '0 0 0 4px rgba(196,104,90,0.25), 0 0 20px rgba(196,104,90,0.2)',
             pointerEvents: 'none',
             animation: 'tutorialGlow 2s ease-in-out infinite',
           }} />
@@ -220,8 +220,8 @@ export default function TutorialEngine() {
 
       <style>{`
         @keyframes tutorialGlow {
-          0%,100% { box-shadow: 0 0 0 4px rgba(232,131,74,0.25), 0 0 20px rgba(232,131,74,0.2); }
-          50% { box-shadow: 0 0 0 6px rgba(232,131,74,0.35), 0 0 30px rgba(232,131,74,0.35); }
+          0%,100% { box-shadow: 0 0 0 4px rgba(196,104,90,0.25), 0 0 20px rgba(196,104,90,0.2); }
+          50% { box-shadow: 0 0 0 6px rgba(196,104,90,0.35), 0 0 30px rgba(196,104,90,0.35); }
         }
         @keyframes tutorialFadeIn {
           from { opacity:0; transform: scale(0.95) translateY(8px); }

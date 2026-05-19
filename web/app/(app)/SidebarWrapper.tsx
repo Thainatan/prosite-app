@@ -123,10 +123,12 @@ export default function SidebarWrapper() {
       {/* Logo + close */}
       <div style={{ padding: '18px 16px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/logo.png" alt="ProSite" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }}/>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+          </div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: 'white' }}>ProSite</div>
-            <div style={{ fontSize: 10, color: '#E8834A', fontWeight: 700, letterSpacing: '0.06em' }}>REMODELING OS</div>
+            <div style={{ fontSize: 15, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
+            <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.06em' }}>REMODELING OS</div>
           </div>
         </div>
         {/* Close button — mobile only */}
@@ -139,9 +141,9 @@ export default function SidebarWrapper() {
       {/* Notifications */}
       <div style={{ padding: '10px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: '7px 10px', cursor: 'pointer' }}>
-          <Bell size={14} color="#E8834A"/>
+          <Bell size={14} color="#C4685A"/>
           <span style={{ fontSize: 12, color: '#CBD5E1', fontWeight: 500, flex: 1 }}>3 notifications</span>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#E8834A' }}/>
+          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#C4685A' }}/>
         </div>
       </div>
 
@@ -159,15 +161,15 @@ export default function SidebarWrapper() {
                   display: 'flex', alignItems: 'center', gap: 9,
                   padding: isActive ? '10px 10px 10px 7px' : '10px 10px',
                   borderRadius: 8, marginBottom: 2, textDecoration: 'none',
-                  background: isActive ? 'rgba(232,131,74,0.12)' : 'transparent',
+                  background: isActive ? 'rgba(196,104,90,0.12)' : 'transparent',
                   color: isActive ? '#FFFFFF' : '#8BA3B8',
                   fontWeight: isActive ? 600 : 400, fontSize: 13.5,
-                  borderLeft: isActive ? '3px solid #E8834A' : '3px solid transparent',
+                  borderLeft: isActive ? '3px solid #C4685A' : '3px solid transparent',
                   minHeight: 44,
                 }}>
-                  <Icon size={16} color={isActive ? '#E8834A' : '#8BA3B8'} strokeWidth={isActive ? 2.5 : 1.8}/>
+                  <Icon size={16} color={isActive ? '#C4685A' : '#8BA3B8'} strokeWidth={isActive ? 2.5 : 1.8}/>
                   <span style={{ flex: 1 }}>{label}</span>
-                  {isActive && <ChevronRight size={13} color="#E8834A"/>}
+                  {isActive && <ChevronRight size={13} color="#C4685A"/>}
                 </a>
               );
             })}
@@ -181,10 +183,10 @@ export default function SidebarWrapper() {
           <button onClick={handleInstall} style={{
             width: '100%', display: 'flex', alignItems: 'center', gap: 8,
             padding: '10px 12px', borderRadius: 8, cursor: 'pointer', minHeight: 44,
-            background: 'transparent', border: '1px solid rgba(232,131,74,0.4)',
-            color: '#E8834A', fontSize: 12.5, fontWeight: 600,
+            background: 'transparent', border: '1px solid rgba(196,104,90,0.4)',
+            color: '#C4685A', fontSize: 12.5, fontWeight: 600,
           }}>
-            <Smartphone size={14} color="#E8834A"/>
+            <Smartphone size={14} color="#C4685A"/>
             <span>Install App</span>
           </button>
         </div>
@@ -196,28 +198,28 @@ export default function SidebarWrapper() {
           <a href="/admin/dashboard" style={{
             display: 'flex', alignItems: 'center', gap: 9, minHeight: 44,
             padding: '9px 12px', borderRadius: 9, textDecoration: 'none',
-            background: 'rgba(232,131,74,0.1)', border: '1px solid rgba(232,131,74,0.25)',
+            background: 'rgba(196,104,90,0.1)', border: '1px solid rgba(196,104,90,0.25)',
           }}>
-            <Shield size={15} color="#E8834A" strokeWidth={2.5}/>
-            <span style={{ flex: 1, fontSize: 13, fontWeight: 700, color: '#E8834A' }}>Admin Panel</span>
-            <ChevronRight size={12} color="#E8834A"/>
+            <Shield size={15} color="#C4685A" strokeWidth={2.5}/>
+            <span style={{ flex: 1, fontSize: 13, fontWeight: 700, color: '#C4685A' }}>Admin Panel</span>
+            <ChevronRight size={12} color="#C4685A"/>
           </a>
         </div>
       )}
 
       <div style={{ padding: '0 16px 4px', display: 'flex', justifyContent: 'center' }}>
-        <Wrench size={18} color="rgba(232,131,74,0.3)" strokeWidth={1.5}/>
+        <Wrench size={18} color="rgba(196,104,90,0.3)" strokeWidth={1.5}/>
       </div>
 
       {/* User */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 9, cursor: 'pointer', minHeight: 44 }}>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,#E8834A,#D4713A)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,#C4685A,#A8524A)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: 'white' }}>{userInitials}</span>
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0' }}>{userName}</div>
-            <div style={{ fontSize: 11, color: '#E8834A', fontWeight: 500 }}>{roleLabel[userRole] || userRole}</div>
+            <div style={{ fontSize: 11, color: '#C4685A', fontWeight: 500 }}>{roleLabel[userRole] || userRole}</div>
           </div>
           <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, minWidth: 32, minHeight: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <LogOut size={14} color="rgba(255,255,255,0.3)"/>

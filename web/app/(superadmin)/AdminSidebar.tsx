@@ -30,15 +30,17 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div style={{ padding: '18px 16px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-          <img src="/logo.png" alt="ProSite" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }}/>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+          </div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: 'white' }}>ProSite</div>
-            <div style={{ fontSize: 10, color: '#E8834A', fontWeight: 700, letterSpacing: '0.06em' }}>ADMIN PANEL</div>
+            <div style={{ fontSize: 15, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
+            <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.06em' }}>ADMIN PANEL</div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(232,131,74,0.12)', borderRadius: 8, padding: '6px 10px', border: '1px solid rgba(232,131,74,0.2)' }}>
-          <Shield size={13} color="#E8834A" strokeWidth={2.5}/>
-          <span style={{ fontSize: 11, color: '#E8834A', fontWeight: 700, letterSpacing: '0.04em' }}>SUPER ADMIN</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(196,104,90,0.12)', borderRadius: 8, padding: '6px 10px', border: '1px solid rgba(196,104,90,0.2)' }}>
+          <Shield size={13} color="#C4685A" strokeWidth={2.5}/>
+          <span style={{ fontSize: 11, color: '#C4685A', fontWeight: 700, letterSpacing: '0.04em' }}>SUPER ADMIN</span>
         </div>
       </div>
 
@@ -54,15 +56,15 @@ export default function AdminSidebar() {
               display: 'flex', alignItems: 'center', gap: 9,
               padding: isActive ? '8px 10px 8px 7px' : '8px 10px',
               borderRadius: 8, marginBottom: 1, textDecoration: 'none',
-              background: isActive ? 'rgba(232,131,74,0.12)' : 'transparent',
+              background: isActive ? 'rgba(196,104,90,0.12)' : 'transparent',
               color: isActive ? '#FFFFFF' : '#8BA3B8',
               fontWeight: isActive ? 600 : 400, fontSize: 13.5,
-              borderLeft: isActive ? '3px solid #E8834A' : '3px solid transparent',
+              borderLeft: isActive ? '3px solid #C4685A' : '3px solid transparent',
               transition: 'all 0.15s ease',
             }}>
-              <Icon size={16} color={isActive ? '#E8834A' : '#8BA3B8'} strokeWidth={isActive ? 2.5 : 1.8}/>
+              <Icon size={16} color={isActive ? '#C4685A' : '#8BA3B8'} strokeWidth={isActive ? 2.5 : 1.8}/>
               <span style={{ flex: 1 }}>{label}</span>
-              {isActive && <ChevronRight size={13} color="#E8834A"/>}
+              {isActive && <ChevronRight size={13} color="#C4685A"/>}
             </a>
           );
         })}
@@ -82,12 +84,12 @@ export default function AdminSidebar() {
       {/* User footer */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px' }}>
-          <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg,#E8834A,#D4713A)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg,#C4685A,#B5564A)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Shield size={14} color="white" strokeWidth={2.5}/>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 11.5, fontWeight: 600, color: '#E2E8F0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>admin@prosite.com</div>
-            <div style={{ fontSize: 10.5, color: '#E8834A', fontWeight: 500 }}>Super Admin</div>
+            <div style={{ fontSize: 10.5, color: '#C4685A', fontWeight: 500 }}>Super Admin</div>
           </div>
           <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             <LogOut size={14} color="rgba(255,255,255,0.3)"/>

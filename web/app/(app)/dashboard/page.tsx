@@ -21,7 +21,7 @@ const STATUS_MAP: Record<string, { label: string; bg: string; color: string }> =
   ON_HOLD:           { label: 'On Hold',      bg: '#FFF0EF', color: '#E74C3C' },
 };
 const TYPE_COLOR: Record<string, string> = {
-  'Site Visit': '#E8834A', 'Meeting': '#8B5CF6', 'Follow-up': '#F39C12',
+  'Site Visit': '#C4685A', 'Meeting': '#8B5CF6', 'Follow-up': '#F39C12',
   'Installation': '#2ECC71', 'Inspection': '#0EA5E9', 'Other': '#9CA3AF',
 };
 
@@ -94,7 +94,7 @@ export default function DashboardPage() {
 
       const activity = [
         ...clientsArr.map((c: any) => ({ text: `New client — ${c.firstName} ${c.lastName}`, time: c.createdAt, color: '#4F7EF7' })),
-        ...quotesArr.map((q: any) => ({ text: `Quote ${q.estimateNumber || ''} — ${q.title || 'New quote'}`, time: q.createdAt, color: '#E8834A' })),
+        ...quotesArr.map((q: any) => ({ text: `Quote ${q.estimateNumber || ''} — ${q.title || 'New quote'}`, time: q.createdAt, color: '#C4685A' })),
         ...invoicesArr.map((i: any) => ({ text: `Invoice ${i.invoiceNumber} — ${i.status}`, time: i.createdAt, color: i.status === 'PAID' ? '#2ECC71' : '#9CA3AF' })),
       ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 5);
 
@@ -105,7 +105,7 @@ export default function DashboardPage() {
 
   const stats = data ? [
     { label: 'New Leads',       value: String(data.newLeads),       Icon: Users,         color: '#4F7EF7', bg: '#EEF3FF' },
-    { label: 'Open Quotes',     value: String(data.openQuotes),     Icon: ClipboardList, color: '#E8834A', bg: '#FEF3EC' },
+    { label: 'Open Quotes',     value: String(data.openQuotes),     Icon: ClipboardList, color: '#C4685A', bg: '#FEF3EC' },
     { label: 'Active Projects', value: String(data.activeProjects), Icon: HardHat,       color: '#2ECC71', bg: '#EAFAF3' },
     { label: 'Unpaid Balance',  value: fmt(data.unpaidBalance),     Icon: DollarSign,    color: '#E74C3C', bg: '#FFF0EF' },
   ] : [];
@@ -120,12 +120,12 @@ export default function DashboardPage() {
         borderRadius: 16, padding: '24px 28px', marginBottom: 24, position: 'relative', overflow: 'hidden',
       }}>
         <svg style={{ position: 'absolute', inset: 0, opacity: 0.05, width: '100%', height: '100%' }}>
-          <defs><pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#E8834A" strokeWidth="0.8"/></pattern></defs>
+          <defs><pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke="#C4685A" strokeWidth="0.8"/></pattern></defs>
           <rect width="100%" height="100%" fill="url(#g)"/>
         </svg>
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(232,131,74,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Home size={24} color="#E8834A" strokeWidth={2}/>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(196,104,90,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Home size={24} color="#C4685A" strokeWidth={2}/>
           </div>
           <div>
             <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: 'white' }}>
@@ -159,14 +159,14 @@ export default function DashboardPage() {
         <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8E4DF', overflow: 'hidden' }}>
           <div style={{ padding: '14px 18px', borderBottom: '1px solid #E8E4DF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#1A1A2E' }}>Today&apos;s Schedule</h3>
-            <a href="/schedule" style={{ fontSize: 12, color: '#E8834A', textDecoration: 'none', fontWeight: 600 }}>View all →</a>
+            <a href="/schedule" style={{ fontSize: 12, color: '#C4685A', textDecoration: 'none', fontWeight: 600 }}>View all →</a>
           </div>
           {loading ? (
             <div style={{ padding: 16 }}>{[1,2,3].map(i => <div key={i} style={{ height: 48, background: '#F8F6F3', borderRadius: 8, marginBottom: 8 }} className="animate-pulse"/>)}</div>
           ) : data?.todayTasks.length === 0 ? (
             <div style={{ padding: 24, textAlign: 'center' }}>
               <p style={{ color: '#9CA3AF', fontSize: 13, margin: '0 0 8px' }}>No tasks scheduled today</p>
-              <a href="/tasks" style={{ color: '#E8834A', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>+ Add Task</a>
+              <a href="/tasks" style={{ color: '#C4685A', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>+ Add Task</a>
             </div>
           ) : data?.todayTasks.map((t: any) => (
             <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 18px', borderBottom: '1px solid #F8F6F3' }}>
@@ -184,14 +184,14 @@ export default function DashboardPage() {
         <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E8E4DF', overflow: 'hidden' }}>
           <div style={{ padding: '14px 18px', borderBottom: '1px solid #E8E4DF', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#1A1A2E' }}>Active Projects</h3>
-            <a href="/projects" style={{ fontSize: 12, color: '#E8834A', textDecoration: 'none', fontWeight: 600 }}>View all →</a>
+            <a href="/projects" style={{ fontSize: 12, color: '#C4685A', textDecoration: 'none', fontWeight: 600 }}>View all →</a>
           </div>
           {loading ? (
             <div style={{ padding: 16 }}>{[1,2,3].map(i => <div key={i} style={{ height: 56, background: '#F8F6F3', borderRadius: 8, marginBottom: 8 }} className="animate-pulse"/>)}</div>
           ) : data?.activeList.length === 0 ? (
             <div style={{ padding: 24, textAlign: 'center' }}>
               <p style={{ color: '#9CA3AF', fontSize: 13, margin: '0 0 8px' }}>No active projects</p>
-              <a href="/quotes" style={{ color: '#E8834A', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Create from a quote →</a>
+              <a href="/quotes" style={{ color: '#C4685A', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>Create from a quote →</a>
             </div>
           ) : data?.activeList.map((p: any) => {
             const st = STATUS_MAP[p.status] || STATUS_MAP.APPROVED;

@@ -18,13 +18,13 @@ const FEATURES = [
 const IOS_STEPS = [
   { icon: Share2,     title: 'Tap the Share button',        desc: 'Open this page in Safari, then tap the Share icon at the bottom of the screen.' },
   { icon: PlusSquare, title: 'Add to Home Screen',          desc: 'Scroll down in the share sheet and tap "Add to Home Screen".' },
-  { icon: Home,       title: 'Tap Add',                     desc: 'Tap "Add" in the top right corner. ProSite will appear on your home screen instantly.' },
+  { icon: Home,       title: 'Tap Add',                     desc: 'Tap "Add" in the top right corner. finesse. will appear on your home screen instantly.' },
 ];
 
 const ANDROID_STEPS = [
   { icon: ArrowDown,  title: 'Open in Chrome',              desc: 'Open this page in Chrome. Look for the install banner or use the menu.' },
   { icon: PlusSquare, title: 'Add to Home Screen',          desc: 'Tap the 3-dot menu in the top right, then tap "Add to Home Screen" or "Install App".' },
-  { icon: Home,       title: 'Tap Install',                 desc: 'Tap "Install" or "Add". ProSite appears on your home screen ready to launch.' },
+  { icon: Home,       title: 'Tap Install',                 desc: 'Tap "Install" or "Add". finesse. appears on your home screen ready to launch.' },
 ];
 
 // CSS phone frame mockup content
@@ -51,8 +51,8 @@ function PhoneMockup({ title, children }: { title: string; children: React.React
         </div>
         {/* Page header */}
         <div style={{ background: '#1C2B3A', padding: '8px 10px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{ width: 16, height: 16, borderRadius: 4, background: '#E8834A' }}/>
-          <span style={{ fontSize: 9, fontWeight: 800, color: 'white' }}>ProSite</span>
+          <div style={{ width: 16, height: 16, borderRadius: 4, background: '#C4685A' }}/>
+          <span style={{ fontSize: 7, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
         </div>
         {children}
       </div>
@@ -75,7 +75,7 @@ function DashboardMockup() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 8 }}>
           {[
             { label: 'Leads', val: '8',    bg: '#EEF3FF', color: '#4F7EF7' },
-            { label: 'Quotes', val: '3',   bg: '#FEF3EC', color: '#E8834A' },
+            { label: 'Quotes', val: '3',   bg: '#FEF3EC', color: '#C4685A' },
             { label: 'Active', val: '12',  bg: '#EAFAF3', color: '#2ECC71' },
             { label: 'Owed',  val: '$24k', bg: '#FFF0EF', color: '#E74C3C' },
           ].map(s => (
@@ -105,7 +105,7 @@ function QuotesMockup() {
       <div style={{ padding: '8px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
           <div style={{ fontSize: 9, fontWeight: 700, color: '#1A1A2E' }}>Quotes</div>
-          <div style={{ background: '#E8834A', borderRadius: 5, padding: '3px 8px' }}>
+          <div style={{ background: '#C4685A', borderRadius: 5, padding: '3px 8px' }}>
             <span style={{ fontSize: 7, fontWeight: 700, color: 'white' }}>+ New</span>
           </div>
         </div>
@@ -122,7 +122,7 @@ function QuotesMockup() {
                 <div style={{ fontSize: 6, color: '#9CA3AF' }}>{q.num}</div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: 7, fontWeight: 800, color: '#E8834A' }}>{q.val}</div>
+                <div style={{ fontSize: 7, fontWeight: 800, color: '#C4685A' }}>{q.val}</div>
                 <span style={{ fontSize: 6, fontWeight: 700, color: q.color }}>{q.status}</span>
               </div>
             </div>
@@ -216,13 +216,15 @@ function InstallContent() {
         position: 'sticky', top: 0, zIndex: 10,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/logo.png" alt="ProSite" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'contain' }}/>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ fontSize: 8, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+          </div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: 'white' }}>ProSite</div>
-            <div style={{ fontSize: 9, color: '#E8834A', fontWeight: 700, letterSpacing: '0.08em' }}>REMODELING OS</div>
+            <div style={{ fontSize: 15, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
+            <div style={{ fontSize: 9, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>REMODELING OS</div>
           </div>
         </div>
-        <a href="/login" style={{ fontSize: 13, fontWeight: 600, color: '#E8834A', textDecoration: 'none', padding: '8px 16px', border: '1px solid rgba(232,131,74,0.4)', borderRadius: 8 }}>
+        <a href="/login" style={{ fontSize: 13, fontWeight: 600, color: '#C4685A', textDecoration: 'none', padding: '8px 16px', border: '1px solid rgba(196,104,90,0.4)', borderRadius: 8 }}>
           Sign In
         </a>
       </nav>
@@ -250,11 +252,13 @@ function InstallContent() {
             overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
             border: '1px solid #E8E4DF',
           }}>
-            <img src="/logo.png" alt="ProSite" style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#1C2B3A' }}/>
+            <div style={{ width: '100%', height: '100%', background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 18, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+            </div>
           </div>
 
           <div style={{ flex: 1, minWidth: 200 }}>
-            <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 800, color: '#1A1A2E' }}>ProSite</h1>
+            <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 300, letterSpacing: '0.05em', color: '#1A1A2E' }}>finesse.</h1>
             <p style={{ margin: '0 0 10px', fontSize: 15, color: '#6B7280' }}>Remodeling Management OS</p>
 
             {/* Rating row */}
@@ -275,10 +279,10 @@ function InstallContent() {
               </div>
             ) : installPrompt ? (
               <button onClick={handleInstall} style={{
-                padding: '12px 32px', background: '#E8834A', color: 'white',
+                padding: '12px 32px', background: '#C4685A', color: 'white',
                 border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 700,
                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-                boxShadow: '0 4px 16px rgba(232,131,74,0.35)',
+                boxShadow: '0 4px 16px rgba(196,104,90,0.35)',
               }}>
                 <Smartphone size={18}/>
                 Install Now
@@ -287,10 +291,10 @@ function InstallContent() {
               <button
                 onClick={() => document.getElementById('install-instructions')?.scrollIntoView({ behavior: 'smooth' })}
                 style={{
-                  padding: '12px 32px', background: '#E8834A', color: 'white',
+                  padding: '12px 32px', background: '#C4685A', color: 'white',
                   border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 700,
                   cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
-                  boxShadow: '0 4px 16px rgba(232,131,74,0.35)',
+                  boxShadow: '0 4px 16px rgba(196,104,90,0.35)',
                 }}
               >
                 <Smartphone size={18}/>
@@ -320,7 +324,7 @@ function InstallContent() {
       {/* ── Features ── */}
       <div style={{ padding: '48px 24px', maxWidth: 640, margin: '0 auto' }}>
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#1A1A2E', margin: '0 0 24px', textAlign: 'center' }}>
-          What&apos;s in ProSite
+          What&apos;s in finesse.
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {FEATURES.map(({ icon: Icon, title, desc }, i) => (
@@ -331,10 +335,10 @@ function InstallContent() {
             }}>
               <div style={{
                 width: 48, height: 48, borderRadius: 14, flexShrink: 0,
-                background: 'rgba(232,131,74,0.1)', border: '1px solid rgba(232,131,74,0.2)',
+                background: 'rgba(196,104,90,0.1)', border: '1px solid rgba(196,104,90,0.2)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <Icon size={22} color="#E8834A" strokeWidth={2}/>
+                <Icon size={22} color="#C4685A" strokeWidth={2}/>
               </div>
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#1A1A2E', marginBottom: 4 }}>{title}</div>
@@ -362,7 +366,7 @@ function InstallContent() {
                 flex: 1, padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer',
                 fontSize: 14, fontWeight: 700, transition: 'all 0.2s',
                 background: activeTab === tab ? 'white' : 'transparent',
-                color: activeTab === tab ? '#E8834A' : '#6B7280',
+                color: activeTab === tab ? '#C4685A' : '#6B7280',
                 boxShadow: activeTab === tab ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
               }}>
                 {label}
@@ -380,10 +384,10 @@ function InstallContent() {
                     background: '#FEF3EC', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     position: 'relative',
                   }}>
-                    <Icon size={20} color="#E8834A" strokeWidth={2}/>
+                    <Icon size={20} color="#C4685A" strokeWidth={2}/>
                     <div style={{
                       position: 'absolute', top: -6, right: -6, width: 18, height: 18,
-                      borderRadius: '50%', background: '#E8834A', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      borderRadius: '50%', background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
                       <span style={{ fontSize: 10, fontWeight: 800, color: 'white' }}>{i + 1}</span>
                     </div>
@@ -407,7 +411,7 @@ function InstallContent() {
             <Check size={18} color="#22C55E" strokeWidth={2.5} style={{ flexShrink: 0, marginTop: 1 }}/>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#15803D', marginBottom: 2 }}>
-                ProSite icon will appear on your home screen!
+                finesse. icon will appear on your home screen!
               </div>
               <div style={{ fontSize: 12, color: '#16A34A' }}>
                 {activeTab === 'ios' ? 'Works on iOS 14+ · Safari only · No App Store needed'
@@ -421,13 +425,13 @@ function InstallContent() {
       {/* ── CTA ── */}
       <div style={{ padding: '56px 24px', textAlign: 'center', maxWidth: 480, margin: '0 auto' }}>
         <div style={{
-          width: 56, height: 56, borderRadius: 16, background: 'rgba(232,131,74,0.1)',
+          width: 56, height: 56, borderRadius: 16, background: 'rgba(196,104,90,0.1)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px',
         }}>
-          <HardHat size={28} color="#E8834A" strokeWidth={2}/>
+          <HardHat size={28} color="#C4685A" strokeWidth={2}/>
         </div>
         <h2 style={{ margin: '0 0 8px', fontSize: 24, fontWeight: 800, color: '#1A1A2E' }}>
-          New to ProSite?
+          New to finesse.?
         </h2>
         <p style={{ margin: '0 0 28px', fontSize: 15, color: '#6B7280', lineHeight: 1.6 }}>
           Create your free account — no credit card needed.{' '}
@@ -435,9 +439,9 @@ function InstallContent() {
         </p>
         <a href={registerHref} style={{
           display: 'block', padding: '16px 32px',
-          background: '#E8834A', color: 'white', borderRadius: 14,
+          background: '#C4685A', color: 'white', borderRadius: 14,
           fontSize: 16, fontWeight: 700, textDecoration: 'none',
-          boxShadow: '0 6px 20px rgba(232,131,74,0.35)',
+          boxShadow: '0 6px 20px rgba(196,104,90,0.35)',
           transition: 'transform 0.15s',
         }}>
           Start Free Trial {promoCode && `— ${promoCode}`}
@@ -450,7 +454,7 @@ function InstallContent() {
       {/* ── Footer ── */}
       <div style={{ borderTop: '1px solid #E8E4DF', padding: '20px 24px', textAlign: 'center' }}>
         <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>
-          © 2026 ProSite · Built for remodeling contractors ·{' '}
+          © 2026 finesse. · Built for remodeling contractors ·{' '}
           <a href="/login" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Sign In</a>
         </p>
       </div>
@@ -463,7 +467,9 @@ export default function InstallPage() {
     <Suspense fallback={
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#1C2B3A' }}>
         <div style={{ textAlign: 'center' }}>
-          <img src="/logo.png" alt="ProSite" style={{ width: 64, height: 64, borderRadius: 16, marginBottom: 16 }}/>
+          <div style={{ width: 64, height: 64, borderRadius: 16, marginBottom: 16, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 14, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+          </div>
           <div style={{ color: 'white', fontSize: 15, fontWeight: 600 }}>Loading…</div>
         </div>
       </div>

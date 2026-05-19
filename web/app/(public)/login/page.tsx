@@ -63,7 +63,7 @@ export default function LoginPage() {
         <svg style={{ position: 'absolute', inset: 0, opacity: 0.05, width: '100%', height: '100%' }}>
           <defs>
             <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1.5" fill="#E8834A"/>
+              <circle cx="2" cy="2" r="1.5" fill="#C4685A"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#dots)"/>
@@ -72,16 +72,18 @@ export default function LoginPage() {
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 380, width: '100%' }}>
           {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 52 }}>
-            <img src="/logo.png" alt="ProSite" style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'contain' }}/>
+            <div style={{ width: 44, height: 44, borderRadius: 10, background: '#C4685A', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontSize: 10, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
+            </div>
             <div>
-              <div style={{ fontSize: 22, fontWeight: 800, color: 'white' }}>ProSite</div>
-              <div style={{ fontSize: 10, color: '#E8834A', fontWeight: 700, letterSpacing: '0.08em' }}>REMODELING OS</div>
+              <div style={{ fontSize: 22, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
+              <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>REMODELING OS</div>
             </div>
           </div>
 
           <h1 style={{ fontSize: 28, fontWeight: 800, color: 'white', margin: '0 0 12px', lineHeight: 1.25 }}>
             Run Your Entire<br/>Remodeling Business<br/>
-            <span style={{ color: '#E8834A' }}>From One Place</span>
+            <span style={{ color: '#C4685A' }}>From One Place</span>
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: '0 0 36px', lineHeight: 1.6 }}>
             The all-in-one OS built for remodeling contractors.
@@ -90,8 +92,8 @@ export default function LoginPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             {FEATURES.map(({ Icon, title, desc }) => (
               <div key={title} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(232,131,74,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={18} color="#E8834A" strokeWidth={2}/>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(196,104,90,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon size={18} color="#C4685A" strokeWidth={2}/>
                 </div>
                 <div>
                   <div style={{ fontSize: 13.5, fontWeight: 700, color: 'white' }}>{title}</div>
@@ -102,7 +104,7 @@ export default function LoginPage() {
           </div>
 
           <p style={{ position: 'absolute', bottom: -32, left: 0, fontSize: 11, color: 'rgba(255,255,255,0.25)', margin: 0 }}>
-            © 2026 ProSite. Built for remodeling contractors.
+            © 2026 finesse. Built for remodeling contractors.
           </p>
         </div>
       </div>
@@ -116,7 +118,7 @@ export default function LoginPage() {
         <div style={{ maxWidth: 400, width: '100%', margin: '0 auto' }}>
           <div style={{ marginBottom: 36 }}>
             <h2 style={{ margin: '0 0 6px', fontSize: 26, fontWeight: 800, color: '#1A1A2E' }}>Welcome back</h2>
-            <p style={{ margin: 0, fontSize: 14, color: '#6B7280' }}>Sign in to your ProSite account</p>
+            <p style={{ margin: 0, fontSize: 14, color: '#6B7280' }}>Sign in to your finesse. account</p>
           </div>
 
           <form onSubmit={handleLogin}>
@@ -128,7 +130,7 @@ export default function LoginPage() {
                 type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="you@company.com" required autoFocus
                 style={inp}
-                onFocus={e => { e.target.style.borderColor = '#E8834A'; e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)'; }}
+                onFocus={e => { e.target.style.borderColor = '#C4685A'; e.target.style.boxShadow = '0 0 0 3px rgba(196,104,90,0.15)'; }}
                 onBlur={e => { e.target.style.borderColor = '#E8E4DF'; e.target.style.boxShadow = 'none'; }}
               />
             </div>
@@ -142,7 +144,7 @@ export default function LoginPage() {
                   type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••" required
                   style={{ ...inp, paddingRight: 44 }}
-                  onFocus={e => { e.target.style.borderColor = '#E8834A'; e.target.style.boxShadow = '0 0 0 3px rgba(232,131,74,0.15)'; }}
+                  onFocus={e => { e.target.style.borderColor = '#C4685A'; e.target.style.boxShadow = '0 0 0 3px rgba(196,104,90,0.15)'; }}
                   onBlur={e => { e.target.style.borderColor = '#E8E4DF'; e.target.style.boxShadow = 'none'; }}
                 />
                 <button type="button" onClick={() => setShowPw(p => !p)}
@@ -153,7 +155,7 @@ export default function LoginPage() {
             </div>
 
             <div style={{ textAlign: 'right', marginBottom: 24 }}>
-              <a href="mailto:support@prositeapp.com?subject=Password Reset Request" style={{ fontSize: 13, color: '#E8834A', textDecoration: 'none', fontWeight: 600 }}>
+              <a href="mailto:support@prositeapp.com?subject=Password Reset Request" style={{ fontSize: 13, color: '#C4685A', textDecoration: 'none', fontWeight: 600 }}>
                 Forgot password?
               </a>
             </div>
@@ -165,7 +167,7 @@ export default function LoginPage() {
             )}
 
             <button type="submit" disabled={loading} className="btn-press" style={{
-              width: '100%', height: 48, background: loading ? '#F0C4A8' : '#E8834A',
+              width: '100%', height: 48, background: loading ? '#D9A09A' : '#C4685A',
               color: 'white', border: 'none', borderRadius: 10, fontSize: 15,
               fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'background 0.15s',
@@ -182,7 +184,7 @@ export default function LoginPage() {
 
           <p style={{ fontSize: 13, color: '#6B7280', textAlign: 'center', margin: 0 }}>
             Don&apos;t have an account?{' '}
-            <a href="/register" style={{ color: '#E8834A', fontWeight: 700, textDecoration: 'none' }}>
+            <a href="/register" style={{ color: '#C4685A', fontWeight: 700, textDecoration: 'none' }}>
               Start free trial
             </a>
           </p>

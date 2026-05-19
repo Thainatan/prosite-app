@@ -72,7 +72,7 @@ export default function OnboardingChecklist() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 800, color: 'white', marginBottom: 2 }}>
-              Welcome to ProSite!
+              Welcome to finesse.!
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
               {completed.length} of {STEPS.length} steps completed
@@ -84,7 +84,7 @@ export default function OnboardingChecklist() {
         </div>
         {/* Progress bar */}
         <div style={{ marginTop: 12, background: 'rgba(255,255,255,0.15)', borderRadius: 99, height: 4 }}>
-          <div style={{ width: `${pct}%`, background: '#E8834A', height: '100%', borderRadius: 99, transition: 'width 0.4s' }}/>
+          <div style={{ width: `${pct}%`, background: '#C4685A', height: '100%', borderRadius: 99, transition: 'width 0.4s' }}/>
         </div>
       </div>
 
@@ -101,12 +101,12 @@ export default function OnboardingChecklist() {
               {done
                 ? <CheckCircle size={18} color="#22C55E" strokeWidth={2}/>
                 : <Circle size={18} color="#D1D5DB" strokeWidth={2}/>}
-              <Icon size={14} color={done ? '#9CA3AF' : '#E8834A'} strokeWidth={2}/>
+              <Icon size={14} color={done ? '#9CA3AF' : '#C4685A'} strokeWidth={2}/>
               <span style={{ fontSize: 13, color: done ? '#9CA3AF' : '#1A1A2E', textDecoration: done ? 'line-through' : 'none', flex: 1 }}>
                 {label}
               </span>
               {!done && hasTutorial && (
-                <span title="Tutorial available"><BookOpen size={12} color="#E8834A" strokeWidth={2}/></span>
+                <span title="Tutorial available"><BookOpen size={12} color="#C4685A" strokeWidth={2}/></span>
               )}
             </div>
           );
