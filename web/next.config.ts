@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
-              "connect-src 'self' https://prosite-app-production.up.railway.app https://helper-joyfully-secluded.ngrok-free.dev http://localhost:3002",
+              "connect-src *",
             ].join('; '),
           },
         ],
