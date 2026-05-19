@@ -8,7 +8,7 @@ import {
 import ClientAutocomplete from '../../../../components/ClientAutocomplete';
 import { apiFetch } from '../../../../lib/api';
 
-const fmt = (n) =>
+const fmt = (n: number) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 
 const NICHES = [
@@ -70,7 +70,7 @@ const AI_QUESTIONS = {
   DESIGN:     ['Style preference? (Modern, Traditional, Transitional)','Rooms in scope?','Full design or consulting only?','Budget range?','Procurement included?'],
 };
 
-function SubPicker({ subs, onSelect, onClose }) {
+function SubPicker({ subs, onSelect, onClose }: { subs: any[]; onSelect: (s: any) => void; onClose: () => void }) {
   const [q, setQ] = useState('');
   const ref = useRef(null);
   useEffect(() => {
@@ -101,7 +101,7 @@ function SubPicker({ subs, onSelect, onClose }) {
   );
 }
 
-function AIPanel({ niche, onClose, onApply }) {
+function AIPanel({ niche, onClose, onApply }: { niche: string; onClose: () => void; onApply: (items: any[]) => void }) {
   const questions = AI_QUESTIONS[niche] || [];
   const [answers, setAnswers] = useState(questions.map(()=>''));
   const [loading, setLoading] = useState(false);
@@ -243,7 +243,7 @@ export default function NewQuotePage() {
   const applyAIItems=(aiItems)=>setItems(prev=>[...prev.filter(i=>i.description),...aiItems]);
   const subtotal=items.reduce((a,i)=>a+i.qty*i.price,0);
 
-  const handleSave=async(action)=>{
+  const handleSave=async(action: string)=>{
     setLoading(true);
     try {
       const res=await apiFetch('/quotes',{method:'POST',body:JSON.stringify({clientId:clientId||null,serviceType:niche||'OTHER',title:title||'New Quote',subtotal,total:subtotal,items:items.map(i=>({section:i.section,description:i.description,qty:i.qty,unit:i.unit,price:i.price,amount:i.qty*i.price,material:i.material||null,finish:i.finish||null,subcontractorId:i.subcontractorId||null,subcontractorName:i.subcontractorName||null}))})});
