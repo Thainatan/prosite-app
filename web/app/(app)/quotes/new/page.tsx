@@ -587,12 +587,16 @@ export default function NewQuotePage() {
                       </div>
 
                       {nicheItems.length===0 && (
-                        <div style={{ padding:'14px 20px',textAlign:'center' }}>
-                          <p style={{ fontSize:12,color:'#9CA3AF',margin:0 }}>No items yet — use AI Generate or Add Item</p>
+                        <div style={{ padding:'24px 20px',textAlign:'center' }}>
+                          <button onClick={()=>addItem(nicheId)}
+                            style={{ display:'inline-flex',alignItems:'center',gap:8,padding:'10px 24px',borderRadius:9,border:'2px dashed '+nicheInfo.color+'50',background:nicheInfo.color+'08',color:nicheInfo.color,fontSize:13,fontWeight:600,cursor:'pointer' }}>
+                            <Plus size={16}/>Add first item
+                          </button>
+                          <p style={{ fontSize:11,color:'#9CA3AF',margin:'8px 0 0' }}>or use AI Generate to build items from a description</p>
                         </div>
                       )}
 
-                      {nicheItems.map(item => (
+                      {nicheItems.length > 0 && nicheItems.map(item => (
                         <div key={item.id} style={{ borderBottom:'1px solid #F3F4F6' }}
                           onMouseEnter={e=>e.currentTarget.style.background='#FAFAFA'}
                           onMouseLeave={e=>e.currentTarget.style.background='white'}>
@@ -655,6 +659,16 @@ export default function NewQuotePage() {
                           )}
                         </div>
                       ))}
+
+                      {/* Bottom add-item bar — always visible when section is open */}
+                      <div style={{ padding:'8px 20px',borderTop:'1px solid #F3F4F6' }}>
+                        <button onClick={()=>addItem(nicheId)}
+                          style={{ display:'flex',alignItems:'center',gap:6,width:'100%',padding:'8px 12px',borderRadius:8,border:'1px dashed #E8E4DF',background:'transparent',color:'#9CA3AF',fontSize:12,fontWeight:600,cursor:'pointer',justifyContent:'center',transition:'all 0.15s' }}
+                          onMouseEnter={e=>{e.currentTarget.style.borderColor=nicheInfo.color+'80';e.currentTarget.style.color=nicheInfo.color;e.currentTarget.style.background=nicheInfo.color+'08';}}
+                          onMouseLeave={e=>{e.currentTarget.style.borderColor='#E8E4DF';e.currentTarget.style.color='#9CA3AF';e.currentTarget.style.background='transparent';}}>
+                          <Plus size={13}/>+ Add Line Item
+                        </button>
+                      </div>
                     </>
                   )}
                 </div>

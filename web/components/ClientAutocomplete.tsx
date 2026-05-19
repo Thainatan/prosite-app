@@ -182,18 +182,23 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
   const [clients, setClients] = useState<Client[]>([]);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [clientsLoading, setClientsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedName, setSelectedName] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Load clients on mount
   useEffect(() => {
-    apiFetch('/clients').then(r => r.json()).then(data => {
-      if (Array.isArray(data)) setClients(data);
-    }).catch(() => {});
+    setClientsLoading(true);
+    apiFetch('/clients')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) setClients(data);
+        else if (data && Array.isArray(data.data)) setClients(data.data);
+      })
+      .catch(() => {})
+      .finally(() => setClientsLoading(false));
   }, []);
 
   // Resolve selected name
@@ -281,7 +286,7 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
               onBlur={e => { e.target.style.borderColor = '#E8E4DF'; e.target.style.boxShadow = 'none'; }}
             />
             <div style={{ position: 'absolute', right: 10, pointerEvents: 'none' }}>
-              {loading ? <Loader2 size={14} color="#9CA3AF" className="animate-spin"/> : <Search size={14} color="#9CA3AF"/>}
+              {clientsLoading ? <Loader2 size={14} color="#C4685A" className="animate-spin"/> : <Search size={14} color="#9CA3AF"/>}
             </div>
           </>
         )}
@@ -294,12 +299,21 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
           background: 'white', border: '1px solid #E8E4DF', borderRadius: 10,
           boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, overflow: 'hidden', maxHeight: 280, overflowY: 'auto',
         }}>
-          {filtered.length === 0 && !query && (
-            <div style={{ padding: '12px 14px', fontSize: 13, color: '#9CA3AF', textAlign: 'center' }}>
-              Start typing to search clients…
+          {clientsLoading ? (
+            <div style={{ padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#9CA3AF', fontSize: 13 }}>
+              <Loader2 size={13} color="#C4685A" className="animate-spin"/>
+              Loading clients…
             </div>
-          )}
-          {filtered.map(c => (
+          ) : filtered.length === 0 && query ? (
+            <div style={{ padding: '12px 14px', fontSize: 13, color: '#9CA3AF', textAlign: 'center' }}>
+              No clients match &ldquo;{query}&rdquo;
+            </div>
+          ) : filtered.length === 0 ? (
+            <div style={{ padding: '12px 14px', fontSize: 13, color: '#9CA3AF', textAlign: 'center' }}>
+              No clients yet — create your first one below
+            </div>
+          ) : null}
+          {!clientsLoading && filtered.map(c => (
             <button key={c.id} type="button" onMouseDown={() => handleSelect(c)} style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
               background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
