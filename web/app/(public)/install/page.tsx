@@ -221,7 +221,7 @@ function InstallContent() {
           </div>
           <div>
             <div style={{ fontSize: 15, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
-            <div style={{ fontSize: 9, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>REMODELING OS</div>
+            <div style={{ fontSize: 9, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>FINESSE WORKSPACE</div>
           </div>
         </div>
         <a href="/login" style={{ fontSize: 13, fontWeight: 600, color: '#C4685A', textDecoration: 'none', padding: '8px 16px', border: '1px solid rgba(196,104,90,0.4)', borderRadius: 8 }}>
@@ -259,7 +259,7 @@ function InstallContent() {
 
           <div style={{ flex: 1, minWidth: 200 }}>
             <h1 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 300, letterSpacing: '0.05em', color: '#1A1A2E' }}>finesse.</h1>
-            <p style={{ margin: '0 0 10px', fontSize: 15, color: '#6B7280' }}>Remodeling Management OS</p>
+            <p style={{ margin: '0 0 10px', fontSize: 15, color: '#6B7280' }}>Finesse Workspace</p>
 
             {/* Rating row */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
@@ -454,7 +454,7 @@ function InstallContent() {
       {/* ── Footer ── */}
       <div style={{ borderTop: '1px solid #E8E4DF', padding: '20px 24px', textAlign: 'center' }}>
         <p style={{ margin: 0, fontSize: 12, color: '#9CA3AF' }}>
-          © 2026 finesse. · Built for remodeling contractors ·{' '}
+          © 2026 finesse. · Built for contractors ·{' '}
           <a href="/login" style={{ color: '#9CA3AF', textDecoration: 'none' }}>Sign In</a>
         </p>
       </div>

@@ -77,16 +77,15 @@ export default function LoginPage() {
             </div>
             <div>
               <div style={{ fontSize: 22, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
-              <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>REMODELING OS</div>
+              <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>FINESSE WORKSPACE</div>
             </div>
           </div>
 
           <h1 style={{ fontSize: 28, fontWeight: 800, color: 'white', margin: '0 0 12px', lineHeight: 1.25 }}>
-            Run Your Entire<br/>Remodeling Business<br/>
-            <span style={{ color: '#C4685A' }}>From One Place</span>
+            Your <span style={{ color: '#C4685A' }}>Finesse Workspace</span>
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: '0 0 36px', lineHeight: 1.6 }}>
-            The all-in-one OS built for remodeling contractors.
+            The all-in-one workspace for contractors.
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -104,7 +103,7 @@ export default function LoginPage() {
           </div>
 
           <p style={{ position: 'absolute', bottom: -32, left: 0, fontSize: 11, color: 'rgba(255,255,255,0.25)', margin: 0 }}>
-            © 2026 finesse. Built for remodeling contractors.
+            © 2026 finesse. Built for contractors.
           </p>
         </div>
       </div>

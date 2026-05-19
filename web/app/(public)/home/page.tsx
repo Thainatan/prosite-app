@@ -24,9 +24,9 @@ export default function HomePage() {
 
       {/* HERO */}
       <section style={{background:'linear-gradient(135deg,#1C2B3A 0%,#2D4A6B 100%)',padding:'80px 40px',textAlign:'center'}}>
-        <div style={{display:'inline-block',background:'#C4685A',color:'white',fontSize:12,fontWeight:700,padding:'4px 14px',borderRadius:999,marginBottom:20}}>BUILT FOR HOME REMODELING COMPANIES</div>
-        <h1 style={{fontSize:52,fontWeight:800,color:'white',margin:'0 0 16px',lineHeight:1.15}}>Run Your Entire<br/><span style={{color:'#C4685A'}}>Remodeling Business</span><br/>From One Place</h1>
-        <p style={{fontSize:18,color:'#9BA3C4',maxWidth:560,margin:'0 auto 36px',lineHeight:1.6}}>Leads, quotes, projects, change orders, and invoices — all connected. Built specifically for remodeling contractors.</p>
+        <div style={{display:'inline-block',background:'#C4685A',color:'white',fontSize:12,fontWeight:700,padding:'4px 14px',borderRadius:999,marginBottom:20}}>BUILT FOR CONTRACTORS</div>
+        <h1 style={{fontSize:52,fontWeight:800,color:'white',margin:'0 0 16px',lineHeight:1.15}}>Your<br/><span style={{color:'#C4685A'}}>Finesse Workspace</span></h1>
+        <p style={{fontSize:18,color:'#9BA3C4',maxWidth:560,margin:'0 auto 36px',lineHeight:1.6}}>Leads, quotes, projects, change orders, and invoices — all connected. Built for your business.</p>
         <div style={{display:'flex',gap:12,justifyContent:'center'}}>
           <a href="/register" style={{padding:'14px 32px',background:'#C4685A',color:'white',borderRadius:12,fontSize:16,fontWeight:700,textDecoration:'none'}}>Start Free — 14 Days Trial</a>
           <a href="#pricing" style={{padding:'14px 32px',background:'rgba(255,255,255,0.08)',color:'white',borderRadius:12,fontSize:16,fontWeight:700,textDecoration:'none',border:'1px solid rgba(255,255,255,0.15)'}}>See Pricing →</a>
@@ -117,7 +117,7 @@ export default function HomePage() {
       {/* FOOTER */}
       <footer style={{background:'#1C2B3A',padding:'40px',textAlign:'center'}}>
         <span style={{fontSize:16,fontWeight:300,letterSpacing:'0.05em',color:'#E8C4BC'}}>finesse.</span>
-        <p style={{color:'#6B7280',fontSize:13,margin:'8px 0 0'}}>© 2026 finesse. · Built for remodeling contractors.</p>
+        <p style={{color:'#6B7280',fontSize:13,margin:'8px 0 0'}}>© 2026 finesse. · Built for contractors.</p>
         <p style={{color:'#4A5568',fontSize:13,margin:'6px 0 0'}}><a href="mailto:support@prositeapp.com" style={{color:'#8BA3B8',textDecoration:'none'}}>support@prositeapp.com</a></p>
       </footer>
     </div>

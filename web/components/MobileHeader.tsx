@@ -18,7 +18,7 @@ export default function MobileHeader() {
         </div>
         <div>
           <div style={{ fontSize: 15, fontWeight: 300, letterSpacing: '0.05em', color: '#1C2B3A', lineHeight: 1.1 }}>finesse.</div>
-          <div style={{ fontSize: 8, fontWeight: 600, color: '#C4685A', letterSpacing: '0.08em' }}>REMODELING OS</div>
+          <div style={{ fontSize: 8, fontWeight: 600, color: '#C4685A', letterSpacing: '0.08em' }}>FINESSE WORKSPACE</div>
         </div>
       </div>
 

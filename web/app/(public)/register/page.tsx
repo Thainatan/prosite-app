@@ -196,12 +196,12 @@ function RegisterForm() {
             </div>
             <div>
               <div style={{ fontSize: 20, fontWeight: 300, letterSpacing: '0.05em', color: 'white' }}>finesse.</div>
-              <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>REMODELING OS</div>
+              <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.08em' }}>FINESSE WORKSPACE</div>
             </div>
           </div>
 
           <h1 style={{ fontSize: 26, fontWeight: 800, color: 'white', margin: '0 0 10px', lineHeight: 1.3 }}>
-            Join 500+ remodeling<br/>
+            Join 500+ contractors<br/>
             <span style={{ color: '#C4685A' }}>contractors</span> who trust<br/>
             finesse.
           </h1>

@@ -45,7 +45,7 @@ export default function SidebarWrapper() {
           </div>
           <div>
             <div style={{ fontSize:15, fontWeight:300, letterSpacing:'0.05em', color:'white' }}>finesse.</div>
-            <div style={{ fontSize:10, color:'#C4685A', fontWeight:600, letterSpacing:'0.05em' }}>REMODELING OS</div>
+            <div style={{ fontSize:10, color:'#C4685A', fontWeight:600, letterSpacing:'0.05em' }}>FINESSE WORKSPACE</div>
           </div>
         </div>
       </div>

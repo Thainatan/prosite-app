@@ -25,7 +25,7 @@ export const TUTORIALS: Tutorial[] = [
         id: 'welcome-intro',
         position: 'center',
         title: 'Welcome to ProSite!',
-        description: "You're now running your remodeling business from one place. Let's take a 2-minute tour to get you started.",
+        description: "You're now running your Finesse Workspace from one place. Let's take a 2-minute tour to get you started.",
         primaryBtn: { label: 'Take the Tour', action: 'next' },
         secondaryBtn: { label: 'Skip for now', action: 'skip' },
       },

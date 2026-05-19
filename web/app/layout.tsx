@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Viewport: viewport-fit=cover for notch, maximum-scale=1 prevents zoom on input focus */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
-        <title>finesse. — Remodeling OS</title>
+        <title>Finesse Workspace</title>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#C4685A" />
 

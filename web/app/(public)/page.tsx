@@ -19,15 +19,13 @@ export default function LandingPage() {
       {/* HERO */}
       <section style={{ background: 'linear-gradient(135deg, #1A1D2E 0%, #2D3148 100%)', padding: '80px 40px', textAlign: 'center' }}>
         <div style={{ display: 'inline-block', background: '#4F7EF7', color: 'white', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 999, marginBottom: 20, letterSpacing: '0.05em' }}>
-          BUILT FOR HOME REMODELING COMPANIES
+          BUILT FOR CONTRACTORS
         </div>
         <h1 style={{ fontSize: 52, fontWeight: 800, color: 'white', margin: '0 0 16px', lineHeight: 1.15 }}>
-          Run Your Entire<br/>
-          <span style={{ color: '#4F7EF7' }}>Remodeling Business</span><br/>
-          From One Place
+          Your <span style={{ color: '#4F7EF7' }}>Finesse Workspace</span>
         </h1>
         <p style={{ fontSize: 18, color: '#9BA3C4', maxWidth: 560, margin: '0 auto 36px', lineHeight: 1.6 }}>
-          Leads, site visits, quotes, projects, change orders, and invoices — all connected. Built specifically for remodeling contractors.
+          Leads, site visits, quotes, projects, change orders, and invoices — all connected. Built for your business.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href="/register" style={{ display: 'inline-block', padding: '14px 32px', background: '#4F7EF7', color: 'white', borderRadius: 12, fontSize: 16, fontWeight: 700, textDecoration: 'none' }}>
@@ -157,7 +155,7 @@ export default function LandingPage() {
           </div>
           <span style={{ fontSize: 16, fontWeight: 300, letterSpacing: '0.05em', color: '#E8C4BC' }}>finesse.</span>
         </div>
-        <p style={{ color: '#6B7280', fontSize: 13, margin: 0 }}>© 2026 finesse. Built for remodeling contractors.</p>
+        <p style={{ color: '#6B7280', fontSize: 13, margin: 0 }}>© 2026 finesse. Built for contractors.</p>
       </footer>
     </div>
   );

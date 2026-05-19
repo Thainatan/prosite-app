@@ -46,7 +46,7 @@ export default function InvitePage() {
           </div>
           <div>
             <div style={{ fontSize: 18, fontWeight: 300, letterSpacing: '0.05em', color: '#1C2B3A' }}>finesse.</div>
-            <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.06em' }}>REMODELING OS</div>
+            <div style={{ fontSize: 10, color: '#C4685A', fontWeight: 600, letterSpacing: '0.06em' }}>FINESSE WORKSPACE</div>
           </div>
         </div>
 
@@ -120,7 +120,7 @@ export default function InvitePage() {
         )}
       </div>
 
-      <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 24 }}>© 2026 finesse. · Built for remodeling contractors</p>
+      <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 12, marginTop: 24 }}>© 2026 finesse. · Built for contractors</p>
     </div>
   );
 }
