@@ -40,12 +40,13 @@
     "rxjs": "^7.8.1",
     "stripe": "^22.0.1",
     "twilio": "^5.13.1",
-    "@nestjs/cli": "^11.0.0"
+    "typescript": "^5.7.3",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "@nestjs/cli": "^11.0.0",
+    "@nestjs/cli": "^11.0.21",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
     "@prisma/client": "^5.22.0",
