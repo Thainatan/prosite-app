@@ -11,6 +11,22 @@ import { apiFetch } from '../../../../lib/api';
 const fmt = (n: number) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n);
 
+interface LineItem {
+  id: string;
+  section: string;
+  description: string;
+  qty: number;
+  unit: string;
+  price: number;
+  material?: string;
+  finish?: string;
+  brand?: string;
+  aiGenerated?: boolean;
+  subcontractorId?: string;
+  subcontractorName?: string;
+  subcontractorTrade?: string;
+}
+
 const NICHES = [
   { id: 'CABINETS',   label: 'Custom Cabinets', icon: Package,    color: '#8B5CF6' },
   { id: 'TILE',       label: 'Tile & Stone',    icon: Grid3x3,    color: '#0EA5E9' },
@@ -106,7 +122,7 @@ function AIPanel({ niche, onClose, onApply }: { niche: string; onClose: () => vo
   const [answers, setAnswers] = useState(questions.map(()=>''));
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
-  const [generatedItems, setGeneratedItems] = useState([]);
+  const [generatedItems, setGeneratedItems] = useState<any[]>([]);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -211,8 +227,8 @@ export default function NewQuotePage() {
   const [loading,setLoading]=useState(false);
   const [saved,setSaved]=useState(false);
   const [showAI,setShowAI]=useState(false);
-  const [pickerForItem,setPickerForItem]=useState(null);
-  const [subs,setSubs]=useState([]);
+  const [pickerForItem,setPickerForItem]=useState<string|null>(null);
+  const [subs,setSubs]=useState<any[]>([]);
   const [showMaterialCols,setShowMaterialCols]=useState(false);
 
   const sections  = niche ? SECTIONS_BY_NICHE[niche]  : SECTIONS_BY_NICHE.REMODELING;
@@ -220,7 +236,7 @@ export default function NewQuotePage() {
   const materials = niche ? MATERIALS_BY_NICHE[niche] : [];
   const finishes  = niche ? FINISHES_BY_NICHE[niche]  : [];
 
-  const [items,setItems]=useState([
+  const [items,setItems]=useState<LineItem[]>([
     { id:'1',section:'Demo & Prep',description:'',qty:1,unit:'job',price:0 },
   ]);
 
