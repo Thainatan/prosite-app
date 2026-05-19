@@ -74,7 +74,7 @@ function SubPicker({ subs, onSelect, onClose }: { subs: any[]; onSelect: (s: any
   const [q, setQ] = useState('');
   const ref = useRef(null);
   useEffect(() => {
-    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
   }, [onClose]);
