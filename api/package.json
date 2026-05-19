@@ -39,7 +39,8 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "stripe": "^22.0.1",
-    "twilio": "^5.13.1"
+    "twilio": "^5.13.1",
+    "@nestjs/cli": "^11.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
