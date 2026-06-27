@@ -1,12 +1,13 @@
 import { getToken } from './auth';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+// Treat empty / whitespace-only env value as missing, strip trailing slash.
+const RAW = (process.env.NEXT_PUBLIC_API_URL || '').trim();
+const API_BASE = (RAW || 'http://localhost:3002').replace(/\/+$/, '');
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const token = getToken();
 
   if (!token && typeof window !== 'undefined') {
-    // Only redirect if we're in a protected route (not /login, /register, /home, /)
     const pub = ['/login', '/register', '/home', '/'];
     if (!pub.includes(window.location.pathname)) {
       console.warn('[apiFetch] No auth token for', path, '— redirecting to login');
@@ -20,11 +21,21 @@ export async function apiFetch(path: string, options: RequestInit = {}): Promise
     'ngrok-skip-browser-warning': 'true',
     ...(options.headers as Record<string, string> || {}),
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+  if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  const url = `${API_BASE}${path.startsWith('/') ? path : '/' + path}`;
+
+  let res: Response;
+  try {
+    res = await fetch(url, { ...options, headers });
+  } catch (err: any) {
+    // fetch throws TypeError ("Failed to fetch", "Load failed", "The string did not
+    // match the expected pattern") for malformed URLs, mixed-content blocks, CORS
+    // preflight failures, or network drops. Log the constructed URL so the cause
+    // is visible instead of just a cryptic TypeError.
+    console.error('[apiFetch] fetch failed', { url, path, apiBase: API_BASE, error: err?.message });
+    throw new Error(`Network error contacting API (${url}): ${err?.message || 'unknown'}`);
+  }
 
   if (res.status === 401) {
     console.error('[apiFetch] 401 Unauthorized for', path, '— clearing token and redirecting');
