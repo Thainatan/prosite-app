@@ -1,6 +1,6 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, X, Check, Plus, Loader2, User } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, X, Check, Plus, Loader2, User, AlertCircle } from 'lucide-react';
 import { apiFetch } from '../lib/api';
 import AddressAutocomplete from './AddressAutocomplete';
 import type { AddressResult } from './AddressAutocomplete';
@@ -183,23 +183,39 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [clientsLoading, setClientsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedName, setSelectedName] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load clients on mount
-  useEffect(() => {
+  const loadClients = async () => {
     setClientsLoading(true);
-    apiFetch('/clients')
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data)) setClients(data);
-        else if (data && Array.isArray(data.data)) setClients(data.data);
-      })
-      .catch(() => {})
-      .finally(() => setClientsLoading(false));
-  }, []);
+    setLoadError(null);
+    try {
+      const res = await apiFetch('/clients');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setClients(data);
+      } else if (data && Array.isArray(data.data)) {
+        setClients(data.data);
+      } else if (data && data.error) {
+        console.error('[ClientAutocomplete] API returned error:', data.error);
+        setLoadError(typeof data.error === 'string' ? data.error : 'API error');
+      } else {
+        console.warn('[ClientAutocomplete] Unexpected /clients response shape:', data);
+        setLoadError('Unexpected response format');
+      }
+    } catch (err: any) {
+      console.error('[ClientAutocomplete] Failed to fetch /clients:', err);
+      setLoadError(err?.message || 'Network error');
+    } finally {
+      setClientsLoading(false);
+    }
+  };
+
+  // Load clients on mount
+  useEffect(() => { loadClients(); }, []);
 
   // Resolve selected name
   useEffect(() => {
@@ -303,6 +319,18 @@ export default function ClientAutocomplete({ value, onChange, placeholder = 'Sea
             <div style={{ padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#9CA3AF', fontSize: 13 }}>
               <Loader2 size={13} color="#C4685A" className="animate-spin"/>
               Loading clients…
+            </div>
+          ) : loadError ? (
+            <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'flex-start', gap: 8, background: '#FFF0EF', borderBottom: '1px solid #FCA5A5' }}>
+              <AlertCircle size={14} color="#E74C3C" style={{ flexShrink: 0, marginTop: 1 }}/>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#B91C1C' }}>Couldn&apos;t load clients</div>
+                <div style={{ fontSize: 11, color: '#9B2C2C', wordBreak: 'break-word' }}>{loadError}</div>
+                <button type="button" onMouseDown={loadClients}
+                  style={{ marginTop: 4, padding: '2px 8px', borderRadius: 5, border: '1px solid #FCA5A5', background: 'white', fontSize: 11, fontWeight: 600, color: '#B91C1C', cursor: 'pointer' }}>
+                  Retry
+                </button>
+              </div>
             </div>
           ) : filtered.length === 0 && query ? (
             <div style={{ padding: '12px 14px', fontSize: 13, color: '#9CA3AF', textAlign: 'center' }}>
